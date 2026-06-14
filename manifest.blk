@@ -1,10 +1,14 @@
 title:t="The Weight of the Crown"
-description:t="Swipe left or right to rule your kingdom"
+description:t="""
+The Weight of the Crown is a narrative kingdom-management game built for EdenSpark Game Jam #2 and its theme, Mass Control. 
+
+You usurped Estedor's throne. Now balance factions, control the masses, and survive the crown's weight through 365 days of rule.
+"""
 project_guid:t="019eab54-61cf-7c88-a293-0fa895edb23b"
 defaultPrefab:t=""
 type:i=3
 author:t="ThiccMarySue"
-hdRendering:b=no
+hdRendering:b=yes
 post_id:t=""
 preview:t=".project/screenshots/shot_2026.06.10_00.14.24.jpeg"
 hash:t=""
@@ -12,7 +16,7 @@ uri:t=""
 build_size:i=-1
 last_played:i=0
 last_downloaded:i=0
-last_opened:i=1781043602
+last_opened:i=1781394524
 deleted_at:i=0
 likes:i=0
 downloads:i=0
