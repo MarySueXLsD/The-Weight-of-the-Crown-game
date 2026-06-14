@@ -1,0 +1,23 @@
+You're right to question that — **13,183 lines is the correct count for what you have now.**
+
+Here's what happened with the numbers:
+
+| Version | Lines | What's in it |
+|---------|-------|--------------|
+| **Start of our session** (uncommitted) | ~16,614 | Everything you have now **plus** Nobility/Loyalty/Succession pool encounters (#252–#390) and the Pool coverage audit (~3,400 lines at the end) |
+| **After my generator + git checkout** | ~7,302 | Old committed version — story arcs gone |
+| **Your current file** | **13,182–13,183** | Story arcs, header, stat-unlock encounters, pool encounters #0–#251 — restored |
+
+So **~16,600 was real** at the start of the session, but your revert dropped the tail section. The file now ends at encounter **#251** (last People Pool entry) and does **not** include:
+- `## Nobility Pool`
+- `## Loyalty Pool`
+- `## Succession Pool`
+- `## Pool coverage audit`
+
+The **header still references** 391 encounters and the new pool indices (lines 62–66), but the actual encounter text for #252–#390 isn't in the file anymore.
+
+**Russian file** is still at ~7,302 lines — only the old pool content, no story arcs.
+
+If 13,183 lines is the version you want to keep, I can update `QUESTIONS_REFERENCE_RU.md` to match it manually (no generators). Want me to proceed?
+
+[REDACTED]
