@@ -16,14 +16,23 @@ var public introNameSlideX = 0.0
 var public introTypewriterCharCount = 0
 var public introTypewriterAccumulator = 0.0
 var public introFadeAlpha = 0.0
-var public continueFadePhase = CONTINUE_FADE_NONE
-var public continueFadeT = 0.0
 var public introTextureAspect = 1.6
 var public introTextureAspect2 = 1.0
 var public introTextureAspect3 = 1.0
 var public introTextureAspect4 = 1.0
 var public introTextureAspect5 = 1.0
 var public introTextureAspect6 = 1.0
+var public introTextureAspect7 = 1.0
+var public introTextureAspect8 = 1.0
+var public introTextureAspect9 = 1.0
+var public introTextureAspect10 = 1.0
+var public introTextureAspect11 = 1.0
+var public introTextureAspect12 = 1.0
+var public introTextureAspect13 = 1.0
+var public introTextureAspect14 = 1.0
+var public introTextureAspect15 = 1.0
+var public introTextureAspect16 = 1.0
+var public introActiveMainTextureAspect = 1.6
 var public mainMenuBackgroundTextureAspect = 16.0 / 9.0
 var public introCutsceneLayoutMode = INTRO_LAYOUT_SEQ1
 var public introActiveBottomYRatio = INTRO_IMAGE_BOTTOM_Y_RATIO
@@ -53,6 +62,16 @@ var public introCorner3InnerSize = float2(160.0, 160.0)
 var public introCorner4InnerSize = float2(240.0, 160.0)
 var public introCorner5InnerSize = float2(200.0, 160.0)
 var public introCorner6InnerSize = float2(200.0, 160.0)
+var public introScene3Seq7InnerSize = float2(640.0, 200.0)
+var public introScene3Seq8InnerSize = float2(640.0, 300.0)
+var public introStorySceneIdx = INTRO_STORY_SCENE_NONE
+var public introSlideTargetBeat = 0
+var public introShakeT = 0.0
+var public introShakeOffsetX = 0.0
+var public introShakeOffsetY = 0.0
+var public introPostShakeAction = INTRO_POST_SHAKE_ACTION_NONE
+var public introShakeToTexture : TextureId
+var public introShakeToAspect = 1.0
 var public deferCharacterEnter = false
 var public kingdomStats : int[STAT_COUNT]
 var public pendingChoiceDeltas : int[STAT_COUNT]
@@ -64,10 +83,6 @@ var public advisorActionCooldowns : int[MAX_ADVISOR_ACTIONS]
 var public pendingAdvisorActionIdx = -1
 var public currentDay = 1
 var public playerNickname = DEFAULT_NICKNAME
-var public recordDays = 0
-var public hasSaveGame = false
-var public savedQuestionIds : array<int>
-var public savedReplyIds : array<int>
 var public currentEncounterIdx = 0
 var public currentNodeIdx = 0
 var public pendingNextNodeIdx = NO_NEXT_NODE
@@ -75,6 +90,13 @@ var public ashfordIntroduced = false
 var public ashfordCutsceneActive = false
 var public ashfordCutsceneTextureAspect = 1.6
 var public usingAshfordDebutEncounter = false
+var public usingArcEncounter = false
+var public usingStatUnlockEncounter = false
+var public statUnlockEncounterKind = -1
+var public activeArcId = ARC_NONE
+var public activeArcBeatIdx = -1
+var public queuedNextArcId = ARC_NONE
+var public queuedNextArcBeatIdx = -1
 var public statUnlocked : bool[STAT_COUNT]
 var public statUnlockRevealT : float[STAT_COUNT]
 var public statUnlockCutsceneActive = false
@@ -85,6 +107,12 @@ var public defeatStatIdx = -1
 var public defeatFadeT = 0.0
 var public deathSummaryFadeT = 0.0
 var public deathSummaryTimer = 0.0
+var public continueFadePhase = CONTINUE_FADE_NONE
+var public continueFadeT = 0.0
+var public recordDays = 0
+var public hasSaveGame = false
+var public savedQuestionIds : array<int>
+var public savedReplyIds : array<int>
 
 var public menuOpen = false
 var public menuAnimPhase = MENU_ANIM_IDLE
@@ -105,10 +133,12 @@ var public characterBreathTimer = 0.0
 var public characterRevealT = 1.0
 
 var public dialogPhase = 0
+var public dialogueLayoutDirty = true
 var public typewriterKind = 0
 var public typewriterCharCount = 0
 var public typewriterAccumulator = 0.0
 var public typewriterFullText = ""
+var public typewriterPromptPrefix = ""
 var public postResponseHoldTimer = 0.0
 var public hoveredChoice = HOVER_NONE
 var public choiceHoverT : float[MAX_CHOICES]
@@ -150,13 +180,13 @@ var public incomingVisitorTexture : TextureId
 
 var public characterRoot : NodeId
 var public characterImageNode : NodeId
-var public characterOutlineNode : NodeId
 var public characterSilhouetteOverlay : NodeId
 var public dialogueRoot : NodeId
 var public questionBorderNode : NodeId
 var public questionBoxNode : NodeId
 var public questionContentNode : NodeId
 var public questionNameNode : NodeId
+var public questionResponseNode : NodeId
 var public questionTextNode : NodeId
 var public answerRoot : NodeId
 var public choiceButtonNodes : NodeId[MAX_CHOICES]
@@ -213,8 +243,9 @@ var public mainMenuOptionsBackButtonHoverT = 0.0
 var public settingsMasterVolume = 1.0
 var public settingsMusicVolume = 1.0
 var public settingsFullscreen = false
-var public settingsLanguageIdx = 0
+var public settingsLanguageIdx = OPTIONS_DEFAULT_LANGUAGE_IDX
 var public lastSelectedChoiceIdx = -1
+var public dialogueBranchResponseText = ""
 var public mainMenuOptionsTitleNode : NodeId
 var public mainMenuOptionsMasterLabelNode : NodeId
 var public mainMenuOptionsMusicLabelNode : NodeId
@@ -290,6 +321,7 @@ var public portraitTextures : TextureId[CHARACTER_COUNT]
 var public courtBodyTextures : TextureId[COURT_CHARACTER_COUNT]
 var public courtPortraitTextures : TextureId[COURT_CHARACTER_COUNT]
 var public usedEncounterFlags : bool[TOTAL_ENCOUNTER_COUNT]
+var public usedOpeningWeekFlags : bool[OPENING_WEEK_ENC_COUNT]
 var public courtCharactersMet : bool[COURT_CHARACTER_COUNT]
 var public characterQuestionCooldowns : int[COURT_CHARACTER_COUNT]
 var public currentCourtCharacterIdx = 0

@@ -26,6 +26,22 @@ struct DialogueNode {
 }
 
 
+def public clamp_choice_count(count : int) : int {
+    if (count < 0) {
+        return 0
+    }
+    if (count > MAX_CHOICES) {
+        return MAX_CHOICES
+    }
+    return count
+}
+
+
+def public visible_choice_count(node : DialogueNode) : int {
+    return clamp_choice_count(node.choiceCount)
+}
+
+
 [safe_when_uninitialized]
 struct Encounter {
     startNodeIdx : int

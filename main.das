@@ -13,6 +13,9 @@ require ashford
 require edric_opener
 require stat_synergies
 require stat_unlocks
+require stat_unlock_intro
+require arc_engine
+require arc_state
 require advisor_actions
 require localization public
 require localization_dialogue public
@@ -67,7 +70,35 @@ var introCutsceneTexture3 : TextureId
 var introCutsceneTexture4 : TextureId
 var introCutsceneTexture5 : TextureId
 var introCutsceneTexture6 : TextureId
+var introCutsceneTexture7 : TextureId
+var introCutsceneTexture8 : TextureId
+var introCutsceneTexture9 : TextureId
+var introCutsceneTexture10 : TextureId
+var introCutsceneTexture11 : TextureId
+var introCutsceneTexture12 : TextureId
+var introCutsceneTexture13 : TextureId
+var introCutsceneTexture14 : TextureId
+var introCutsceneTexture15 : TextureId
+var introCutsceneTexture16 : TextureId
+var churchCutsceneTexture : TextureId
+var churchCutsceneSounds : SoundId[CHURCH_CUTSCENE_SOUND_COUNT]
 var introDialogueSounds : SoundId[INTRO_DIALOGUE_BEAT_COUNT]
+var backgroundMusicSound : SoundId
+var backgroundMusicHandle : SoundHandle
+var backgroundMusicLoaded = false
+var backgroundMusicDesired = false
+var backgroundMusicContext = -1
+var introCutsceneMusicSound : SoundId
+var introCutsceneMusicHandle : SoundHandle
+var introCutsceneMusicLoaded = false
+var introCutsceneMusicDesired = false
+var introWarHornSound : SoundId
+var introSwordFightSound : SoundId
+var introWarHornHandle : SoundHandle
+var introSwordFightHandle : SoundHandle
+var introBattleSfxLoaded = false
+var introCutsceneAssetsLoaded = false
+var deathScreenTexturesLoaded = false
 var menuButtonShineTexture : TextureId
 var advisorHudIconNode : NodeId
 var advisorHudIconTexture : TextureId
@@ -100,6 +131,9 @@ var advisorActionTextureAspects : float[MAX_ADVISOR_ACTIONS]
 var advisorActionTitleNodes : NodeId[MAX_ADVISOR_ACTIONS]
 var advisorActionDescNodes : NodeId[MAX_ADVISOR_ACTIONS]
 var advisorActionEffectRowNodes : NodeId[MAX_ADVISOR_ACTIONS]
+var advisorActionEffectMinusNodes : NodeId[MAX_ADVISOR_ACTIONS]
+var advisorActionEffectPlusNodes : NodeId[MAX_ADVISOR_ACTIONS]
+var advisorActionEffectEmptyNodes : NodeId[MAX_ADVISOR_ACTIONS]
 var advisorActionHitNodes : NodeId[MAX_ADVISOR_ACTIONS]
 var advisorConfirmOverlay : NodeId
 var advisorConfirmPanelNode : NodeId
@@ -116,6 +150,10 @@ var characterProfileDividerNode : NodeId
 var advisorCharacterTexture : TextureId
 var advisorCharacterTextureAspect = 1.0
 var advisorActionClickHandledThisFrame = false
+var choiceButtonCachedText : string[MAX_CHOICES]
+var choiceButtonCachedHeights : float[MAX_CHOICES]
+var statLastAppliedFillValue : float[STAT_COUNT]
+var characterLastBreathOffsetY = 0.0
 
 
 def ui_box_border() : float {
@@ -125,6 +163,36 @@ def ui_box_border() : float {
 
 def answer_button_height() : float {
     return ui_h(ANSWER_BUTTON_HEIGHT)
+}
+
+
+def choice_menu_button_min_height() : float {
+    return ui_h(TOP_BAR_PAUSE_BUTTON_HEIGHT)
+}
+
+
+def measure_choice_menu_button_height(fillNode : NodeId; text : string; buttonOuterWidth : float) : float {
+    let border = ui_box_border()
+    let innerW = buttonOuterWidth - 2.0 * border
+    let minH = choice_menu_button_min_height()
+    if (length(text) == 0) {
+        return minH
+    }
+    if (fillNode.isAlive) {
+        apply_choice_font(fillNode)
+        fillNode?.UIText.fontSize = ui_h(ANSWER_FONT_SIZE)
+        fillNode?.UIText.text = text
+        fillNode?.UIText.fontScaling = false
+        fillNode?.UIText.wordWrapping = true
+        fillNode?.UIText.autoResizeFrame = true
+        set_frame_width(fillNode, innerW)
+        let textH = fillNode?.UIText.size.y
+        fillNode?.UIText.autoResizeFrame = false
+        if (textH > 0.0) {
+            return max(minH, textH)
+        }
+    }
+    return max(minH, estimate_wrapped_text_height(ANSWER_FONT_SIZE, text, innerW))
 }
 
 
@@ -568,6 +636,9 @@ def apply_profile_portrait_layout(portraitW : float; portraitH : float) {
 
 
 def profile_text_line_height(fontSize : float) : float {
+    if (fontSize == ANSWER_FONT_SIZE) {
+        return ui_h(fontSize)
+    }
     if (fontSize == CHARACTER_PROFILE_BODY_FONT_SIZE) {
         return ui_h(fontSize * CHARACTER_PROFILE_BODY_LINE_HEIGHT)
     }
@@ -579,6 +650,9 @@ def profile_text_line_height(fontSize : float) : float {
 
 
 def profile_text_char_width(fontSize : float) : float {
+    if (fontSize == ANSWER_FONT_SIZE) {
+        return max(1.0, ui_w(fontSize * ANSWER_FONT_CHAR_WIDTH_RATIO))
+    }
     if (fontSize == CHARACTER_PROFILE_BODY_FONT_SIZE) {
         return max(1.0, ui_w(fontSize * CHARACTER_PROFILE_BODY_CHAR_WIDTH))
     }
@@ -784,10 +858,10 @@ def update_character_profile_content(idx : int) {
     }
     characterProfileDescriptionFullText = get_court_character_description(idx)
     if (characterProfileLikesNode.isAlive) {
-        characterProfileLikesNode?.UIText.text = ""
+        characterProfileLikesNode?.UIText.text = likes_label(get_court_character_likes(idx))
     }
     if (characterProfileDislikesNode.isAlive) {
-        characterProfileDislikesNode?.UIText.text = ""
+        characterProfileDislikesNode?.UIText.text = dislikes_label(get_court_character_dislikes(idx))
     }
 }
 
@@ -1011,8 +1085,171 @@ def apply_settings_master_volume(vol : float) {
 }
 
 
+def background_music_base_volume() : float {
+    if (screenPhase == SCREEN_MAIN_MENU) {
+        return BACKGROUND_MUSIC_MENU_VOLUME
+    }
+    return BACKGROUND_MUSIC_GAME_VOLUME
+}
+
+
+def background_music_target_volume() : float {
+    return background_music_base_volume() * settingsMusicVolume
+}
+
+
 def apply_settings_music_volume(vol : float) {
-    pass
+    if (valid(backgroundMusicHandle) && is_playing(backgroundMusicHandle)) {
+        set_volume(backgroundMusicHandle, background_music_base_volume() * vol, BACKGROUND_MUSIC_FADE_DURATION)
+    }
+    if (valid(introCutsceneMusicHandle) && is_playing(introCutsceneMusicHandle)) {
+        set_volume(introCutsceneMusicHandle, intro_cutscene_music_target_volume(), BACKGROUND_MUSIC_FADE_DURATION)
+    }
+}
+
+
+def is_new_game_intro_cutscene_active() : bool {
+    return is_intro_cutscene_active() && !ashfordCutsceneActive && !statUnlockCutsceneActive
+}
+
+
+def intro_cutscene_music_target_volume() : float {
+    return INTRO_CUTSCENE_MUSIC_VOLUME * settingsMusicVolume
+}
+
+
+def load_intro_cutscene_music() {
+    if (introCutsceneMusicLoaded) {
+        return
+    }
+    introCutsceneMusicSound = request_sound(INTRO_CUTSCENE_MUSIC_PATH)
+    introCutsceneMusicLoaded = true
+}
+
+
+def fade_in_intro_cutscene_music() {
+    load_intro_cutscene_music()
+    if (!valid(introCutsceneMusicHandle) || !is_playing(introCutsceneMusicHandle)) {
+        introCutsceneMusicHandle = play_sound_loop(introCutsceneMusicSound)
+        set_volume(introCutsceneMusicHandle, 0.0, 0.0)
+    }
+    set_volume(introCutsceneMusicHandle, intro_cutscene_music_target_volume(), BACKGROUND_MUSIC_FADE_DURATION)
+}
+
+
+def fade_out_intro_cutscene_music() {
+    if (!valid(introCutsceneMusicHandle) || !is_playing(introCutsceneMusicHandle)) {
+        return
+    }
+    stop(introCutsceneMusicHandle, BACKGROUND_MUSIC_FADE_DURATION)
+}
+
+
+def should_play_intro_cutscene_music() : bool {
+    if (!is_new_game_intro_cutscene_active()) {
+        return false
+    }
+    return introCutscenePhase != INTRO_FADE_OUT && introCutscenePhase != INTRO_UNFADE
+}
+
+
+def sync_intro_cutscene_music() {
+    let wantMusic = should_play_intro_cutscene_music()
+    if (wantMusic) {
+        if (!introCutsceneMusicDesired) {
+            introCutsceneMusicDesired = true
+            fade_in_intro_cutscene_music()
+        }
+    } elif (introCutsceneMusicDesired) {
+        introCutsceneMusicDesired = false
+        fade_out_intro_cutscene_music()
+    }
+}
+
+
+def load_background_music() {
+    if (backgroundMusicLoaded) {
+        return
+    }
+    backgroundMusicSound = request_sound(BACKGROUND_MUSIC_PATH)
+    backgroundMusicLoaded = true
+}
+
+
+def splash_seconds_until_menu_fade_in() : float {
+    if (startupSplashPhase == SPLASH_BLACK_HOLD) {
+        return (SPLASH_BLACK_HOLD_DURATION - startupSplashT) + SPLASH_FADE_IN_LOGO_DURATION + SPLASH_HOLD_LOGO_DURATION
+    }
+    if (startupSplashPhase == SPLASH_FADE_IN_LOGO) {
+        return (1.0 - startupSplashT) * SPLASH_FADE_IN_LOGO_DURATION + SPLASH_HOLD_LOGO_DURATION
+    }
+    if (startupSplashPhase == SPLASH_HOLD_LOGO) {
+        return SPLASH_HOLD_LOGO_DURATION - startupSplashT
+    }
+    return 0.0
+}
+
+
+def should_play_startup_splash_music() : bool {
+    if (startupSplashPhase == SPLASH_FADE_IN_MENU) {
+        return true
+    }
+    if (startupSplashPhase == SPLASH_NONE) {
+        return false
+    }
+    return splash_seconds_until_menu_fade_in() <= SPLASH_MUSIC_BEFORE_MENU
+}
+
+
+def should_play_background_music() : bool {
+    if (is_intro_cutscene_active()) {
+        if (is_new_game_intro_cutscene_active() && (introCutscenePhase == INTRO_FADE_OUT || introCutscenePhase == INTRO_UNFADE)) {
+            return true
+        }
+        return false
+    }
+    if (is_continue_fade_active()) {
+        return false
+    }
+    if (is_startup_splash_active()) {
+        return should_play_startup_splash_music()
+    }
+    return screenPhase == SCREEN_MAIN_MENU || screenPhase == SCREEN_PLAYING
+}
+
+
+def fade_in_background_music() {
+    load_background_music()
+    if (!valid(backgroundMusicHandle) || !is_playing(backgroundMusicHandle)) {
+        backgroundMusicHandle = play_sound_loop(backgroundMusicSound)
+        set_volume(backgroundMusicHandle, 0.0, 0.0)
+    }
+    set_volume(backgroundMusicHandle, background_music_target_volume(), BACKGROUND_MUSIC_FADE_DURATION)
+}
+
+
+def fade_out_background_music() {
+    if (!valid(backgroundMusicHandle) || !is_playing(backgroundMusicHandle)) {
+        return
+    }
+    stop(backgroundMusicHandle, BACKGROUND_MUSIC_FADE_DURATION)
+}
+
+
+def sync_background_music() {
+    let wantMusic = should_play_background_music()
+    let context = (wantMusic ? screenPhase : -1)
+    if (wantMusic) {
+        if (!backgroundMusicDesired || context != backgroundMusicContext) {
+            backgroundMusicDesired = true
+            backgroundMusicContext = context
+            fade_in_background_music()
+        }
+    } elif (backgroundMusicDesired) {
+        backgroundMusicDesired = false
+        backgroundMusicContext = -1
+        fade_out_background_music()
+    }
 }
 
 
@@ -1048,9 +1285,10 @@ def load_game_options() {
         settingsMasterVolume = get_or(storage, "master", 1.0)
         settingsMusicVolume = get_or(storage, "music", 1.0)
         settingsFullscreen = get_or(storage, "fullscreen", false)
-        settingsLanguageIdx = clamp(get_or(storage, "language", 0), 0, OPTIONS_LANGUAGE_COUNT - 1)
+        settingsLanguageIdx = clamp(get_or(storage, "language", OPTIONS_DEFAULT_LANGUAGE_IDX), 0, OPTIONS_LANGUAGE_COUNT - 1)
     }
     apply_settings_master_volume(settingsMasterVolume)
+    apply_settings_music_volume(settingsMusicVolume)
     if (OPTIONS_FULLSCREEN_ENABLED) {
         apply_settings_fullscreen(settingsFullscreen)
     } else {
@@ -1107,6 +1345,7 @@ def apply_options_label_layout(node : NodeId) {
 
 def create_options_label(labelText : string) : NodeId {
     let node = text(labelText)
+    node.name = "optionsLabel"
     set_text_color(node, OPTIONS_TEXT_COLOR)
     configure_options_label_text(node)
     apply_options_label_layout(node)
@@ -1206,6 +1445,7 @@ def create_options_language_button(buttonText : string; langIdx : int) : NodeId 
     let innerH = ui_h(OPTIONS_ROW_HEIGHT) - ui_h(8.0)
     let innerW = outerW - 2.0 * border
     let fillNode = panel(float2(innerW, innerH), [])
+    fillNode.name = "optionsLangBtn_{langIdx}_fill"
     set_image_color(fillNode, OPTIONS_CONTROL_BG_COLOR)
     add_component(fillNode, new UIButton())
     add_component(fillNode, new UIText(
@@ -1221,6 +1461,7 @@ def create_options_language_button(buttonText : string; langIdx : int) : NodeId 
     }
     let outerH = innerH + 2.0 * border
     let borderNode = panel(float2(outerW, outerH), [fillNode])
+    borderNode.name = "optionsLangBtn_{langIdx}"
     set_image_color(borderNode, UI_BOX_BORDER_COLOR)
     set_frame_pivot(borderNode, float2(0.0, 0.5))
     set_frame_pos(fillNode, float2(border, border))
@@ -1234,6 +1475,7 @@ def create_options_toggle_box() : NodeId {
     let innerW = boxSize
     let innerH = boxSize
     let fillNode = panel(float2(innerW, innerH), [])
+    fillNode.name = "optionsFullscreenToggle_fill"
     set_image_color(fillNode, OPTIONS_CONTROL_BG_COLOR)
     add_component(fillNode, new UIButton())
     add_component(fillNode, new UIText(
@@ -1251,6 +1493,7 @@ def create_options_toggle_box() : NodeId {
     let outerW = innerW + 2.0 * border
     let outerH = innerH + 2.0 * border
     let borderNode = panel(float2(outerW, outerH), [fillNode])
+    borderNode.name = "optionsFullscreenToggle"
     set_image_color(borderNode, UI_BOX_BORDER_COLOR)
     set_frame_pivot(borderNode, float2(0.0, 0.5))
     set_frame_pos(fillNode, float2(border, border))
@@ -1260,12 +1503,17 @@ def create_options_toggle_box() : NodeId {
 
 def create_options_language_row() : NodeId {
     mainMenuOptionsLanguageLabelNode = create_options_label(options_language())
+    mainMenuOptionsLanguageLabelNode.name = "mainMenuOptionsLanguageLabelNode"
     mainMenuOptionsLanguageEnglishBtn = create_options_language_button(options_lang_english(), 0)
+    mainMenuOptionsLanguageEnglishBtn.name = "mainMenuOptionsLanguageEnglishBtn"
     mainMenuOptionsLanguageRussianBtn = create_options_language_button(options_lang_russian(), 1)
+    mainMenuOptionsLanguageRussianBtn.name = "mainMenuOptionsLanguageRussianBtn"
     let buttonsRow = hbox([mainMenuOptionsLanguageEnglishBtn, mainMenuOptionsLanguageRussianBtn])
+    buttonsRow.name = "mainMenuOptionsLanguageButtonsRow"
     set_spacing(buttonsRow, ui_w(OPTIONS_LANGUAGE_BUTTON_SPACING))
     set_alignment(buttonsRow, LayoutAlignment.MiddleLeft)
     let row = hbox([mainMenuOptionsLanguageLabelNode, buttonsRow])
+    row.name = "mainMenuOptionsLanguageRow"
     set_spacing(row, ui_w(OPTIONS_ROW_LABEL_GAP))
     set_alignment(row, LayoutAlignment.MiddleLeft)
     set_frame_size(row, float2(ui_w(OPTIONS_ROW_WIDTH), ui_h(OPTIONS_ROW_HEIGHT)))
@@ -1278,19 +1526,24 @@ def create_options_language_row() : NodeId {
 
 def create_options_fullscreen_row() : NodeId {
     mainMenuOptionsFullscreenLabelNode = create_options_label(options_fullscreen())
+    mainMenuOptionsFullscreenLabelNode.name = "mainMenuOptionsFullscreenLabelNode"
     if (!OPTIONS_FULLSCREEN_ENABLED) {
         set_text_color(mainMenuOptionsFullscreenLabelNode, MENU_DISABLED_TEXT_COLOR)
     }
     mainMenuOptionsFullscreenToggleNode = create_options_toggle_box()
+    mainMenuOptionsFullscreenToggleNode.name = "mainMenuOptionsFullscreenToggleNode"
     update_options_fullscreen_toggle_visual()
     let slotSpacer = panel(float2(1.0, ui_h(OPTIONS_ROW_HEIGHT)), [])
+    slotSpacer.name = "mainMenuOptionsFullscreenSlotSpacer"
     set_image_color(slotSpacer, float4(0.0, 0.0, 0.0, 0.0))
     mainMenuOptionsFullscreenSlotNode = hbox([slotSpacer, mainMenuOptionsFullscreenToggleNode])
+    mainMenuOptionsFullscreenSlotNode.name = "mainMenuOptionsFullscreenSlotNode"
     set_alignment(mainMenuOptionsFullscreenSlotNode, LayoutAlignment.MiddleRight)
     set_frame_size(mainMenuOptionsFullscreenSlotNode, float2(ui_w(options_control_column_width()), ui_h(OPTIONS_ROW_HEIGHT)))
     mainMenuOptionsFullscreenSlotNode?.UIHorizontalLayout.childForceExpandWidth = true
     mainMenuOptionsFullscreenSlotNode?.UIHorizontalLayout.childForceExpandHeight = false
     let row = hbox([mainMenuOptionsFullscreenLabelNode, mainMenuOptionsFullscreenSlotNode])
+    row.name = "mainMenuOptionsFullscreenRow"
     set_spacing(row, ui_w(OPTIONS_ROW_LABEL_GAP))
     set_alignment(row, LayoutAlignment.MiddleLeft)
     set_frame_size(row, float2(ui_w(OPTIONS_ROW_WIDTH), ui_h(OPTIONS_ROW_HEIGHT)))
@@ -1327,6 +1580,7 @@ def init_options_slider(node : NodeId; initialValue : float) {
 
 def create_options_slider_row(labelNode : NodeId; sliderNode : NodeId) : NodeId {
     let row = hbox([labelNode, sliderNode])
+    row.name = "optionsSliderRow"
     set_spacing(row, ui_w(OPTIONS_ROW_LABEL_GAP))
     set_alignment(row, LayoutAlignment.MiddleLeft)
     set_frame_size(row, float2(ui_w(OPTIONS_ROW_WIDTH), ui_h(OPTIONS_ROW_HEIGHT)))
@@ -1571,6 +1825,7 @@ def on_options_music_volume_change(value : float) {
 def build_main_menu_options_ui() {
     let res = float2(get_resolution())
     mainMenuOptionsOverlay = panel(res, [])
+    mainMenuOptionsOverlay.name = "mainMenuOptionsOverlay"
     set_parent(mainMenuOptionsOverlay, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(mainMenuOptionsOverlay, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     set_image_color(mainMenuOptionsOverlay, float4(MENU_OVERLAY_COLOR.x, MENU_OVERLAY_COLOR.y, MENU_OVERLAY_COLOR.z, 0.0))
@@ -1590,6 +1845,7 @@ def build_main_menu_options_ui() {
     let contentH = compute_main_menu_options_content_height()
 
     mainMenuOptionsTitleNode = text(options_title())
+    mainMenuOptionsTitleNode.name = "mainMenuOptionsTitleNode"
     set_text_font_size(mainMenuOptionsTitleNode, ui_h(OPTIONS_TITLE_FONT_SIZE))
     set_text_color(mainMenuOptionsTitleNode, OPTIONS_TEXT_COLOR)
     apply_ui_font(mainMenuOptionsTitleNode)
@@ -1601,20 +1857,29 @@ def build_main_menu_options_ui() {
     mainMenuOptionsMasterSliderNode = horizontal_slider(@(value : float) {
         on_options_master_volume_change(value)
     })
+    mainMenuOptionsMasterSliderNode.name = "mainMenuOptionsMasterSliderNode"
     mainMenuOptionsMusicSliderNode = horizontal_slider(@(value : float) {
         on_options_music_volume_change(value)
     })
+    mainMenuOptionsMusicSliderNode.name = "mainMenuOptionsMusicSliderNode"
     init_options_slider(mainMenuOptionsMasterSliderNode, settingsMasterVolume)
     init_options_slider(mainMenuOptionsMusicSliderNode, settingsMusicVolume)
     mainMenuOptionsMasterLabelNode = create_options_label(options_master())
+    mainMenuOptionsMasterLabelNode.name = "mainMenuOptionsMasterLabelNode"
     mainMenuOptionsMusicLabelNode = create_options_label(options_music())
+    mainMenuOptionsMusicLabelNode.name = "mainMenuOptionsMusicLabelNode"
     let masterRow = create_options_slider_row(mainMenuOptionsMasterLabelNode, mainMenuOptionsMasterSliderNode)
+    masterRow.name = "mainMenuOptionsMasterRow"
     let musicRow = create_options_slider_row(mainMenuOptionsMusicLabelNode, mainMenuOptionsMusicSliderNode)
+    musicRow.name = "mainMenuOptionsMusicRow"
 
     let fullscreenRow = create_options_fullscreen_row()
+    fullscreenRow.name = "mainMenuOptionsFullscreenRow"
     mainMenuOptionsLanguageRowNode = create_options_language_row()
+    mainMenuOptionsLanguageRowNode.name = "mainMenuOptionsLanguageRowNode"
 
     mainMenuOptionsVersionTextNode = text(options_version())
+    mainMenuOptionsVersionTextNode.name = "mainMenuOptionsVersionTextNode"
     set_text_font_size(mainMenuOptionsVersionTextNode, ui_h(OPTIONS_VERSION_FONT_SIZE))
     set_text_color(mainMenuOptionsVersionTextNode, OPTIONS_TEXT_COLOR)
     apply_ui_font(mainMenuOptionsVersionTextNode)
@@ -1625,6 +1890,7 @@ def build_main_menu_options_ui() {
     set_frame_size(mainMenuOptionsVersionTextNode, float2(innerW - 2.0 * pad, versionH))
 
     mainMenuOptionsBackButtonNode = create_pause_menu_button(menu_back(), true, buttonW, btnH, true, OPTIONS_BUTTON_FONT_SIZE)
+    mainMenuOptionsBackButtonNode.name = "mainMenuOptionsBackButtonNode"
 
     mainMenuOptionsContentNode = vbox([
         mainMenuOptionsTitleNode,
@@ -1635,6 +1901,7 @@ def build_main_menu_options_ui() {
         mainMenuOptionsVersionTextNode,
         mainMenuOptionsBackButtonNode
     ])
+    mainMenuOptionsContentNode.name = "mainMenuOptionsContentNode"
     set_spacing(mainMenuOptionsContentNode, spacing)
     set_alignment(mainMenuOptionsContentNode, LayoutAlignment.MiddleCenter)
     set_padding(mainMenuOptionsContentNode, float4(pad, pad, pad, pad))
@@ -1644,11 +1911,13 @@ def build_main_menu_options_ui() {
     mainMenuOptionsContentNode?.UIVerticalLayout.childForceExpandHeight = false
 
     mainMenuOptionsInnerNode = panel(float2(innerW, contentH), [mainMenuOptionsContentNode])
+    mainMenuOptionsInnerNode.name = "mainMenuOptionsInnerNode"
     set_image_color(mainMenuOptionsInnerNode, DEATH_SUMMARY_BOX_BG_COLOR)
     set_alignment(mainMenuOptionsInnerNode, LayoutAlignment.TopLeft)
     set_frame_pivot(mainMenuOptionsInnerNode, float2(0.0, 0.0))
 
     mainMenuOptionsPanelNode = panel(float2(panelW, contentH + 2.0 * border), [mainMenuOptionsInnerNode])
+    mainMenuOptionsPanelNode.name = "mainMenuOptionsPanelNode"
     set_image_color(mainMenuOptionsPanelNode, UI_BOX_BORDER_COLOR)
     set_alignment(mainMenuOptionsPanelNode, LayoutAlignment.TopLeft)
     set_frame_pos(mainMenuOptionsInnerNode, float2(border, border))
@@ -1786,6 +2055,13 @@ def refresh_all_localized_ui() {
     }
     if (advisorPopupAnimPhase != ADVISOR_ANIM_IDLE) {
         apply_advisor_popup_layout()
+        refresh_advisor_action_slots()
+    }
+    if (pendingAdvisorActionIdx >= 0 && advisorConfirmOverlay.isAlive && advisorConfirmOverlay.isActive) {
+        let confirmIdx = pendingAdvisorActionIdx
+        advisorConfirmTitleNode?.UIText.text = advisor_confirm_title()
+        advisorConfirmBodyNode?.UIText.text = advisor_action_description(confirmIdx)
+        advisorConfirmPreviewNode?.UIText.text = format_advisor_action_preview(advisor_action_preview_deltas(confirmIdx))
     }
     if (hoveredInfoTarget != INFO_HOVER_NONE) {
         update_info_tooltip_content()
@@ -1808,6 +2084,9 @@ def refresh_all_ui_fonts() {
     apply_ui_font(nicknameTextNode)
     apply_name_font(questionNameNode)
     apply_dialogue_font(questionTextNode)
+    if (questionResponseNode.isAlive) {
+        apply_dialogue_font(questionResponseNode)
+    }
     apply_dialogue_font(infoTooltipTitleNode)
     apply_dialogue_font(infoTooltipBodyNode)
     apply_dialogue_font(infoTooltipInfluenceHeaderNode)
@@ -1818,7 +2097,7 @@ def refresh_all_ui_fonts() {
     apply_dialogue_font(infoTooltipActiveDebuffNode)
     apply_name_font(introCutsceneNameNode)
     apply_dialogue_font(introCutsceneReplicaNode)
-    apply_ui_font(introCutsceneSkipTextNode)
+    apply_dialogue_font(introCutsceneSkipTextNode)
     apply_ui_font(deathSummaryTextNode)
     apply_ui_font(deathRecordTextNode)
     if (mainMenuOptionsTitleNode.isAlive) {
@@ -1881,6 +2160,32 @@ def refresh_all_ui_fonts() {
     apply_ui_font(characterProfileTitleNode)
     apply_ui_font(advisorPopupTitleNode)
     apply_ui_font(advisorPopupStatusNode)
+    for (i in range(MAX_ADVISOR_ACTIONS)) {
+        if (advisorActionTitleNodes[i].isAlive) {
+            apply_ui_font(advisorActionTitleNodes[i])
+        }
+        if (advisorActionDescNodes[i].isAlive) {
+            apply_ui_font(advisorActionDescNodes[i])
+        }
+        if (advisorActionEffectMinusNodes[i].isAlive) {
+            apply_ui_font(advisorActionEffectMinusNodes[i])
+        }
+        if (advisorActionEffectPlusNodes[i].isAlive) {
+            apply_ui_font(advisorActionEffectPlusNodes[i])
+        }
+        if (advisorActionEffectEmptyNodes[i].isAlive) {
+            apply_ui_font(advisorActionEffectEmptyNodes[i])
+        }
+    }
+    if (advisorConfirmTitleNode.isAlive) {
+        apply_ui_font(advisorConfirmTitleNode)
+    }
+    if (advisorConfirmBodyNode.isAlive) {
+        apply_ui_font(advisorConfirmBodyNode)
+    }
+    if (advisorConfirmPreviewNode.isAlive) {
+        apply_ui_font(advisorConfirmPreviewNode)
+    }
     apply_dialogue_font(characterProfileDescBesideNode)
     apply_dialogue_font(characterProfileDescBelowNode)
     apply_plain_font(characterProfileLikesNode)
@@ -1967,6 +2272,32 @@ def refresh_options_ui_labels() {
 }
 
 
+def clear_dialogue_branch_response() {
+    dialogueBranchResponseText = ""
+    mark_dialogue_layout_dirty()
+    if (!questionResponseNode.isAlive) {
+        return
+    }
+    questionResponseNode.isActive = false
+    questionResponseNode?.UIText.text = ""
+}
+
+
+def set_dialogue_branch_response(responseText : string) {
+    dialogueBranchResponseText = responseText
+    mark_dialogue_layout_dirty()
+    if (!questionResponseNode.isAlive) {
+        return
+    }
+    if (length(responseText) == 0) {
+        clear_dialogue_branch_response()
+        return
+    }
+    questionResponseNode.isActive = true
+    questionResponseNode?.UIText.text = responseText
+}
+
+
 def refresh_active_dialogue_text() {
     if (dialogPhase == DIALOG_IDLE && defeatPhase != DEFEAT_PEASANT_DIALOGUE) {
         return
@@ -1975,17 +2306,19 @@ def refresh_active_dialogue_text() {
     update_dialogue_speaker_name()
     if (dialogPhase == DIALOG_TYPEWRITER) {
         if (typewriterKind == TYPEWRITER_PROMPT) {
-            typewriterFullText = node.prompt
-        } elif (lastSelectedChoiceIdx >= 0 && lastSelectedChoiceIdx < node.choiceCount) {
+            typewriterFullText = build_dialogue_prompt_text(typewriterPromptPrefix, node.prompt)
+        } elif (lastSelectedChoiceIdx >= 0 && lastSelectedChoiceIdx < visible_choice_count(node)) {
             typewriterFullText = node.choices[lastSelectedChoiceIdx].response
         }
         typewriterCharCount = min(typewriterCharCount, typewriter_text_length(typewriterFullText))
         questionTextNode?.UIText.text = typewriter_text_slice(typewriterFullText, typewriterCharCount)
     } elif (dialogPhase == DIALOG_CHOOSING) {
-        questionTextNode?.UIText.text = node.prompt
-        layout_visible_choice_buttons(compute_dialogue_width())
+        clear_dialogue_branch_response()
+        questionTextNode?.UIText.text = build_dialogue_prompt_text(typewriterPromptPrefix, node.prompt)
+        mark_dialogue_layout_dirty()
     } elif (dialogPhase == DIALOG_POST_RESPONSE_HOLD) {
-        if (lastSelectedChoiceIdx >= 0 && lastSelectedChoiceIdx < node.choiceCount) {
+        clear_dialogue_branch_response()
+        if (lastSelectedChoiceIdx >= 0 && lastSelectedChoiceIdx < visible_choice_count(node)) {
             questionTextNode?.UIText.text = node.choices[lastSelectedChoiceIdx].response
         }
     }
@@ -2031,6 +2364,7 @@ def create_menu_button(buttonText : string; buttonOuterWidth : float = -1.0; inn
     let innerW = outerW - 2.0 * border
     let labelSize = (fontSizeDesign > 0.0) ? fontSizeDesign : ((useRoyalFont) ? MENU_BUTTON_FONT_SIZE : ANSWER_FONT_SIZE)
     let fillNode = panel(float2(innerW, btnH), [])
+    fillNode.name = "btn_{buttonText}_fill"
     set_frame_pivot(fillNode, float2(0.0, 0.0))
     set_image_color(fillNode, ANSWER_BUTTON_COLOR)
     add_component(fillNode, new UIButton())
@@ -2048,6 +2382,7 @@ def create_menu_button(buttonText : string; buttonOuterWidth : float = -1.0; inn
 
     let outerH = btnH + 2.0 * border
     let borderNode = panel(float2(outerW, outerH), [fillNode])
+    borderNode.name = "btn_{buttonText}"
     set_frame_pivot(borderNode, float2(0.5, 0.5))
     set_image_color(borderNode, UI_BOX_BORDER_COLOR)
     set_frame_pos(fillNode, float2(border, border))
@@ -2096,7 +2431,26 @@ def set_ui_button_interactable(fillNode : NodeId; interactable : bool) {
 
 
 def compute_answer_button_width(dialogueW : float) : float {
-    return max(dialogueW * ANSWER_BUTTON_WIDTH_RATIO, ui_w(ANSWER_BUTTON_MIN_WIDTH))
+    return dialogueW
+}
+
+
+def configure_choice_menu_button_text(btnNode : NodeId) {
+    configure_answer_button_text(btnNode)
+}
+
+
+def layout_choice_button(btnBorderNode : NodeId; buttonOuterWidth : float; innerHeight : float) {
+    apply_menu_button_layout(btnBorderNode, buttonOuterWidth, innerHeight, ANSWER_FONT_SIZE, false, float2(0.0, 0.0))
+    let fill = answer_button_fill(btnBorderNode)
+    if (fill.isAlive) {
+        configure_choice_menu_button_text(fill)
+    }
+}
+
+
+def create_choice_button(buttonText : string; buttonWidth : float) : NodeId {
+    return create_menu_button(buttonText, buttonWidth, choice_menu_button_min_height(), false, ANSWER_FONT_SIZE)
 }
 
 
@@ -2232,6 +2586,7 @@ def setup_main_menu_button_decoration(borderNode : NodeId; buttonIdx : int) {
         return
     }
     let shineNode = panel(float2(32.0, 32.0), [])
+    shineNode.name = "mainMenuButtonShine_{buttonIdx}"
     set_node_ui_texture(shineNode, menuButtonShineTexture)
     set_image_color(shineNode, MENU_BUTTON_SHINE_COLOR)
     set_frame_pivot(shineNode, float2(0.0, 0.0))
@@ -2280,39 +2635,6 @@ def update_main_menu_button_shine(buttonIdx : int; innerW : float; innerH : floa
     set_node_ui_uv_region(shine, float4(uOff, 0.0, 1.0, 1.0))
     let shineAlpha = MENU_BUTTON_SHINE_COLOR.w * lerp(1.0, 1.0 + MENU_BUTTON_SHINE_HOVER_BOOST, hoverT)
     set_image_color(shine, float4(MENU_BUTTON_SHINE_COLOR.x, MENU_BUTTON_SHINE_COLOR.y, MENU_BUTTON_SHINE_COLOR.z, shineAlpha))
-}
-
-
-def apply_answer_button_visual(btnBorderNode : NodeId; hoverT : float) {
-    if (!btnBorderNode.isAlive) {
-        return
-    }
-    let fill = answer_button_fill(btnBorderNode)
-    if (!fill.isAlive) {
-        return
-    }
-    let scale = lerp(1.0, ANSWER_HOVER_SCALE, hoverT)
-    btnBorderNode.localScale = float3(scale, scale, 1.0)
-    fill.localScale = float3(1.0, 1.0, 1.0)
-    var col = lerp(ANSWER_BUTTON_COLOR, ANSWER_BUTTON_HOVER_COLOR, hoverT)
-    col.w = lerp(ANSWER_BUTTON_IDLE_ALPHA, ANSWER_HOVER_ALPHA, hoverT)
-    set_image_color(fill, col)
-}
-
-
-def layout_answer_button(btnBorderNode : NodeId; buttonWidth : float) {
-    let border = ui_box_border()
-    let btnH = answer_button_height()
-    let innerW = buttonWidth - 2.0 * border
-    let outerH = btnH + 2.0 * border
-    set_frame_size(btnBorderNode, float2(buttonWidth, outerH))
-    set_frame_pivot(btnBorderNode, float2(0.5, 0.5))
-    let fill = answer_button_fill(btnBorderNode)
-    if (fill.isAlive) {
-        set_frame_pivot(fill, float2(0.0, 0.0))
-        set_frame_pos(fill, float2(border, border))
-        sync_button_label_frame(fill, float2(innerW, btnH))
-    }
 }
 
 
@@ -2585,6 +2907,7 @@ def set_anchor_insets(node : NodeId; left : float = 0.0; top : float = 0.0) {
 
 def configure_answer_button_text(btnNode : NodeId) {
     configure_body_button_text(btnNode)
+    btnNode?.UIText.vertAlignment = TextVertAlignment.Top
     apply_choice_font(btnNode)
 }
 
@@ -2595,6 +2918,7 @@ def create_answer_button(buttonText : string; buttonWidth : float) : NodeId {
     let innerW = buttonWidth - 2.0 * border
     let fillSize = float2(innerW, btnH)
     let fillNode = panel(fillSize, [])
+    fillNode.name = "answerBtn_{buttonText}_fill"
     set_frame_pivot(fillNode, float2(0.0, 0.0))
     set_image_color(fillNode, ANSWER_BUTTON_COLOR)
     add_component(fillNode, new UIButton())
@@ -2608,7 +2932,8 @@ def create_answer_button(buttonText : string; buttonWidth : float) : NodeId {
 
     let outerH = btnH + 2.0 * border
     let borderNode = panel(float2(buttonWidth, outerH), [fillNode])
-    set_frame_pivot(borderNode, float2(0.5, 0.5))
+    borderNode.name = "answerBtn_{buttonText}"
+    set_frame_pivot(borderNode, float2(0.0, 0.0))
     set_image_color(borderNode, UI_BOX_BORDER_COLOR)
     set_frame_pos(fillNode, float2(border, border))
     return borderNode
@@ -2839,7 +3164,13 @@ def on_character_profile_okay_mouse_out(evt : UIMouseEvent) {
 
 
 def on_try_again_click(evt : UIMouseEvent) {
+    clear_game_save()
+    deferCharacterEnter = false
     reset_game()
+    screenPhase = SCREEN_PLAYING
+    sync_stat_bar_children()
+    apply_screen_visibility()
+    save_game_progress(main_question_id(currentEncounterIdx, currentNodeIdx))
 }
 
 
@@ -2961,12 +3292,65 @@ def update_intro_texture6_aspect() {
 }
 
 
+def update_intro_texture_aspect_for(tex : TextureId) : float {
+    var aspect = 1.0
+    get_texture_size(tex) $(size : int2) {
+        if (size.y > 0) {
+            aspect = float(size.x) / float(size.y)
+        }
+    }
+    return aspect
+}
+
+
+def update_intro_texture7_aspect() {
+    introTextureAspect7 = update_intro_texture_aspect_for(introCutsceneTexture7)
+}
+def update_intro_texture8_aspect() {
+    introTextureAspect8 = update_intro_texture_aspect_for(introCutsceneTexture8)
+}
+def update_intro_texture9_aspect() {
+    introTextureAspect9 = update_intro_texture_aspect_for(introCutsceneTexture9)
+}
+def update_intro_texture10_aspect() {
+    introTextureAspect10 = update_intro_texture_aspect_for(introCutsceneTexture10)
+}
+def update_intro_texture11_aspect() {
+    introTextureAspect11 = update_intro_texture_aspect_for(introCutsceneTexture11)
+}
+def update_intro_texture12_aspect() {
+    introTextureAspect12 = update_intro_texture_aspect_for(introCutsceneTexture12)
+}
+def update_intro_texture13_aspect() {
+    introTextureAspect13 = update_intro_texture_aspect_for(introCutsceneTexture13)
+}
+def update_intro_texture14_aspect() {
+    introTextureAspect14 = update_intro_texture_aspect_for(introCutsceneTexture14)
+}
+def update_intro_texture15_aspect() {
+    introTextureAspect15 = update_intro_texture_aspect_for(introCutsceneTexture15)
+}
+def update_intro_texture16_aspect() {
+    introTextureAspect16 = update_intro_texture_aspect_for(introCutsceneTexture16)
+}
+
+
+def intro_set_main_texture(tex : TextureId; aspect : float) {
+    introCutsceneImageNode?.UIImage.textureId = tex
+    introActiveMainTextureAspect = aspect
+}
+
+
 def intro_image_rect() : float4 {
     let padX = screen_w() * INTRO_IMAGE_EDGE_PADDING_RATIO
     let top = screen_h() * INTRO_IMAGE_EDGE_PADDING_RATIO
     if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
         let inner = introMultiSeq2InnerSize
         return float4(padX, top, inner.x, inner.y)
+    }
+    if (introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
+        let inner = introScene3Seq7InnerSize
+        return float4(padX, intro_scene3_seq7_base_pos().y, inner.x, inner.y)
     }
     let bottom = screen_h() * introActiveBottomYRatio
     let width = screen_w() - 2.0 * padX
@@ -2989,6 +3373,9 @@ def intro_image_inner_size() : float2 {
     if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
         return introMultiSeq2InnerSize
     }
+    if (introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
+        return introScene3Seq7InnerSize
+    }
     let rect = intro_image_rect()
     return float2(rect.z, rect.w)
 }
@@ -3002,14 +3389,15 @@ def intro_image_frame_outer_size() : float2 {
 }
 
 
-def intro_cover_uv_for(inner : float2; textureAspect : float) : float4 {
+def intro_cover_uv_for(inner : float2; textureAspect : float; verticalAnchor : float = 0.5) : float4 {
     if (inner.y <= 0.0 || textureAspect <= 0.0) {
         return float4(0.0, 0.0, 1.0, 1.0)
     }
     let boxAspect = inner.x / inner.y
+    let anchor = clamp(verticalAnchor, 0.0, 1.0)
     if (boxAspect > textureAspect) {
         let uvH = textureAspect / boxAspect
-        let uvY = (1.0 - uvH) * 0.5
+        let uvY = (1.0 - uvH) * (1.0 - anchor)
         return float4(0.0, uvY, 1.0, uvH)
     }
     let uvW = boxAspect / textureAspect
@@ -3064,7 +3452,10 @@ def intro_image_cover_uv() : float4 {
     if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
         return intro_cover_uv_for(introMultiSeq2InnerSize, introTextureAspect2)
     }
-    return intro_cover_uv_for(intro_image_inner_size(), introTextureAspect)
+    if (introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
+        return intro_cover_uv_for(introScene3Seq7InnerSize, introActiveMainTextureAspect, INTRO_SCENE3_SEQ7_UV_Y_ANCHOR)
+    }
+    return intro_cover_uv_for(intro_image_inner_size(), introActiveMainTextureAspect)
 }
 
 
@@ -3135,6 +3526,50 @@ def intro_update_multi_layout_metrics() {
 }
 
 
+def intro_update_scene3_layout_metrics() {
+    let padX = screen_w() * INTRO_IMAGE_EDGE_PADDING_RATIO
+    let topPad = screen_h() * INTRO_IMAGE_EDGE_PADDING_RATIO
+    let contentW = screen_w() - 2.0 * padX
+    let textTop = screen_h() * (1.0 - INTRO_MULTI_TEXT_AREA_RATIO)
+    let gridBottom = textTop - ui_h(INTRO_TEXT_SPACING)
+    let availH = gridBottom - topPad
+    let colGap = ui_h(INTRO_CORNER_PAIR_GAP)
+    let availW = contentW - colGap
+    let sumRatio = INTRO_SCENE3_SEQ7_WIDTH_RATIO + INTRO_SCENE3_SEQ8_WIDTH_RATIO
+    introScene3Seq7InnerSize = float2(availW * INTRO_SCENE3_SEQ7_WIDTH_RATIO / sumRatio, availH)
+    introScene3Seq8InnerSize = float2(availW * INTRO_SCENE3_SEQ8_WIDTH_RATIO / sumRatio, availH)
+}
+
+
+def intro_scene3_seq7_base_pos() : float2 {
+    let padX = screen_w() * INTRO_IMAGE_EDGE_PADDING_RATIO
+    return float2(padX, screen_h() * INTRO_IMAGE_EDGE_PADDING_RATIO)
+}
+
+
+def intro_scene3_seq8_base_pos() : float2 {
+    let base = intro_scene3_seq7_base_pos()
+    let colGap = ui_h(INTRO_CORNER_PAIR_GAP)
+    let seq7OuterX = intro_frame_outer_size_for(introScene3Seq7InnerSize).x
+    return float2(base.x + seq7OuterX + colGap, base.y)
+}
+
+
+def intro_scene3_seq8_hidden_left_x() : float {
+    return intro_seq_hidden_left_x(intro_scene3_seq8_base_pos(), introScene3Seq8InnerSize)
+}
+
+
+def intro_scene3_seq8_slide_speed() : float {
+    return -intro_scene3_seq8_hidden_left_x() / INTRO_SLIDE_DURATION
+}
+
+
+def intro_seq3_slide_is_scene3_pair() : bool {
+    return introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR
+}
+
+
 def intro_text_top_below_main() : float {
     let rect = intro_image_rect()
     return rect.y + intro_image_frame_outer_size().y + ui_h(INTRO_TEXT_SPACING)
@@ -3142,7 +3577,7 @@ def intro_text_top_below_main() : float {
 
 
 def intro_text_width() : float {
-    if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
+    if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI || introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
         return intro_multi_content_width()
     }
     return intro_image_rect().z
@@ -3152,7 +3587,7 @@ def intro_text_width() : float {
 def intro_text_top_left() : float2 {
     let padX = screen_w() * INTRO_IMAGE_EDGE_PADDING_RATIO
     let offsetY = ui_h(INTRO_TEXT_TOP_OFFSET)
-    if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
+    if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI || introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
         return float2(padX, intro_multi_text_top_y() + offsetY)
     }
     return float2(padX, intro_text_top_below_main() + offsetY)
@@ -3268,6 +3703,9 @@ def intro_image_hidden_left_x() : float {
     if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
         return intro_seq_hidden_left_x(intro_seq2_base_pos(), introMultiSeq2InnerSize)
     }
+    if (introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
+        return intro_seq_hidden_left_x(intro_scene3_seq7_base_pos(), introScene3Seq7InnerSize)
+    }
     let rect = intro_image_rect()
     return -(rect.x + intro_image_frame_outer_size().x)
 }
@@ -3298,22 +3736,37 @@ def intro_exit_slide_speed() : float {
 }
 
 
-def intro_any_input_pressed() : bool {
+def is_cutscene_advance_key_idx(keyIdx : KeyCode) : bool {
+    return keyIdx == KeyCode.Space || keyIdx == KeyCode.Return
+}
+
+
+def is_cutscene_advance_mouse_button(buttonIdx : MouseButton) : bool {
+    return buttonIdx == MouseButton.Left
+}
+
+
+def intro_cutscene_advance_input_pressed() : bool {
     for (cmd in get_input_command_buffer()) {
         if (cmd is RawMouseInputEvent) {
             let mouse = cmd as RawMouseInputEvent
-            if (mouse.kind == RawMouseInputEventKind.MouseDown && mouse.buttonIdx != MouseButton.Right) {
+            if (mouse.kind == RawMouseInputEventKind.MouseDown && is_cutscene_advance_mouse_button(mouse.buttonIdx)) {
                 return true
             }
         }
         if (cmd is RawKeyboardInputEvent) {
             let key = cmd as RawKeyboardInputEvent
-            if (key.kind == RawKeyboardInputEventKind.KeyDown) {
+            if (key.kind == RawKeyboardInputEventKind.KeyDown && is_cutscene_advance_key_idx(key.buttonIdx)) {
                 return true
             }
         }
     }
     return false
+}
+
+
+def intro_any_input_pressed() : bool {
+    return intro_cutscene_advance_input_pressed()
 }
 
 
@@ -3359,25 +3812,13 @@ def update_intro_cutscene_skip_input_state() {
     for (cmd in get_input_command_buffer()) {
         if (cmd is RawMouseInputEvent) {
             let mouse = cmd as RawMouseInputEvent
+            if (mouse.buttonIdx != MouseButton.Right) {
+                continue
+            }
             if (mouse.kind == RawMouseInputEventKind.MouseDown) {
-                introCutsceneSkipInputHoldCount++
+                introCutsceneSkipRightMouseDown = true
             } elif (mouse.kind == RawMouseInputEventKind.MouseUp) {
-                introCutsceneSkipInputHoldCount = max(0, introCutsceneSkipInputHoldCount - 1)
-            }
-            if (mouse.buttonIdx == MouseButton.Right) {
-                if (mouse.kind == RawMouseInputEventKind.MouseDown) {
-                    introCutsceneSkipRightMouseDown = true
-                } elif (mouse.kind == RawMouseInputEventKind.MouseUp) {
-                    introCutsceneSkipRightMouseDown = false
-                }
-            }
-        }
-        if (cmd is RawKeyboardInputEvent) {
-            let key = cmd as RawKeyboardInputEvent
-            if (key.kind == RawKeyboardInputEventKind.KeyDown) {
-                introCutsceneSkipInputHoldCount++
-            } elif (key.kind == RawKeyboardInputEventKind.KeyUp) {
-                introCutsceneSkipInputHoldCount = max(0, introCutsceneSkipInputHoldCount - 1)
+                introCutsceneSkipRightMouseDown = false
             }
         }
     }
@@ -3385,7 +3826,7 @@ def update_intro_cutscene_skip_input_state() {
 
 
 def intro_cutscene_skip_input_active() : bool {
-    return introCutsceneSkipInputHoldCount > 0
+    return introCutsceneSkipRightMouseDown
 }
 
 
@@ -3493,7 +3934,7 @@ def apply_intro_cutscene_skip_layout() {
 
     set_text_font_size(introCutsceneSkipTextNode, ui_h(CUTSCENE_SKIP_HINT_FONT_SIZE))
     set_text_color(introCutsceneSkipTextNode, CUTSCENE_SKIP_HINT_COLOR)
-    apply_ui_font(introCutsceneSkipTextNode)
+    apply_dialogue_font(introCutsceneSkipTextNode)
     refresh_intro_cutscene_skip_text()
 
     let textSize = intro_cutscene_skip_text_size()
@@ -3503,9 +3944,11 @@ def apply_intro_cutscene_skip_layout() {
     set_frame_pivot(introCutsceneSkipTextNode, float2(1.0, 1.0))
     set_frame_pos(introCutsceneSkipTextNode, float2(0.0, 0.0))
 
-    set_frame_size(introCutsceneSkipBarBgNode, float2(textW, barH))
+    let barExtraUp = ui_h(CUTSCENE_SKIP_BAR_EXTRA_UP)
+    let barExtraW = ui_w(CUTSCENE_SKIP_BAR_EXTRA_WIDTH)
+    set_frame_size(introCutsceneSkipBarBgNode, float2(textW + barExtraW, barH))
     set_frame_pivot(introCutsceneSkipBarBgNode, float2(1.0, 1.0))
-    set_frame_pos(introCutsceneSkipBarBgNode, float2(0.0, -(textH + gap)))
+    set_frame_pos(introCutsceneSkipBarBgNode, float2(0.0, -(textH + gap + barExtraUp)))
     set_frame_pivot(introCutsceneSkipBarFillNode, float2(0.0, 0.0))
     set_frame_pos(introCutsceneSkipBarFillNode, float2(0.0, 0.0))
 
@@ -3541,6 +3984,7 @@ def reset_intro_cutscene_skip_ui() {
 
 def skip_entire_cutscene() {
     intro_stop_dialogue_audio()
+    intro_stop_battle_sfx()
     reset_intro_cutscene_skip_hold()
     introCutsceneSkipAlpha = 0.0
     apply_intro_cutscene_skip_alpha()
@@ -3580,6 +4024,9 @@ def intro_current_replic() : string {
         return get_ashford_cutscene_body()
     }
     if (statUnlockCutsceneActive) {
+        if (statUnlockCutsceneStatIdx == STAT_CHURCH_IDX) {
+            return get_church_cutscene_replica(introDialogueBeat)
+        }
         return get_stat_unlock_cutscene_body(statUnlockCutsceneStatIdx)
     }
     return intro_dialogue_replic(introDialogueBeat)
@@ -3700,8 +4147,75 @@ def intro_begin_dialogue_beat_immediately(beat : int) {
 }
 
 
+def intro_battle_sfx_target_volume() : float {
+    return INTRO_BATTLE_SFX_VOLUME * settingsMusicVolume
+}
+
+
+def load_intro_battle_sfx() {
+    if (introBattleSfxLoaded) {
+        return
+    }
+    introWarHornSound = request_sound(INTRO_WAR_HORN_PATH)
+    introSwordFightSound = request_sound(INTRO_SWORD_FIGHT_PATH)
+    introBattleSfxLoaded = true
+}
+
+
+def intro_start_seq10_battle_sfx() {
+    load_intro_battle_sfx()
+    if (!valid(introWarHornHandle) || !is_playing(introWarHornHandle)) {
+        introWarHornHandle = play_sound(introWarHornSound)
+        set_volume(introWarHornHandle, intro_battle_sfx_target_volume(), 0.0)
+    }
+    if (!valid(introSwordFightHandle) || !is_playing(introSwordFightHandle)) {
+        introSwordFightHandle = play_sound_loop(introSwordFightSound)
+        set_volume(introSwordFightHandle, intro_battle_sfx_target_volume(), 0.0)
+    }
+}
+
+
+def intro_stop_sword_fight_sfx() {
+    if (valid(introSwordFightHandle)) {
+        stop(introSwordFightHandle)
+    }
+}
+
+
+def intro_stop_battle_sfx() {
+    if (valid(introWarHornHandle)) {
+        stop(introWarHornHandle)
+    }
+    intro_stop_sword_fight_sfx()
+}
+
+
+def intro_begin_black_pause_before_edwin_death() {
+    intro_stop_sword_fight_sfx()
+    set_intro_text_visible(false)
+    set_intro_image_visible(false)
+    if (introFadeOverlay.isAlive) {
+        introFadeOverlay.isActive = true
+    }
+    set_intro_fade_alpha(1.0)
+    introCutscenePhase = INTRO_BLACK_PAUSE
+    introCutsceneT = 0.0
+}
+
+
+def intro_leave_black_pause_and_begin_edwin_shake() {
+    set_intro_fade_alpha(0.0)
+    set_intro_image_visible(true)
+    intro_begin_shake_transition(
+        introCutsceneTexture14, introTextureAspect14,
+        introCutsceneTexture15, introTextureAspect15,
+        INTRO_POST_SHAKE_ACTION_DIALOGUE_23
+    )
+}
+
+
 def intro_beat_has_dialogue_audio(beat : int) : bool {
-    return beat >= 0 && beat < INTRO_DIALOGUE_BEAT_COUNT
+    return beat >= 0 && beat < INTRO_DIALOGUE_BEAT_COUNT && intro_dialogue_sound_path(beat) != ""
 }
 
 
@@ -3714,6 +4228,16 @@ def intro_stop_dialogue_audio() {
 
 def intro_start_dialogue_audio_for_beat(beat : int) {
     intro_stop_dialogue_audio()
+    if (statUnlockCutsceneActive && statUnlockCutsceneStatIdx == STAT_CHURCH_IDX) {
+        if (beat < 0 || beat >= CHURCH_CUTSCENE_SOUND_COUNT) {
+            return
+        }
+        if (church_cutscene_sound_path(beat) == "") {
+            return
+        }
+        introDialogueSoundHandle = play_sound(churchCutsceneSounds[beat])
+        return
+    }
     if (!intro_beat_has_dialogue_audio(beat)) {
         return
     }
@@ -3845,7 +4369,16 @@ def apply_intro_image_frame_layout() {
 
 
 def apply_intro_corner3_layout() {
-    let inner = introCorner3InnerSize
+    var inner = introCorner3InnerSize
+    var aspect = introTextureAspect3
+    var uvRegion : float4
+    if (intro_seq3_slide_is_scene3_pair()) {
+        inner = introScene3Seq8InnerSize
+        aspect = introTextureAspect8
+        uvRegion = intro_cover_uv_for(inner, aspect, INTRO_SCENE3_SEQ8_UV_Y_ANCHOR)
+    } else {
+        uvRegion = intro_cover_uv_for(inner, aspect)
+    }
     apply_framed_image_layout(
         introCutsceneImage3FrameNode,
         introCutsceneImage3ShadowNode,
@@ -3853,7 +4386,7 @@ def apply_intro_corner3_layout() {
         introCutsceneImage3BevelBottomNode,
         introCutsceneImage3BevelRightNode,
         inner,
-        intro_cover_uv_for(inner, introTextureAspect3)
+        uvRegion
     )
 }
 
@@ -3906,10 +4439,13 @@ def apply_intro_image_position() {
     }
     if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
         let base = intro_seq2_base_pos()
-        set_frame_pos(introCutsceneImageFrameNode, base + float2(introCutsceneSlideX, 0.0))
+        set_frame_pos(introCutsceneImageFrameNode, base + float2(introCutsceneSlideX + introShakeOffsetX, introShakeOffsetY))
+    } elif (introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
+        let base = intro_scene3_seq7_base_pos()
+        set_frame_pos(introCutsceneImageFrameNode, base + float2(introCutsceneSlideX + introShakeOffsetX, introShakeOffsetY))
     } else {
         let rect = intro_image_rect()
-        set_frame_pos(introCutsceneImageFrameNode, float2(rect.x + introCutsceneSlideX, rect.y))
+        set_frame_pos(introCutsceneImageFrameNode, float2(rect.x + introCutsceneSlideX + introShakeOffsetX, rect.y + introShakeOffsetY))
     }
     apply_intro_image_frame_layout()
 }
@@ -3933,7 +4469,12 @@ def apply_intro_text_position() {
 
 def apply_intro_corner_positions() {
     if (introSeq3Visible && introCutsceneImage3FrameNode.isAlive) {
-        let base = intro_seq3_base_pos()
+        var base : float2
+        if (intro_seq3_slide_is_scene3_pair()) {
+            base = intro_scene3_seq8_base_pos()
+        } else {
+            base = intro_seq3_base_pos()
+        }
         set_frame_pos(introCutsceneImage3FrameNode, base + float2(introSeq3SlideX, 0.0))
         apply_intro_corner3_layout()
     }
@@ -3976,6 +4517,8 @@ def apply_intro_cutscene_layout() {
     }
     if (introCutsceneLayoutMode == INTRO_LAYOUT_MULTI) {
         intro_update_multi_layout_metrics()
+    } elif (introCutsceneLayoutMode == INTRO_LAYOUT_SCENE3_PAIR) {
+        intro_update_scene3_layout_metrics()
     }
     let res = float2(get_resolution())
     set_frame_size(introCutsceneRoot, res)
@@ -4067,18 +4610,22 @@ def apply_startup_splash_layout() {
 def build_startup_splash_ui() {
     let res = float2(get_resolution())
     uiCanvas = canvas(res)
+    uiCanvas.name = "uiCanvas"
 
     startupSplashRoot = panel(res, [])
+    startupSplashRoot.name = "startupSplashRoot"
     set_image_color(startupSplashRoot, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(startupSplashRoot, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(startupSplashRoot, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
 
     startupSplashBgNode = panel(res, [])
+    startupSplashBgNode.name = "startupSplashBgNode"
     set_image_color(startupSplashBgNode, float4(0.0, 0.0, 0.0, 1.0))
     set_parent(startupSplashBgNode, startupSplashRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(startupSplashBgNode, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
 
     startupSplashLogoNode = panel(float2(640.0, 360.0), [])
+    startupSplashLogoNode.name = "startupSplashLogoNode"
     startupSplashLogoNode?.UIImage.textureId = logoTexture
     startupSplashLogoNode?.UIImage.pivot = float2(0.0, 0.0)
     set_image_color(startupSplashLogoNode, float4(1.0, 1.0, 1.0, 1.0))
@@ -4087,6 +4634,7 @@ def build_startup_splash_ui() {
     startupSplashLogoNode.isActive = false
 
     startupSplashOverlayNode = panel(res, [])
+    startupSplashOverlayNode.name = "startupSplashOverlayNode"
     set_image_color(startupSplashOverlayNode, float4(0.0, 0.0, 0.0, 1.0))
     set_parent(startupSplashOverlayNode, startupSplashRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(startupSplashOverlayNode, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
@@ -4142,56 +4690,67 @@ def build_intro_cutscene_ui() {
     let res = float2(get_resolution())
 
     introCutsceneRoot = panel(res, [])
+    introCutsceneRoot.name = "introCutsceneRoot"
     set_image_color(introCutsceneRoot, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(introCutsceneRoot, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(introCutsceneRoot, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     introCutsceneRoot.isActive = false
 
     introCutsceneBgNode = panel(res, [])
+    introCutsceneBgNode.name = "introCutsceneBgNode"
     set_image_color(introCutsceneBgNode, INTRO_CUTSCENE_BG_COLOR)
     set_parent(introCutsceneBgNode, introCutsceneRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(introCutsceneBgNode, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
 
     introCutsceneImageFrameNode = panel(float2(640.0, 420.0), [])
+    introCutsceneImageFrameNode.name = "introCutsceneImageFrameNode"
     set_image_color(introCutsceneImageFrameNode, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(introCutsceneImageFrameNode, float2(0.0, 0.0))
     set_parent(introCutsceneImageFrameNode, introCutsceneRoot, AddChildStrategy.KeepLocalTransform)
     introCutsceneImageFrameNode.isActive = false
 
     introCutsceneImageShadowNode = panel(float2(640.0, 400.0), [])
+    introCutsceneImageShadowNode.name = "introCutsceneImageShadowNode"
     set_image_color(introCutsceneImageShadowNode, INTRO_IMAGE_SHADOW_COLOR)
     set_frame_pivot(introCutsceneImageShadowNode, float2(0.0, 0.0))
     set_parent(introCutsceneImageShadowNode, introCutsceneImageFrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImageNode = panel(float2(640.0, 400.0), [])
+    introCutsceneImageNode.name = "introCutsceneImageNode"
     introCutsceneImageNode?.UIImage.textureId = introCutsceneTexture
+    introActiveMainTextureAspect = introTextureAspect
     set_image_color(introCutsceneImageNode, float4(1.0, 1.0, 1.0, 1.0))
     introCutsceneImageNode?.UIImage.pivot = float2(0.0, 0.0)
     set_frame_pivot(introCutsceneImageNode, float2(0.0, 0.0))
     set_parent(introCutsceneImageNode, introCutsceneImageFrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImageBevelBottomNode = panel(float2(640.0, 8.0), [])
+    introCutsceneImageBevelBottomNode.name = "introCutsceneImageBevelBottomNode"
     set_image_color(introCutsceneImageBevelBottomNode, INTRO_IMAGE_BEVEL_DARK_COLOR)
     set_frame_pivot(introCutsceneImageBevelBottomNode, float2(0.0, 0.0))
     set_parent(introCutsceneImageBevelBottomNode, introCutsceneImageFrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImageBevelRightNode = panel(float2(8.0, 400.0), [])
+    introCutsceneImageBevelRightNode.name = "introCutsceneImageBevelRightNode"
     set_image_color(introCutsceneImageBevelRightNode, INTRO_IMAGE_BEVEL_DARKER_COLOR)
     set_frame_pivot(introCutsceneImageBevelRightNode, float2(0.0, 0.0))
     set_parent(introCutsceneImageBevelRightNode, introCutsceneImageFrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage3FrameNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage3FrameNode.name = "introCutsceneImage3FrameNode"
     set_image_color(introCutsceneImage3FrameNode, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(introCutsceneImage3FrameNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage3FrameNode, introCutsceneRoot, AddChildStrategy.KeepLocalTransform)
     introCutsceneImage3FrameNode.isActive = false
 
     introCutsceneImage3ShadowNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage3ShadowNode.name = "introCutsceneImage3ShadowNode"
     set_image_color(introCutsceneImage3ShadowNode, INTRO_IMAGE_SHADOW_COLOR)
     set_frame_pivot(introCutsceneImage3ShadowNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage3ShadowNode, introCutsceneImage3FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage3Node = panel(float2(200.0, 200.0), [])
+    introCutsceneImage3Node.name = "introCutsceneImage3Node"
     introCutsceneImage3Node?.UIImage.textureId = introCutsceneTexture3
     set_image_color(introCutsceneImage3Node, float4(1.0, 1.0, 1.0, 1.0))
     introCutsceneImage3Node?.UIImage.pivot = float2(0.0, 0.0)
@@ -4199,27 +4758,32 @@ def build_intro_cutscene_ui() {
     set_parent(introCutsceneImage3Node, introCutsceneImage3FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage3BevelBottomNode = panel(float2(200.0, 8.0), [])
+    introCutsceneImage3BevelBottomNode.name = "introCutsceneImage3BevelBottomNode"
     set_image_color(introCutsceneImage3BevelBottomNode, INTRO_IMAGE_BEVEL_DARK_COLOR)
     set_frame_pivot(introCutsceneImage3BevelBottomNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage3BevelBottomNode, introCutsceneImage3FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage3BevelRightNode = panel(float2(8.0, 200.0), [])
+    introCutsceneImage3BevelRightNode.name = "introCutsceneImage3BevelRightNode"
     set_image_color(introCutsceneImage3BevelRightNode, INTRO_IMAGE_BEVEL_DARKER_COLOR)
     set_frame_pivot(introCutsceneImage3BevelRightNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage3BevelRightNode, introCutsceneImage3FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage4FrameNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage4FrameNode.name = "introCutsceneImage4FrameNode"
     set_image_color(introCutsceneImage4FrameNode, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(introCutsceneImage4FrameNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage4FrameNode, introCutsceneRoot, AddChildStrategy.KeepLocalTransform)
     introCutsceneImage4FrameNode.isActive = false
 
     introCutsceneImage4ShadowNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage4ShadowNode.name = "introCutsceneImage4ShadowNode"
     set_image_color(introCutsceneImage4ShadowNode, INTRO_IMAGE_SHADOW_COLOR)
     set_frame_pivot(introCutsceneImage4ShadowNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage4ShadowNode, introCutsceneImage4FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage4Node = panel(float2(200.0, 200.0), [])
+    introCutsceneImage4Node.name = "introCutsceneImage4Node"
     introCutsceneImage4Node?.UIImage.textureId = introCutsceneTexture4
     set_image_color(introCutsceneImage4Node, float4(1.0, 1.0, 1.0, 1.0))
     introCutsceneImage4Node?.UIImage.pivot = float2(0.0, 0.0)
@@ -4227,27 +4791,32 @@ def build_intro_cutscene_ui() {
     set_parent(introCutsceneImage4Node, introCutsceneImage4FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage4BevelBottomNode = panel(float2(200.0, 8.0), [])
+    introCutsceneImage4BevelBottomNode.name = "introCutsceneImage4BevelBottomNode"
     set_image_color(introCutsceneImage4BevelBottomNode, INTRO_IMAGE_BEVEL_DARK_COLOR)
     set_frame_pivot(introCutsceneImage4BevelBottomNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage4BevelBottomNode, introCutsceneImage4FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage4BevelRightNode = panel(float2(8.0, 200.0), [])
+    introCutsceneImage4BevelRightNode.name = "introCutsceneImage4BevelRightNode"
     set_image_color(introCutsceneImage4BevelRightNode, INTRO_IMAGE_BEVEL_DARKER_COLOR)
     set_frame_pivot(introCutsceneImage4BevelRightNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage4BevelRightNode, introCutsceneImage4FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage5FrameNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage5FrameNode.name = "introCutsceneImage5FrameNode"
     set_image_color(introCutsceneImage5FrameNode, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(introCutsceneImage5FrameNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage5FrameNode, introCutsceneRoot, AddChildStrategy.KeepLocalTransform)
     introCutsceneImage5FrameNode.isActive = false
 
     introCutsceneImage5ShadowNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage5ShadowNode.name = "introCutsceneImage5ShadowNode"
     set_image_color(introCutsceneImage5ShadowNode, INTRO_IMAGE_SHADOW_COLOR)
     set_frame_pivot(introCutsceneImage5ShadowNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage5ShadowNode, introCutsceneImage5FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage5Node = panel(float2(200.0, 200.0), [])
+    introCutsceneImage5Node.name = "introCutsceneImage5Node"
     introCutsceneImage5Node?.UIImage.textureId = introCutsceneTexture5
     set_image_color(introCutsceneImage5Node, float4(1.0, 1.0, 1.0, 1.0))
     introCutsceneImage5Node?.UIImage.pivot = float2(0.0, 0.0)
@@ -4255,27 +4824,32 @@ def build_intro_cutscene_ui() {
     set_parent(introCutsceneImage5Node, introCutsceneImage5FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage5BevelBottomNode = panel(float2(200.0, 8.0), [])
+    introCutsceneImage5BevelBottomNode.name = "introCutsceneImage5BevelBottomNode"
     set_image_color(introCutsceneImage5BevelBottomNode, INTRO_IMAGE_BEVEL_DARK_COLOR)
     set_frame_pivot(introCutsceneImage5BevelBottomNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage5BevelBottomNode, introCutsceneImage5FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage5BevelRightNode = panel(float2(8.0, 200.0), [])
+    introCutsceneImage5BevelRightNode.name = "introCutsceneImage5BevelRightNode"
     set_image_color(introCutsceneImage5BevelRightNode, INTRO_IMAGE_BEVEL_DARKER_COLOR)
     set_frame_pivot(introCutsceneImage5BevelRightNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage5BevelRightNode, introCutsceneImage5FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage6FrameNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage6FrameNode.name = "introCutsceneImage6FrameNode"
     set_image_color(introCutsceneImage6FrameNode, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(introCutsceneImage6FrameNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage6FrameNode, introCutsceneRoot, AddChildStrategy.KeepLocalTransform)
     introCutsceneImage6FrameNode.isActive = false
 
     introCutsceneImage6ShadowNode = panel(float2(200.0, 200.0), [])
+    introCutsceneImage6ShadowNode.name = "introCutsceneImage6ShadowNode"
     set_image_color(introCutsceneImage6ShadowNode, INTRO_IMAGE_SHADOW_COLOR)
     set_frame_pivot(introCutsceneImage6ShadowNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage6ShadowNode, introCutsceneImage6FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage6Node = panel(float2(200.0, 200.0), [])
+    introCutsceneImage6Node.name = "introCutsceneImage6Node"
     introCutsceneImage6Node?.UIImage.textureId = introCutsceneTexture6
     set_image_color(introCutsceneImage6Node, float4(1.0, 1.0, 1.0, 1.0))
     introCutsceneImage6Node?.UIImage.pivot = float2(0.0, 0.0)
@@ -4283,16 +4857,19 @@ def build_intro_cutscene_ui() {
     set_parent(introCutsceneImage6Node, introCutsceneImage6FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage6BevelBottomNode = panel(float2(200.0, 8.0), [])
+    introCutsceneImage6BevelBottomNode.name = "introCutsceneImage6BevelBottomNode"
     set_image_color(introCutsceneImage6BevelBottomNode, INTRO_IMAGE_BEVEL_DARK_COLOR)
     set_frame_pivot(introCutsceneImage6BevelBottomNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage6BevelBottomNode, introCutsceneImage6FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneImage6BevelRightNode = panel(float2(8.0, 200.0), [])
+    introCutsceneImage6BevelRightNode.name = "introCutsceneImage6BevelRightNode"
     set_image_color(introCutsceneImage6BevelRightNode, INTRO_IMAGE_BEVEL_DARKER_COLOR)
     set_frame_pivot(introCutsceneImage6BevelRightNode, float2(0.0, 0.0))
     set_parent(introCutsceneImage6BevelRightNode, introCutsceneImage6FrameNode, AddChildStrategy.KeepLocalTransform)
 
     introCutsceneNameNode = text(intro_dialogue_name(0))
+    introCutsceneNameNode.name = "introCutsceneNameNode"
     set_text_font_size(introCutsceneNameNode, ui_h(DIALOGUE_NAME_FONT_SIZE))
     set_text_color(introCutsceneNameNode, DIALOGUE_NAME_COLOR)
     apply_name_font(introCutsceneNameNode)
@@ -4301,12 +4878,14 @@ def build_intro_cutscene_ui() {
     introCutsceneNameNode?.UIText.vertAlignment = TextVertAlignment.Top
 
     introCutsceneReplicaNode = text("")
+    introCutsceneReplicaNode.name = "introCutsceneReplicaNode"
     set_text_font_size(introCutsceneReplicaNode, ui_h(INTRO_REPLIC_FONT_SIZE))
     set_text_color(introCutsceneReplicaNode, DIALOGUE_TEXT_COLOR)
     apply_dialogue_font(introCutsceneReplicaNode)
     configure_intro_replica_text(introCutsceneReplicaNode, intro_text_width())
 
     introCutsceneTextColumnNode = vbox([introCutsceneNameNode, introCutsceneReplicaNode])
+    introCutsceneTextColumnNode.name = "introCutsceneTextColumnNode"
     set_spacing(introCutsceneTextColumnNode, ui_h(8.0))
     set_alignment(introCutsceneTextColumnNode, LayoutAlignment.TopLeft)
     set_frame_pivot(introCutsceneTextColumnNode, float2(0.0, 0.0))
@@ -4315,15 +4894,17 @@ def build_intro_cutscene_ui() {
     introCutsceneTextColumnNode.isActive = false
 
     introFadeOverlay = panel(res, [])
+    introFadeOverlay.name = "introFadeOverlay"
     set_image_color(introFadeOverlay, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(introFadeOverlay, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(introFadeOverlay, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     introFadeOverlay.isActive = false
 
     introCutsceneSkipTextNode = text(intro_cutscene_skip_hint_text())
+    introCutsceneSkipTextNode.name = "introCutsceneSkipTextNode"
     set_text_font_size(introCutsceneSkipTextNode, ui_h(CUTSCENE_SKIP_HINT_FONT_SIZE))
     set_text_color(introCutsceneSkipTextNode, CUTSCENE_SKIP_HINT_COLOR)
-    apply_ui_font(introCutsceneSkipTextNode)
+    apply_dialogue_font(introCutsceneSkipTextNode)
     introCutsceneSkipTextNode?.UIText.fontScaling = false
     introCutsceneSkipTextNode?.UIText.autoResizeFrame = true
     introCutsceneSkipTextNode?.UIText.wordWrapping = false
@@ -4331,14 +4912,17 @@ def build_intro_cutscene_ui() {
 
     let skipBarH = ui_h(CUTSCENE_SKIP_BAR_HEIGHT)
     introCutsceneSkipBarFillNode = panel(float2(0.0, skipBarH), [])
+    introCutsceneSkipBarFillNode.name = "introCutsceneSkipBarFillNode"
     set_image_color(introCutsceneSkipBarFillNode, CUTSCENE_SKIP_BAR_FILL_COLOR)
     set_frame_pivot(introCutsceneSkipBarFillNode, float2(0.0, 0.0))
 
     introCutsceneSkipBarBgNode = panel(float2(ui_w(CUTSCENE_SKIP_BAR_MIN_WIDTH), skipBarH), [introCutsceneSkipBarFillNode])
+    introCutsceneSkipBarBgNode.name = "introCutsceneSkipBarBgNode"
     set_image_color(introCutsceneSkipBarBgNode, CUTSCENE_SKIP_BAR_BG_COLOR)
     set_frame_pivot(introCutsceneSkipBarBgNode, float2(1.0, 1.0))
 
     introCutsceneSkipRoot = panel(float2(0.0, 0.0), [])
+    introCutsceneSkipRoot.name = "introCutsceneSkipRoot"
     set_image_color(introCutsceneSkipRoot, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(introCutsceneSkipRoot, float2(1.0, 1.0))
     set_parent(introCutsceneSkipTextNode, introCutsceneSkipRoot, AddChildStrategy.KeepLocalTransform)
@@ -4357,6 +4941,7 @@ def build_intro_cutscene_ui() {
 def prepare_intro_seq2() {
     introCutsceneLayoutMode = INTRO_LAYOUT_MULTI
     introCutsceneImageNode?.UIImage.textureId = introCutsceneTexture2
+    introActiveMainTextureAspect = introTextureAspect2
     update_intro_texture2_aspect()
     intro_update_multi_layout_metrics()
     introCutsceneSlideX = intro_seq_hidden_left_x(intro_seq2_base_pos(), introMultiSeq2InnerSize)
@@ -4380,7 +4965,9 @@ def prepare_intro_seq2() {
 
 
 def start_intro_cutscene() {
+    ensure_intro_cutscene_assets_loaded()
     intro_stop_dialogue_audio()
+    intro_stop_battle_sfx()
     introSuppressTypewriterSkip = false
     reset_intro_cutscene_skip_ui()
     introCutscenePhase = INTRO_FADE_TO_BLACK
@@ -4406,7 +4993,11 @@ def start_intro_cutscene() {
     introSeq4Visible = false
     introSeq5Visible = false
     introSeq6Visible = false
+    introStorySceneIdx = INTRO_STORY_SCENE_NONE
+    introSlideTargetBeat = 0
+    intro_reset_shake_state()
     introCutsceneImageNode?.UIImage.textureId = introCutsceneTexture
+    introActiveMainTextureAspect = introTextureAspect
     update_intro_texture_aspect()
     set_intro_image_visible(false)
     set_intro_text_visible(false)
@@ -4427,6 +5018,7 @@ def start_intro_cutscene() {
 
 def finish_intro_cutscene() {
     intro_stop_dialogue_audio()
+    intro_stop_battle_sfx()
     reset_intro_cutscene_skip_ui()
     introCutscenePhase = INTRO_NONE
     introCutsceneT = 0.0
@@ -4525,6 +5117,8 @@ def apply_screen_visibility() {
             mainMenuButtonHoverT[i] = 0.0
         }
     }
+    sync_background_music()
+    sync_intro_cutscene_music()
 }
 
 
@@ -4587,7 +5181,6 @@ def continue_saved_game_setup() : bool {
     if (!load_and_apply_game_progress()) {
         return false
     }
-    deferCharacterEnter = true
     reset_pause_menu_state()
     introCutscenePhase = INTRO_NONE
     introCutsceneT = 0.0
@@ -4644,6 +5237,7 @@ def finish_continue_loaded_game(skipEntryFade : bool = false) {
         begin_stat_unlock_cutscene(statIdx, skipEntryFade)
         return
     }
+    deferCharacterEnter = false
     start_character_enter()
 }
 
@@ -4873,6 +5467,15 @@ def get_current_dialogue_node() : DialogueNode {
     if (usingAshfordDebutEncounter) {
         return get_ashford_debut_dialogue_node(currentNodeIdx)
     }
+    if (usingStatUnlockEncounter) {
+        return get_stat_unlock_dialogue_node(currentNodeIdx)
+    }
+    if (usingArcEncounter) {
+        return resolve_arc_dialogue_node(activeArcId, activeArcBeatIdx, currentNodeIdx)
+    }
+    if (is_edric_day_one_encounter(currentEncounterIdx)) {
+        return get_edric_day_one_dialogue_node(currentNodeIdx)
+    }
     return get_dialogue_node(currentEncounterIdx, currentNodeIdx)
 }
 
@@ -4917,7 +5520,16 @@ def pick_random_visitor_texture() : TextureId {
 
 
 def refresh_next_visitor_preview() {
+    if (queuedNextArcId >= 0) {
+        let charIdx = get_arc_character_idx(queuedNextArcId, queuedNextArcBeatIdx)
+        nextVisitorTexture = courtBodyTextures[charIdx >= 0 && charIdx < COURT_CHARACTER_COUNT ? charIdx : CHAR_EDRIC]
+        warm_character_visual(COURT_BODY_PATHS[charIdx >= 0 && charIdx < COURT_CHARACTER_COUNT ? charIdx : CHAR_EDRIC])
+        return
+    }
     let encIdx = queue_next_day_encounter_preview(currentDay + 1)
+    if (encIdx < 0) {
+        return
+    }
     let charIdx = get_encounter_character_idx(encIdx)
     nextVisitorTexture = courtBodyTextures[charIdx]
     warm_character_visual(COURT_BODY_PATHS[charIdx])
@@ -4941,15 +5553,6 @@ def incoming_character_body_path() : string {
 }
 
 
-def update_character_outline_node_texture() {
-    if (!characterOutlineNode.isAlive) {
-        return
-    }
-    characterOutlineNode?.UIImage.textureId = characterOutlineTexture
-    characterOutlineNode?.UIImage.uvRegion = character_outline_uv_region()
-}
-
-
 def advance_day_only() {
     currentDay++
     update_day_text()
@@ -4965,12 +5568,26 @@ def apply_court_character_texture(charIdx : int) {
     }
     currentCourtCharacterIdx = idx
     characterTexture = courtBodyTextures[idx]
-    warm_character_visual(COURT_BODY_PATHS[idx])
+    let bodyPath = COURT_BODY_PATHS[idx]
+    warm_character_visual(bodyPath)
+    warm_character_alpha(bodyPath)
     update_character_texture_aspect(characterTexture)
 }
 
 
 def apply_current_encounter_character() {
+    if (usingStatUnlockEncounter) {
+        apply_court_character_texture(currentCourtCharacterIdx)
+        return
+    }
+    if (usingArcEncounter) {
+        apply_court_character_texture(get_arc_character_idx(activeArcId, activeArcBeatIdx))
+        return
+    }
+    if (is_edric_day_one_encounter(currentEncounterIdx)) {
+        apply_court_character_texture(CHAR_EDRIC)
+        return
+    }
     apply_court_character_texture(get_encounter_character_idx(currentEncounterIdx))
 }
 
@@ -5036,6 +5653,7 @@ def texture_path_for(tex : TextureId) : string {
 
 def update_character_texture_aspect(tex : TextureId) {
     let path = texture_path_for(tex)
+    load_character_alpha_pixels(path)
     if (apply_character_visual(path)) {
         return
     }
@@ -5043,9 +5661,6 @@ def update_character_texture_aspect(tex : TextureId) {
         characterTextureAspect = float(size.x) / float(size.y)
         characterTextureUvRegion = float4(0.0, 0.0, 1.0, 1.0)
     }
-    characterAlphaWidth = 0
-    characterAlphaHeight = 0
-    characterAlphaPixels |> clear()
 }
 
 
@@ -5071,7 +5686,7 @@ def is_mouse_over_bottom_bar() : bool {
 }
 
 
-def is_mouse_over_character_opaque() : bool {
+def is_mouse_over_character_frame() : bool {
     if (!characterImageNode.isAlive || !characterRoot.isAlive || !characterRoot.isActive) {
         return false
     }
@@ -5087,10 +5702,15 @@ def is_mouse_over_character_opaque() : bool {
     if (characterAnimPhase == CHARACTER_ANIM_EXIT || characterAnimPhase == CHARACTER_ANIM_HIDE) {
         return false
     }
-    if (characterAlphaWidth <= 0 || characterAlphaHeight <= 0 || length(characterAlphaPixels) == 0) {
+    return is_mouse_inside_frame(characterImageNode?.UIFrame)
+}
+
+
+def is_mouse_over_character_opaque() : bool {
+    if (!is_mouse_over_character_frame()) {
         return false
     }
-    if (!is_mouse_inside_frame(characterImageNode?.UIFrame)) {
+    if (characterAlphaWidth <= 0 || characterAlphaHeight <= 0 || length(characterAlphaPixels) == 0) {
         return false
     }
 
@@ -5109,16 +5729,11 @@ def is_mouse_over_character_opaque() : bool {
 }
 
 
-def apply_character_outline_visual(hoverT : float) {
-    if (!characterOutlineNode.isAlive) {
-        return
+def current_character_reveal_t() : float {
+    if (characterAnimPhase == CHARACTER_ANIM_IDLE) {
+        return 1.0
     }
-    characterOutlineNode.isActive = hoverT > 0.01
-    characterOutlineNode?.UIImage.uvRegion = character_outline_uv_region()
-    apply_character_outline_top_clip(characterOutlineNode)
-    var col = CHARACTER_OUTLINE_COLOR
-    col.w = hoverT
-    set_image_color(characterOutlineNode, col)
+    return characterRevealT
 }
 
 
@@ -5374,6 +5989,7 @@ def apply_advisor_icon_layout() {
 def build_advisor_hud_icon() {
     let advisorSize = ui_size(float2(ADVISOR_ICON_SIZE, ADVISOR_ICON_SIZE))
     advisorHudIconNode = panel(advisorSize, [])
+    advisorHudIconNode.name = "advisorHudIconNode"
     advisorHudIconHovered = false
     apply_advisor_icon_visual()
     configure_stat_icon(advisorHudIconNode)
@@ -5465,13 +6081,31 @@ def advisor_popup_card_size(contentW : float) : float2 {
 }
 
 
+def advisor_action_effect_line_height() : float {
+    return ui_h(ADVISOR_ACTION_EFFECT_FONT_SIZE * ADVISOR_ACTION_EFFECT_LINE_HEIGHT_SCALE)
+}
+
+
+def advisor_action_effect_block_height(hasMinus : bool; hasPlus : bool) : float {
+    let lineH = advisor_action_effect_line_height()
+    let gap = ui_h(ADVISOR_ACTION_EFFECT_LINE_SPACING)
+    if (hasMinus && hasPlus) {
+        return lineH * 2.0 + gap
+    }
+    if (hasMinus || hasPlus) {
+        return lineH
+    }
+    return lineH
+}
+
+
 def advisor_action_desc_text_height(innerH : float) : float {
     let pad = ui_h(ADVISOR_ACTION_CARD_INNER_PAD)
     let titleH = ui_h(ADVISOR_ACTION_TITLE_FONT_SIZE)
-    let effectH = ui_h(ADVISOR_ACTION_EFFECT_FONT_SIZE)
+    let effectBlockH = advisor_action_effect_block_height(true, true)
     let titleDescGap = ui_h(ADVISOR_ACTION_TITLE_DESC_SPACING)
     let descEffectGap = ui_h(ADVISOR_ACTION_DESC_EFFECT_SPACING)
-    let reserved = 2.0 * pad + titleH + titleDescGap + descEffectGap + effectH + ui_h(8.0)
+    let reserved = 2.0 * pad + titleH + titleDescGap + descEffectGap + effectBlockH + ui_h(20.0)
     return max(innerH - reserved, ui_h(48.0))
 }
 
@@ -5657,6 +6291,7 @@ def update_advisor_scroll_ranges() {
 def build_advisor_scrollbar(scrollNode : NodeId; viewportH : float) : NodeId {
     let barW = ui_w(ADVISOR_PANEL_SCROLLBAR_WIDTH)
     let barNode = panel(float2(barW, viewportH), [])
+    barNode.name = "advisorScrollBar"
     set_frame_pivot(barNode, float2(1.0, 0.0))
     set_image_color(barNode, float4(0.10, 0.08, 0.06, 0.55))
     add_component(barNode, new UIVerticalScrollbar())
@@ -5664,6 +6299,7 @@ def build_advisor_scrollbar(scrollNode : NodeId; viewportH : float) : NodeId {
 
     let handleW = max(barW - ui_w(4.0), ui_w(6.0))
     let handleNode = panel(float2(handleW, ui_h(56.0)), [])
+    handleNode.name = "advisorScrollBarHandle"
     set_frame_pivot(handleNode, float2(0.5, 0.5))
     set_image_color(handleNode, float4(0.68, 0.58, 0.42, 0.95))
     handleNode.set_parent(barNode, AddChildStrategy.KeepLocalTransform)
@@ -5680,6 +6316,7 @@ def build_advisor_scrollbar(scrollNode : NodeId; viewportH : float) : NodeId {
 def build_advisor_popup_scroll_area(contentW : float; viewportH : float) : NodeId {
     let scrollContentW = advisor_popup_scroll_content_width(contentW)
     let scrollNode = panel(float2(contentW, viewportH), [])
+    scrollNode.name = "advisorPopupScrollArea"
     set_frame_pivot(scrollNode, float2(0.0, 0.0))
     set_image_color(scrollNode, DEATH_SUMMARY_BOX_BG_COLOR)
     add_component(scrollNode, new UIMask())
@@ -5692,12 +6329,14 @@ def build_advisor_popup_scroll_area(contentW : float; viewportH : float) : NodeI
     scrollNode?.UIScrollArea.enableInertia = false
 
     advisorPopupScrollContentNode = panel(float2(scrollContentW, viewportH), [])
+    advisorPopupScrollContentNode.name = "advisorPopupScrollContentNode"
     set_frame_pivot(advisorPopupScrollContentNode, float2(0.0, 0.0))
     set_image_color(advisorPopupScrollContentNode, float4(0.0, 0.0, 0.0, 0.0))
     advisorPopupScrollContentNode.set_parent(scrollNode, AddChildStrategy.KeepLocalTransform)
     set_frame_pos(advisorPopupScrollContentNode, float2(0.0, 0.0))
 
     advisorPopupScrollBarNode = build_advisor_scrollbar(scrollNode, viewportH)
+    advisorPopupScrollBarNode.name = "advisorPopupScrollBarNode"
     scrollNode?.UIScrollArea.content = advisorPopupScrollContentNode?.UIFrame
     scrollNode?.UIScrollArea.maskArea = scrollNode?.UIMask
     scrollNode?.UIScrollArea.verticalScrollbar = advisorPopupScrollBarNode?.UIVerticalScrollbar
@@ -5930,38 +6569,95 @@ def advisor_action_effect_part_color(delta : int; hoverT : float) : float4 {
 }
 
 
-def refresh_advisor_action_effect_row(actionIdx : int; deltas : int[STAT_COUNT]; hoverT : float; enabled : bool) {
-    let row = advisorActionEffectRowNodes[actionIdx]
-    if (!row.isAlive) {
+def build_advisor_effect_line_node(container : NodeId; lineWidth : float; lineHeight : float) : NodeId {
+    let lineNode = text("")
+    lineNode.name = "advisorEffectLine"
+    configure_advisor_card_line_text(lineNode)
+    lineNode?.UIText.fontScaling = false
+    lineNode?.UIText.autoResizeFrame = false
+    lineNode?.UIText.wordWrapping = true
+    lineNode?.UIText.horAlignment = TextHorAlignment.Left
+    lineNode?.UIText.vertAlignment = TextVertAlignment.Top
+    lineNode?.UIText.size = float2(lineWidth, lineHeight)
+    set_frame_size(lineNode, float2(lineWidth, lineHeight))
+    set_frame_pivot(lineNode, float2(0.0, 0.0))
+    lineNode.set_parent(container, AddChildStrategy.KeepLocalTransform)
+    lineNode.isActive = false
+    return lineNode
+}
+
+
+def update_advisor_effect_line_text(lineNode : NodeId; lineText : string; deltaSign : int; hoverT : float; enabled : bool; fontSize : float; lineWidth : float; lineHeight : float; yOffset : float) {
+    if (!lineNode.isAlive) {
         return
     }
-    clear_ui_node_children(row)
-    let alpha = enabled ? 1.0 : ADVISOR_ACTION_DISABLED_ALPHA
-    let fontSize = ui_h(ADVISOR_ACTION_EFFECT_FONT_SIZE)
-    var hasPart = false
-    for (i in range(STAT_COUNT)) {
-        if (deltas[i] == 0) {
-            continue
-        }
-        let sign = (deltas[i] > 0) ? "+" : ""
-        let partNode = text("{sign}{deltas[i]} {stat_display_name(i)}")
-        set_text_font_size(partNode, fontSize)
-        let partCol = advisor_action_effect_part_color(deltas[i], hoverT)
-        set_text_color(partNode, float4(partCol.x, partCol.y, partCol.z, alpha))
-        configure_advisor_card_line_text(partNode)
-        partNode?.UIText.wordWrapping = false
-        partNode?.UIText.autoResizeFrame = true
-        partNode.set_parent(row, AddChildStrategy.KeepLocalTransform)
-        hasPart = true
+    if (length(lineText) == 0) {
+        lineNode.isActive = false
+        return
     }
-    if (!hasPart) {
-        let emptyNode = text(format_advisor_action_preview(deltas))
-        set_text_font_size(emptyNode, fontSize)
-        set_text_color(emptyNode, float4(ADVISOR_ACTION_DESC_COLOR.x, ADVISOR_ACTION_DESC_COLOR.y, ADVISOR_ACTION_DESC_COLOR.z, alpha))
-        configure_advisor_card_line_text(emptyNode)
-        emptyNode?.UIText.wordWrapping = false
-        emptyNode?.UIText.autoResizeFrame = true
-        emptyNode.set_parent(row, AddChildStrategy.KeepLocalTransform)
+    lineNode.isActive = true
+    if (lineNode?.UIText.text != lineText) {
+        lineNode?.UIText.text = lineText
+    }
+    set_text_font_size(lineNode, fontSize)
+    let alpha = enabled ? 1.0 : ADVISOR_ACTION_DISABLED_ALPHA
+    let partCol = advisor_action_effect_part_color(deltaSign, hoverT)
+    set_text_color(lineNode, float4(partCol.x, partCol.y, partCol.z, alpha))
+    lineNode?.UIText.size = float2(lineWidth, lineHeight)
+    set_frame_size(lineNode, float2(lineWidth, lineHeight))
+    set_frame_pos(lineNode, float2(0.0, yOffset))
+}
+
+
+def refresh_advisor_action_effect_row(actionIdx : int; deltas : int[STAT_COUNT]; hoverT : float; enabled : bool) {
+    let container = advisorActionEffectRowNodes[actionIdx]
+    if (!container.isAlive) {
+        return
+    }
+    let fontSize = ui_h(ADVISOR_ACTION_EFFECT_FONT_SIZE)
+    let lineHeight = advisor_action_effect_line_height()
+    let lineGap = ui_h(ADVISOR_ACTION_EFFECT_LINE_SPACING)
+    var lineWidth = container?.UIFrame.size.x
+    if (lineWidth <= 0.0) {
+        lineWidth = ui_w(ADVISOR_PANEL_WIDTH * 0.35)
+    }
+
+    let minusText = format_advisor_effect_line(deltas, true)
+    let plusText = format_advisor_effect_line(deltas, false)
+    let hasMinus = length(minusText) > 0
+    let hasPlus = length(plusText) > 0
+    let blockH = advisor_action_effect_block_height(hasMinus, hasPlus)
+    set_frame_size(container, float2(lineWidth, blockH))
+    set_image_color(container, float4(0.0, 0.0, 0.0, 0.0))
+
+    update_advisor_effect_line_text(advisorActionEffectMinusNodes[actionIdx], minusText, -1, hoverT, enabled, fontSize, lineWidth, lineHeight, 0.0)
+
+    let plusYOffset = hasMinus ? (lineHeight + lineGap) : 0.0
+    update_advisor_effect_line_text(advisorActionEffectPlusNodes[actionIdx], plusText, 1, hoverT, enabled, fontSize, lineWidth, lineHeight, plusYOffset)
+
+    let emptyNode = advisorActionEffectEmptyNodes[actionIdx]
+    if (!hasMinus && !hasPlus) {
+        let emptyText = format_advisor_action_preview(deltas)
+        let alpha = enabled ? 1.0 : ADVISOR_ACTION_DISABLED_ALPHA
+        if (emptyNode.isAlive) {
+            emptyNode.isActive = true
+            if (emptyNode?.UIText.text != emptyText) {
+                emptyNode?.UIText.text = emptyText
+            }
+            set_text_font_size(emptyNode, fontSize)
+            set_text_color(emptyNode, float4(ADVISOR_ACTION_DESC_COLOR.x, ADVISOR_ACTION_DESC_COLOR.y, ADVISOR_ACTION_DESC_COLOR.z, alpha))
+            emptyNode?.UIText.size = float2(lineWidth, lineHeight)
+            set_frame_size(emptyNode, float2(lineWidth, lineHeight))
+            set_frame_pos(emptyNode, float2(0.0, 0.0))
+        }
+        if (advisorActionEffectMinusNodes[actionIdx].isAlive) {
+            advisorActionEffectMinusNodes[actionIdx].isActive = false
+        }
+        if (advisorActionEffectPlusNodes[actionIdx].isAlive) {
+            advisorActionEffectPlusNodes[actionIdx].isActive = false
+        }
+    } elif (emptyNode.isAlive) {
+        emptyNode.isActive = false
     }
 }
 
@@ -6104,9 +6800,14 @@ def layout_advisor_action_card(actionIdx : int; cardSize : float2) {
         apply_advisor_card_desc_layout(advisorActionDescNodes[actionIdx], textW, descH)
         advisorActionDescNodes[actionIdx]?.UIText.autoResizeFrame = false
         advisorActionDescNodes[actionIdx]?.UIText.wordWrapping = true
+        let bodyCol = advisorActionDescNodes[actionIdx].parent
+        if (bodyCol.isAlive) {
+            set_spacing(bodyCol, ui_h(ADVISOR_ACTION_DESC_EFFECT_SPACING))
+        }
     }
     if (advisorActionEffectRowNodes[actionIdx].isAlive) {
-        set_frame_width(advisorActionEffectRowNodes[actionIdx], textW)
+        let effectBlockH = advisor_action_effect_block_height(true, true)
+        set_frame_size(advisorActionEffectRowNodes[actionIdx], float2(textW, effectBlockH))
     }
     if (advisorActionHitNodes[actionIdx].isAlive) {
         set_frame_size(advisorActionHitNodes[actionIdx], float2(innerW, innerH))
@@ -6147,7 +6848,7 @@ def apply_advisor_action_card_visual(actionIdx : int; hoverT : float; enabled : 
         descCol = lerp(descCol, float4(1.0, 0.98, 0.92, 1.0), hoverT * 0.25)
         advisorActionDescNodes[actionIdx]?.UIText.color = float4(descCol.x, descCol.y, descCol.z, textAlpha)
     }
-    let deltas = mask_deltas_to_unlocked_stats(copy_action_deltas_with_loyalty_tax(actionIdx))
+    let deltas = advisor_action_preview_deltas(actionIdx)
     refresh_advisor_action_effect_row(actionIdx, deltas, hoverT, enabled)
 }
 
@@ -6158,38 +6859,51 @@ def build_advisor_action_slot(actionIdx : int; cardSize : float2) : NodeId {
     let innerH = cardSize.y - inset * 2.0
     let pad = ui_h(ADVISOR_ACTION_CARD_INNER_PAD)
     let textW = innerW - 2.0 * pad
-    let deltas = mask_deltas_to_unlocked_stats(copy_action_deltas_with_loyalty_tax(actionIdx))
+    let deltas = advisor_action_preview_deltas(actionIdx)
 
     advisorActionImageNodes[actionIdx] = panel(float2(innerW, innerH), [])
+    advisorActionImageNodes[actionIdx].name = "advisorActionImage_{actionIdx}"
     set_image_color(advisorActionImageNodes[actionIdx], float4(1.0, 1.0, 1.0, 1.0))
     advisorActionImageNodes[actionIdx]?.UIImage.pivot = float2(0.0, 0.0)
     set_frame_pivot(advisorActionImageNodes[actionIdx], float2(0.0, 0.0))
     apply_advisor_action_image_cover(actionIdx, innerW, innerH)
 
     advisorActionOverlayNodes[actionIdx] = panel(float2(innerW, innerH), [])
+    advisorActionOverlayNodes[actionIdx].name = "advisorActionOverlay_{actionIdx}"
     set_frame_pivot(advisorActionOverlayNodes[actionIdx], float2(0.0, 0.0))
     set_image_color(advisorActionOverlayNodes[actionIdx], ADVISOR_ACTION_OVERLAY_IDLE_COLOR)
 
     advisorActionTitleNodes[actionIdx] = text(advisor_action_title(actionIdx))
+    advisorActionTitleNodes[actionIdx].name = "advisorActionTitle_{actionIdx}"
     set_text_font_size(advisorActionTitleNodes[actionIdx], ui_h(ADVISOR_ACTION_TITLE_FONT_SIZE))
     set_text_color(advisorActionTitleNodes[actionIdx], ADVISOR_ACTION_TITLE_COLOR)
     configure_advisor_card_title_text(advisorActionTitleNodes[actionIdx])
     set_frame_width(advisorActionTitleNodes[actionIdx], textW)
 
     advisorActionDescNodes[actionIdx] = text(advisor_action_description(actionIdx))
+    advisorActionDescNodes[actionIdx].name = "advisorActionDesc_{actionIdx}"
     set_text_font_size(advisorActionDescNodes[actionIdx], ui_h(ADVISOR_ACTION_DESC_FONT_SIZE))
     set_text_color(advisorActionDescNodes[actionIdx], ADVISOR_ACTION_DESC_COLOR)
     configure_advisor_card_desc_text(advisorActionDescNodes[actionIdx])
     let descH = advisor_action_desc_text_height(innerH)
     apply_advisor_card_desc_layout(advisorActionDescNodes[actionIdx], textW, descH)
 
-    advisorActionEffectRowNodes[actionIdx] = hbox([])
-    set_spacing(advisorActionEffectRowNodes[actionIdx], ui_w(ADVISOR_ACTION_EFFECT_PART_SPACING))
-    set_alignment(advisorActionEffectRowNodes[actionIdx], LayoutAlignment.TopLeft)
-    set_frame_width(advisorActionEffectRowNodes[actionIdx], textW)
+    let effectBlockH = advisor_action_effect_block_height(true, true)
+    advisorActionEffectRowNodes[actionIdx] = panel(float2(textW, effectBlockH), [])
+    advisorActionEffectRowNodes[actionIdx].name = "advisorActionEffectRow_{actionIdx}"
+    set_image_color(advisorActionEffectRowNodes[actionIdx], float4(0.0, 0.0, 0.0, 0.0))
+    set_frame_pivot(advisorActionEffectRowNodes[actionIdx], float2(0.0, 0.0))
+    let effectLineH = advisor_action_effect_line_height()
+    advisorActionEffectMinusNodes[actionIdx] = build_advisor_effect_line_node(advisorActionEffectRowNodes[actionIdx], textW, effectLineH)
+    advisorActionEffectMinusNodes[actionIdx].name = "advisorActionEffectMinus_{actionIdx}"
+    advisorActionEffectPlusNodes[actionIdx] = build_advisor_effect_line_node(advisorActionEffectRowNodes[actionIdx], textW, effectLineH)
+    advisorActionEffectPlusNodes[actionIdx].name = "advisorActionEffectPlus_{actionIdx}"
+    advisorActionEffectEmptyNodes[actionIdx] = build_advisor_effect_line_node(advisorActionEffectRowNodes[actionIdx], textW, effectLineH)
+    advisorActionEffectEmptyNodes[actionIdx].name = "advisorActionEffectEmpty_{actionIdx}"
     refresh_advisor_action_effect_row(actionIdx, deltas, 0.0, true)
 
     let bodyCol = vbox([advisorActionDescNodes[actionIdx], advisorActionEffectRowNodes[actionIdx]])
+    bodyCol.name = "advisorActionBodyCol_{actionIdx}"
     set_spacing(bodyCol, ui_h(ADVISOR_ACTION_DESC_EFFECT_SPACING))
     set_alignment(bodyCol, LayoutAlignment.TopLeft)
     bodyCol?.UIVerticalLayout.childForceExpandWidth = false
@@ -6198,6 +6912,7 @@ def build_advisor_action_slot(actionIdx : int; cardSize : float2) : NodeId {
     set_frame_size(bodyCol, float2(innerW, innerH))
 
     let textCol = vbox([advisorActionTitleNodes[actionIdx], bodyCol])
+    textCol.name = "advisorActionTextCol_{actionIdx}"
     set_spacing(textCol, ui_h(ADVISOR_ACTION_TITLE_DESC_SPACING))
     set_alignment(textCol, LayoutAlignment.TopLeft)
     textCol?.UIVerticalLayout.childForceExpandWidth = false
@@ -6207,6 +6922,7 @@ def build_advisor_action_slot(actionIdx : int; cardSize : float2) : NodeId {
     set_frame_size(textCol, float2(innerW, innerH))
 
     let fillNode = panel(float2(innerW, innerH), [])
+    fillNode.name = "advisorActionFill_{actionIdx}"
     set_frame_pivot(fillNode, float2(0.0, 0.0))
     set_image_color(fillNode, float4(0.0, 0.0, 0.0, ADVISOR_ACTION_FILL_HIT_ALPHA))
 
@@ -6219,6 +6935,7 @@ def build_advisor_action_slot(actionIdx : int; cardSize : float2) : NodeId {
     set_frame_pos(textCol, float2(0.0, 0.0))
 
     advisorActionHitNodes[actionIdx] = panel(float2(innerW, innerH), [])
+    advisorActionHitNodes[actionIdx].name = "advisorActionHit_{actionIdx}"
     set_frame_pivot(advisorActionHitNodes[actionIdx], float2(0.0, 0.0))
     set_image_color(advisorActionHitNodes[actionIdx], float4(0.0, 0.0, 0.0, ADVISOR_ACTION_FILL_HIT_ALPHA))
     add_component(advisorActionHitNodes[actionIdx], new UIButton())
@@ -6227,6 +6944,7 @@ def build_advisor_action_slot(actionIdx : int; cardSize : float2) : NodeId {
     bind_advisor_action_hit_click(actionIdx)
 
     let borderNode = panel(cardSize, [fillNode])
+    borderNode.name = "advisorActionSlot_{actionIdx}"
     set_frame_pivot(borderNode, float2(0.0, 0.0))
     set_image_color(borderNode, UI_BOX_BORDER_COLOR)
     set_frame_pos(fillNode, float2(inset, inset))
@@ -6319,7 +7037,7 @@ def show_advisor_confirm(actionIdx : int) {
         return
     }
     pendingAdvisorActionIdx = actionIdx
-    let deltas = mask_deltas_to_unlocked_stats(copy_action_deltas_with_loyalty_tax(actionIdx))
+    let deltas = advisor_action_preview_deltas(actionIdx)
     advisorConfirmTitleNode?.UIText.text = advisor_confirm_title()
     advisorConfirmBodyNode?.UIText.text = advisor_action_description(actionIdx)
     advisorConfirmPreviewNode?.UIText.text = format_advisor_action_preview(deltas)
@@ -6339,7 +7057,7 @@ def execute_advisor_action(actionIdx : int) {
         return
     }
     advisorActionClickHandledThisFrame = true
-    let deltas = mask_deltas_to_unlocked_stats(copy_action_deltas_with_loyalty_tax(actionIdx))
+    let deltas = advisor_action_apply_deltas(actionIdx)
     begin_advisor_action_cooldown(actionIdx)
     hide_advisor_confirm()
     close_advisor_popup()
@@ -6354,28 +7072,38 @@ def build_advisor_confirm_ui() {
     let panelW = ui_w(ADVISOR_CONFIRM_PANEL_WIDTH)
     let innerW = panelW - 2.0 * border
     advisorConfirmTitleNode = text(advisor_confirm_title())
+    advisorConfirmTitleNode.name = "advisorConfirmTitleNode"
     set_text_color(advisorConfirmTitleNode, float4(1.0, 1.0, 1.0, 1.0))
     configure_profile_title_text(advisorConfirmTitleNode)
     advisorConfirmBodyNode = text("")
+    advisorConfirmBodyNode.name = "advisorConfirmBodyNode"
     set_text_color(advisorConfirmBodyNode, TEXT_COLOR)
     configure_body_button_text(advisorConfirmBodyNode)
     advisorConfirmPreviewNode = text("")
+    advisorConfirmPreviewNode.name = "advisorConfirmPreviewNode"
     set_text_color(advisorConfirmPreviewNode, float4(0.85, 0.78, 0.55, 1.0))
     configure_body_button_text(advisorConfirmPreviewNode)
     let buttonW = innerW * 0.42
     advisorConfirmYesNode = create_answer_button(advisor_confirm_yes(), buttonW)
+    advisorConfirmYesNode.name = "advisorConfirmYesNode"
     advisorConfirmNoNode = create_answer_button(advisor_confirm_no(), buttonW)
+    advisorConfirmNoNode.name = "advisorConfirmNoNode"
     let buttonRow = hbox([advisorConfirmYesNode, advisorConfirmNoNode])
+    buttonRow.name = "advisorConfirmButtonRow"
     set_spacing(buttonRow, ui_w(16.0))
     set_alignment(buttonRow, LayoutAlignment.MiddleCenter)
     advisorConfirmContentNode = vbox([advisorConfirmTitleNode, advisorConfirmBodyNode, advisorConfirmPreviewNode, buttonRow])
+    advisorConfirmContentNode.name = "advisorConfirmContentNode"
     set_alignment(advisorConfirmContentNode, LayoutAlignment.TopLeft)
     advisorConfirmInnerNode = panel(float2(innerW, 200.0), [advisorConfirmContentNode])
+    advisorConfirmInnerNode.name = "advisorConfirmInnerNode"
     set_image_color(advisorConfirmInnerNode, DEATH_SUMMARY_BOX_BG_COLOR)
     advisorConfirmPanelNode = panel(float2(panelW, 220.0), [advisorConfirmInnerNode])
+    advisorConfirmPanelNode.name = "advisorConfirmPanelNode"
     set_image_color(advisorConfirmPanelNode, UI_BOX_BORDER_COLOR)
     add_component(advisorConfirmPanelNode, new UIButton())
     advisorConfirmOverlay = panel(float2(screen_w(), screen_h()), [advisorConfirmPanelNode])
+    advisorConfirmOverlay.name = "advisorConfirmOverlay"
     set_image_color(advisorConfirmOverlay, float4(MENU_OVERLAY_COLOR.x, MENU_OVERLAY_COLOR.y, MENU_OVERLAY_COLOR.z, 0.55))
     set_parent(advisorConfirmOverlay, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(advisorConfirmPanelNode, float2(0.5, 0.5))
@@ -6405,6 +7133,7 @@ def build_advisor_popup_grid(contentW : float) : NodeId {
             push(colNodes, slot)
         }
         let rowNode = hbox(colNodes)
+        rowNode.name = "advisorPopupGridRow_{row}"
         set_spacing(rowNode, gap)
         set_alignment(rowNode, LayoutAlignment.TopLeft)
         set_frame_pivot(rowNode, float2(0.0, 0.0))
@@ -6414,6 +7143,7 @@ def build_advisor_popup_grid(contentW : float) : NodeId {
         push(rowNodes, rowNode)
     }
     let grid = vbox(rowNodes)
+    grid.name = "advisorPopupGrid"
     set_spacing(grid, rowGap)
     set_alignment(grid, LayoutAlignment.TopLeft)
     set_frame_pivot(grid, float2(0.0, 0.0))
@@ -6432,6 +7162,7 @@ def build_advisor_popup_ui() {
     let portraitSize = advisor_portrait_display_size()
 
     advisorPopupTitleNode = text(advisor_panel_title())
+    advisorPopupTitleNode.name = "advisorPopupTitleNode"
     set_text_font_size(advisorPopupTitleNode, ui_h(ADVISOR_PANEL_TITLE_FONT_SIZE))
     set_text_color(advisorPopupTitleNode, float4(1.0, 1.0, 1.0, 1.0))
     configure_profile_title_text(advisorPopupTitleNode)
@@ -6439,12 +7170,14 @@ def build_advisor_popup_ui() {
     advisorPopupTitleNode?.UIText.autoResizeFrame = true
 
     advisorPopupStatusNode = text("")
+    advisorPopupStatusNode.name = "advisorPopupStatusNode"
     set_text_font_size(advisorPopupStatusNode, ui_h(ADVISOR_PANEL_STATUS_FONT_SIZE))
     set_text_color(advisorPopupStatusNode, ADVISOR_ACTION_DESC_COLOR)
     configure_advisor_status_text(advisorPopupStatusNode)
     advisorPopupStatusNode.isActive = false
 
     advisorPopupTitleRowNode = hbox([advisorPopupTitleNode, advisorPopupStatusNode])
+    advisorPopupTitleRowNode.name = "advisorPopupTitleRowNode"
     set_spacing(advisorPopupTitleRowNode, ui_w(ADVISOR_PANEL_TITLE_ROW_GAP))
     set_alignment(advisorPopupTitleRowNode, LayoutAlignment.MiddleLeft)
     advisorPopupTitleRowNode?.UIHorizontalLayout.childForceExpandWidth = false
@@ -6455,12 +7188,15 @@ def build_advisor_popup_ui() {
     let scrollContentW = advisor_popup_scroll_content_width(contentW)
     let scrollH = advisor_popup_scroll_viewport_height()
     advisorPopupScrollAreaNode = build_advisor_popup_scroll_area(contentW, scrollH)
+    advisorPopupScrollAreaNode.name = "advisorPopupScrollAreaNode"
     advisorPopupGridNode = build_advisor_popup_grid(scrollContentW)
+    advisorPopupGridNode.name = "advisorPopupGridNode"
     set_frame_pivot(advisorPopupGridNode, float2(0.0, 0.0))
     advisorPopupGridNode.set_parent(advisorPopupScrollContentNode, AddChildStrategy.KeepLocalTransform)
     set_frame_pos(advisorPopupGridNode, float2(0.0, 0.0))
 
     advisorPopupContentNode = vbox([advisorPopupTitleRowNode, advisorPopupScrollAreaNode])
+    advisorPopupContentNode.name = "advisorPopupContentNode"
     set_spacing(advisorPopupContentNode, ui_h(ADVISOR_PANEL_TITLE_SPACING))
     set_alignment(advisorPopupContentNode, LayoutAlignment.TopLeft)
     set_frame_pivot(advisorPopupContentNode, float2(0.0, 0.0))
@@ -6475,18 +7211,21 @@ def build_advisor_popup_ui() {
     set_frame_size(advisorPopupContentNode, float2(innerW, contentH))
 
     advisorPopupInnerNode = panel(float2(innerW, contentH), [advisorPopupContentNode])
+    advisorPopupInnerNode.name = "advisorPopupInnerNode"
     set_image_color(advisorPopupInnerNode, DEATH_SUMMARY_BOX_BG_COLOR)
     set_alignment(advisorPopupInnerNode, LayoutAlignment.TopLeft)
     set_frame_pivot(advisorPopupInnerNode, float2(0.0, 0.0))
     set_frame_pos(advisorPopupInnerNode, float2(border, border))
 
     advisorPopupPanelNode = panel(float2(panelW, contentH + 2.0 * border), [advisorPopupInnerNode])
+    advisorPopupPanelNode.name = "advisorPopupPanelNode"
     set_image_color(advisorPopupPanelNode, UI_BOX_BORDER_COLOR)
     set_alignment(advisorPopupPanelNode, LayoutAlignment.TopLeft)
     set_frame_pivot(advisorPopupPanelNode, float2(0.0, 0.0))
     set_parent(advisorPopupPanelNode, advisorPopupOverlay, AddChildStrategy.KeepLocalTransform)
 
     advisorPopupPortraitNode = panel(portraitSize, [])
+    advisorPopupPortraitNode.name = "advisorPopupPortraitNode"
     advisorPopupPortraitNode?.UIImage.textureId = advisorCharacterTexture
     advisorPopupPortraitNode?.UIImage.size = portraitSize
     advisorPopupPortraitNode?.UIImage.uvRegion = float4(0.0, 0.0, 1.0, 1.0)
@@ -6789,6 +7528,7 @@ def start_defeat_encounter() {
 
 
 def start_defeat_fade_out() {
+    ensure_death_screen_textures_loaded()
     defeatPhase = DEFEAT_FADE_OUT
     defeatFadeT = 0.0
     deathSummaryFadeT = 0.0
@@ -6828,7 +7568,21 @@ def reset_game() {
     reset_character_question_cooldowns()
     ashfordIntroduced = false
     ashfordCutsceneActive = false
+    statUnlockCutsceneActive = false
+    statUnlockCutsceneStatIdx = -1
+    characterExitFinished = false
+    zoomOutFinished = false
+    continueFadePhase = CONTINUE_FADE_NONE
+    continueFadeT = 0.0
     usingAshfordDebutEncounter = false
+    usingArcEncounter = false
+    usingStatUnlockEncounter = false
+    statUnlockEncounterKind = -1
+    activeArcId = ARC_NONE
+    activeArcBeatIdx = -1
+    queuedNextArcId = ARC_NONE
+    queuedNextArcBeatIdx = -1
+    reset_arc_state()
     reset_stat_unlocks()
     if (introCutscenePhase != INTRO_NONE) {
         introCutscenePhase = INTRO_NONE
@@ -6907,7 +7661,7 @@ def get_hovered_choice_modified_deltas() : int[STAT_COUNT] {
         return copy_stat_deltas(NO_STAT_CHANGE)
     }
     let node = get_current_dialogue_node()
-    if (hoveredChoice >= node.choiceCount) {
+    if (hoveredChoice >= visible_choice_count(node)) {
         return copy_stat_deltas(NO_STAT_CHANGE)
     }
     return compute_synergy_modified_deltas(node.choices[hoveredChoice].statDeltas)
@@ -7048,6 +7802,12 @@ def complete_parallel_handoff() {
     if (usingAshfordDebutEncounter) {
         usingAshfordDebutEncounter = false
     }
+    if (usingStatUnlockEncounter) {
+        clear_stat_unlock_encounter_mode()
+    }
+    if (usingArcEncounter) {
+        clear_arc_encounter_mode()
+    }
     if (advance_day_and_begin_pending_cutscene()) {
         cancel_parallel_handoff()
         return
@@ -7176,25 +7936,76 @@ def update_dialogue_speaker_name() {
 }
 
 
+def sync_question_response_parent() {
+    if (!questionResponseNode.isAlive || !questionContentNode.isAlive || !questionBorderNode.isAlive) {
+        return
+    }
+    let showResponse = questionResponseNode.isActive && length(dialogueBranchResponseText) > 0
+    if (showResponse) {
+        add_child(questionContentNode, questionResponseNode, 1, AddChildStrategy.KeepLocalTransform)
+    } elif (questionResponseNode.parent == questionContentNode) {
+        questionResponseNode.set_parent(questionBorderNode, AddChildStrategy.KeepLocalTransform)
+    }
+}
+
+
 def apply_question_box_layout(dialogueW : float) {
     if (!questionBorderNode.isAlive) {
         return
     }
+    sync_question_response_parent()
     let border = ui_box_border()
     let padding = ui_h(DIALOGUE_BOX_PADDING)
     let innerW = dialogueW - 2.0 * border
     let textW = innerW - 2.0 * padding
+
     set_text_font_size(questionNameNode, ui_h(DIALOGUE_NAME_FONT_SIZE))
+    questionNameNode?.UIText.autoResizeFrame = true
+    questionNameNode?.UIText.wordWrapping = false
     set_frame_width(questionNameNode, textW)
-    let nameH = questionNameNode?.UIFrame.size.y
+    var nameH = questionNameNode?.UIFrame.size.y
+    if (nameH <= 0.0 && length(questionNameNode?.UIText.text) > 0) {
+        nameH = ui_h(DIALOGUE_NAME_FONT_SIZE)
+    }
+
+    var responseH = 0.0
+    if (questionResponseNode.isAlive && questionResponseNode.isActive && length(dialogueBranchResponseText) > 0 && questionResponseNode.parent == questionContentNode) {
+        set_text_font_size(questionResponseNode, ui_h(DIALOGUE_BRANCH_RESPONSE_FONT_SIZE))
+        questionResponseNode?.UIText.autoResizeFrame = true
+        questionResponseNode?.UIText.wordWrapping = true
+        set_frame_width(questionResponseNode, textW)
+        responseH = questionResponseNode?.UIFrame.size.y
+    }
+
     set_text_font_size(questionTextNode, ui_h(QUESTION_FONT_SIZE))
+    questionTextNode?.UIText.autoResizeFrame = true
+    questionTextNode?.UIText.wordWrapping = true
     set_frame_width(questionTextNode, textW)
     var textH = questionTextNode?.UIFrame.size.y
-    if (length(questionTextNode?.UIText.text) == 0) {
+    if (textH <= 0.0 && length(questionTextNode?.UIText.text) > 0) {
         textH = ui_h(QUESTION_FONT_SIZE)
     }
-    let nameSpacing = (nameH > 0.0) ? ui_h(DIALOGUE_NAME_SPACING) : 0.0
-    let contentH = nameH + nameSpacing + textH + 2.0 * padding
+
+    let spacing = ui_h(DIALOGUE_NAME_SPACING)
+    var bodyH = 0.0
+    var visibleBlocks = 0
+    if (nameH > 0.0) {
+        bodyH += nameH
+        visibleBlocks++
+    }
+    if (responseH > 0.0) {
+        bodyH += responseH
+        visibleBlocks++
+    }
+    if (textH > 0.0) {
+        bodyH += textH
+        visibleBlocks++
+    }
+    if (visibleBlocks > 1) {
+        bodyH += spacing * float(visibleBlocks - 1)
+    }
+    let contentH = bodyH + 2.0 * padding
+
     set_padding(questionContentNode, float4(padding, padding, padding, padding))
     set_frame_size(questionContentNode, float2(innerW, contentH))
     set_frame_size(questionBoxNode, float2(innerW, contentH))
@@ -7203,11 +8014,15 @@ def apply_question_box_layout(dialogueW : float) {
 }
 
 
+def mark_dialogue_layout_dirty() {
+    dialogueLayoutDirty = true
+}
+
+
 def apply_dialogue_layout() {
     if (!dialogueRoot.isAlive) {
         return
     }
-    let res = float2(get_resolution())
     let dialogueW = compute_dialogue_width()
 
     set_dialogue_anchor(compute_dialogue_left(), compute_dialogue_top())
@@ -7216,18 +8031,33 @@ def apply_dialogue_layout() {
     if (dialogPhase == DIALOG_CHOOSING) {
         layout_visible_choice_buttons(dialogueW)
     }
+    dialogueLayoutDirty = false
 }
 
 
 def layout_visible_choice_buttons(dialogueW : float) {
     let node = get_current_dialogue_node()
-    let count = node.choiceCount
+    let count = visible_choice_count(node)
     let buttonW = compute_answer_button_width(dialogueW)
-    let answerOuterH = answer_button_height() + 2.0 * ui_box_border()
     let answerSpacing = ui_h(ANSWER_SPACING)
-    let spacingTotal = (count > 1) ? answerSpacing * float(count - 1) : 0.0
+    var totalH = 0.0
+    for (i in range(count)) {
+        let btn = choiceButtonNodes[i]
+        let fill = answer_button_fill(btn)
+        let choiceText = node.choices[i].choiceText
+        if (fill.isAlive && fill?.UIText.text != choiceText) {
+            fill?.UIText.text = choiceText
+            choiceButtonCachedText[i] = choiceText
+        }
+        let innerH = measure_choice_menu_button_height(fill, choiceText, buttonW)
+        choiceButtonCachedHeights[i] = innerH
+        totalH += menu_button_outer_height(innerH)
+        if (i < count - 1) {
+            totalH += answerSpacing
+        }
+    }
     set_spacing(answerRoot, answerSpacing)
-    set_frame_size(answerRoot, float2(dialogueW, answerOuterH * float(count) + spacingTotal))
+    set_frame_size(answerRoot, float2(dialogueW, totalH))
     for (i in range(MAX_CHOICES)) {
         let btn = choiceButtonNodes[i]
         if (!btn.isAlive) {
@@ -7235,12 +8065,7 @@ def layout_visible_choice_buttons(dialogueW : float) {
         }
         if (i < count) {
             btn.isActive = true
-            layout_answer_button(btn, buttonW)
-            let fill = answer_button_fill(btn)
-            if (fill.isAlive) {
-                fill?.UIText.fontSize = ui_h(ANSWER_FONT_SIZE)
-                fill?.UIText.text = node.choices[i].choiceText
-            }
+            layout_choice_button(btn, buttonW, choiceButtonCachedHeights[i])
         } else {
             btn.isActive = false
         }
@@ -7259,42 +8084,15 @@ def apply_character_image_top_clip(node : NodeId) {
 }
 
 
-def apply_character_outline_top_clip(node : NodeId) {
-    if (!node.isAlive) {
-        return
-    }
-    set_anchor_insets(node, 0.0, ui_h(CHARACTER_OUTLINE_TOP_CLIP))
-}
-
-
-def character_outline_uv_region() : float4 {
-    let region = characterTextureUvRegion
-    if (characterAlphaHeight <= 0) {
-        return region
-    }
-    let h = float(characterAlphaHeight)
-    let extraTrim = float(CHARACTER_TEXTURE_UV_TRIM_TOP) / h
-    var trimmedH : float = region.w - extraTrim
-    if (trimmedH < 0.001) {
-        return region
-    }
-    return float4(region.x, region.y + extraTrim, region.z, trimmedH)
-}
-
-
 def sync_character_image_size(node : NodeId; charSize : float2) {
     if (!node.isAlive) {
         return
     }
     set_frame_size(node, charSize)
     node?.UIImage.size = charSize
-    if (node == characterOutlineNode) {
-        node?.UIImage.uvRegion = character_outline_uv_region()
-        apply_character_outline_top_clip(node)
-    } else {
-        node?.UIImage.uvRegion = characterTextureUvRegion
-        apply_character_image_top_clip(node)
-    }
+    node.localScale = float3(1.0, 1.0, 1.0)
+    node?.UIImage.uvRegion = characterTextureUvRegion
+    apply_character_image_top_clip(node)
 }
 
 
@@ -7318,7 +8116,6 @@ def apply_character_layout() {
     if (characterRoot.isAlive) {
         set_frame_size(characterRoot, charSize)
         set_frame_pos(characterRoot, float2(0.0, 0.0))
-        sync_character_image_size(characterOutlineNode, charSize)
         sync_character_image_size(characterImageNode, charSize)
         sync_character_image_size(characterSilhouetteOverlay, charSize)
     }
@@ -7351,7 +8148,7 @@ def apply_camera_zoom() {
     let scale = zoom_ui_scale()
     zoomRoot.localScale = float3(scale, scale, 1.0)
     if (dialogueRoot.isAlive && dialogueRoot.isActive) {
-        apply_dialogue_layout()
+        mark_dialogue_layout_dirty()
     }
 }
 
@@ -7363,7 +8160,11 @@ def character_walk_bob_offset_y(bobPhase : float) : float {
 
 
 def set_character_offset(offsetX : float; offsetY : float = 0.0) {
+    if (!characterRoot.isAlive) {
+        return
+    }
     characterAnimOffsetY = offsetY
+    characterLastBreathOffsetY = offsetY
     get_component(characterRoot) $(var anchor : UIAnchor?) {
         anchor.left = offsetX
         // Bottom-anchored (anchor y = 1.0): vertical inset uses top, not bottom.
@@ -7377,7 +8178,12 @@ def apply_character_breath() {
     characterBreathTimer += get_delta_time()
     let breathY = sin(characterBreathTimer * CHARACTER_BREATH_BOB_FREQ * PI * 2.0) * ui_h(CHARACTER_BREATH_BOB_AMPLITUDE)
     // Snap to whole pixels so sub-pixel bob does not shimmer the top scanline.
-    set_character_offset(characterAnimOffsetX, floor(breathY + 0.5))
+    let snappedY = floor(breathY + 0.5)
+    if (snappedY == characterLastBreathOffsetY) {
+        return
+    }
+    characterLastBreathOffsetY = snappedY
+    set_character_offset(characterAnimOffsetX, snappedY)
 }
 
 
@@ -7385,8 +8191,9 @@ def apply_character_image_color(revealT : float) {
     if (!characterImageNode.isAlive) {
         return
     }
-    // Base stays full-color at full opacity — never tint it black (premultiplied alpha makes black tint invisible).
-    set_image_color(characterImageNode, float4(1.0, 1.0, 1.0, 1.0))
+    let hoverT = clamp(characterHoverT, 0.0, 1.0)
+    let tint = lerp(1.0, CHARACTER_HOVER_GRAY_TINT, hoverT)
+    set_image_color(characterImageNode, float4(tint, tint, tint, 1.0))
     if (!characterSilhouetteOverlay.isAlive) {
         return
     }
@@ -7440,6 +8247,7 @@ def hide_dialogue_ui() {
     dialogueRoot.isActive = false
     questionBorderNode.isActive = false
     answerRoot.isActive = false
+    clear_dialogue_branch_response()
 }
 
 
@@ -7449,7 +8257,7 @@ def reset_choice_hover_state() {
         choiceHoverT[i] = 0.0
         let btn = choiceButtonNodes[i]
         if (btn.isAlive) {
-            apply_answer_button_visual(btn, 0.0)
+            apply_menu_button_visual(btn, 0.0, true)
         }
     }
 }
@@ -7457,8 +8265,9 @@ def reset_choice_hover_state() {
 
 def show_answer_buttons() {
     reset_choice_hover_state()
-    apply_dialogue_layout()
     answerRoot.isActive = true
+    mark_dialogue_layout_dirty()
+    apply_dialogue_layout()
 }
 
 
@@ -7481,11 +8290,13 @@ def build_encounter_prompt_text(basePrompt : string) : string {
     if (usingAshfordDebutEncounter || defeatPhase != DEFEAT_NONE) {
         return basePrompt
     }
-    if (is_edric_day_one_encounter(currentEncounterIdx)) {
-        courtCharactersMet[CHAR_EDRIC] = true
+    let charIdx = currentCourtCharacterIdx
+    if (encounter_has_built_in_intro()) {
+        if (charIdx >= 0 && charIdx < COURT_CHARACTER_COUNT) {
+            courtCharactersMet[charIdx] = true
+        }
         return basePrompt
     }
-    let charIdx = currentCourtCharacterIdx
     if (charIdx < 0 || charIdx >= COURT_CHARACTER_COUNT) {
         return basePrompt
     }
@@ -7501,10 +8312,20 @@ def build_encounter_prompt_text(basePrompt : string) : string {
 }
 
 
-def start_prompt_typewriter() {
+def build_dialogue_prompt_text(responsePrefix : string; basePrompt : string) : string {
+    let prompt = build_encounter_prompt_text(basePrompt)
+    if (length(responsePrefix) == 0) {
+        return prompt
+    }
+    return "{responsePrefix} {prompt}"
+}
+
+
+def start_prompt_typewriter(responsePrefix : string = "") {
     lastSelectedChoiceIdx = -1
+    typewriterPromptPrefix = responsePrefix
     let node = get_current_dialogue_node()
-    begin_typewriter(build_encounter_prompt_text(node.prompt), TYPEWRITER_PROMPT)
+    begin_typewriter(build_dialogue_prompt_text(typewriterPromptPrefix, node.prompt), TYPEWRITER_PROMPT)
 }
 
 
@@ -7513,6 +8334,7 @@ def start_typewriter() {
         return
     }
     pendingNextNodeIdx = NO_NEXT_NODE
+    clear_dialogue_branch_response()
     start_prompt_typewriter()
 }
 
@@ -7526,12 +8348,15 @@ def finish_typewriter() {
     }
     if (typewriterKind == TYPEWRITER_RESPONSE) {
         if (pendingNextNodeIdx != NO_NEXT_NODE) {
+            let responsePrefix = typewriterFullText
+            clear_dialogue_branch_response()
             currentNodeIdx = pendingNextNodeIdx
             pendingNextNodeIdx = NO_NEXT_NODE
             let nextQuestionId = get_current_question_id()
             save_game_progress(nextQuestionId)
-            start_prompt_typewriter()
+            start_prompt_typewriter(responsePrefix)
         } else {
+            clear_dialogue_branch_response()
             dialogPhase = DIALOG_POST_RESPONSE_HOLD
             postResponseHoldTimer = POST_RESPONSE_HOLD_DURATION
         }
@@ -7556,7 +8381,7 @@ def select_choice(choiceIdx : int) {
         return
     }
     let node = get_current_dialogue_node()
-    if (choiceIdx < 0 || choiceIdx >= node.choiceCount) {
+    if (choiceIdx < 0 || choiceIdx >= visible_choice_count(node)) {
         return
     }
     let choice = node.choices[choiceIdx]
@@ -7567,6 +8392,15 @@ def select_choice(choiceIdx : int) {
     append_reply_to_history(questionId, choiceReplyId)
     hoveredChoice = HOVER_NONE
     apply_encounter_nickname_change(currentEncounterIdx, choiceIdx)
+    if (is_edric_day_one_encounter(currentEncounterIdx)) {
+        apply_edric_day_one_choice(currentNodeIdx, choiceIdx)
+    }
+    if (usingArcEncounter) {
+        apply_arc_choice_effects(activeArcId, activeArcBeatIdx, choiceIdx)
+    }
+    if (usingStatUnlockEncounter && statUnlockEncounterKind == 0 && currentNodeIdx == 0) {
+        apply_people_unlock_tone(choiceIdx)
+    }
     update_nickname_text()
     pendingChoiceDeltas = compute_synergy_modified_deltas(choice.statDeltas)
     hasPendingChoiceDeltas = true
@@ -7579,12 +8413,21 @@ def select_choice(choiceIdx : int) {
         begin_defeat_after_exit()
     }
     answerRoot.isActive = false
-    if (length(choice.response) == 0 && pendingNextNodeIdx != NO_NEXT_NODE) {
+    if (pendingNextNodeIdx != NO_NEXT_NODE) {
+        clear_dialogue_branch_response()
+        let responsePrefix = choice.response
         currentNodeIdx = pendingNextNodeIdx
         pendingNextNodeIdx = NO_NEXT_NODE
         save_game_progress(get_current_question_id())
-        start_prompt_typewriter()
+        start_prompt_typewriter(responsePrefix)
+    } elif (length(choice.response) == 0) {
+        clear_dialogue_branch_response()
+        typewriterPromptPrefix = ""
+        dialogPhase = DIALOG_POST_RESPONSE_HOLD
+        postResponseHoldTimer = POST_RESPONSE_HOLD_DURATION
     } else {
+        clear_dialogue_branch_response()
+        typewriterPromptPrefix = ""
         begin_typewriter(choice.response, TYPEWRITER_RESPONSE)
     }
 }
@@ -7627,6 +8470,7 @@ def finish_camera_zoom_in() {
 
 
 def begin_ashford_cutscene(skipEntryFade : bool = false) {
+    ensure_intro_cutscene_assets_loaded()
     hide_dialogue_ui()
     cancel_parallel_handoff()
     reset_intro_cutscene_skip_ui()
@@ -7682,7 +8526,7 @@ def begin_ashford_cutscene(skipEntryFade : bool = false) {
 
 def stat_unlock_cutscene_texture(statIdx : int) : TextureId {
     if (statIdx == STAT_CHURCH_IDX) {
-        return introCutsceneTexture6
+        return churchCutsceneTexture
     }
     if (statIdx == STAT_PEOPLE_IDX) {
         return introCutsceneTexture3
@@ -7709,6 +8553,7 @@ def update_stat_unlock_cutscene_texture_aspect(statIdx : int) {
 
 
 def begin_stat_unlock_cutscene(statIdx : int; skipEntryFade : bool = false) {
+    ensure_intro_cutscene_assets_loaded()
     hide_dialogue_ui()
     cancel_parallel_handoff()
     reset_intro_cutscene_skip_ui()
@@ -7771,7 +8616,7 @@ def start_stat_intro_encounter(statIdx : int) {
     refresh_character_visuals()
     hide_dialogue_ui()
     dialogPhase = DIALOG_IDLE
-    save_game_progress(main_question_id(currentEncounterIdx, currentNodeIdx))
+    save_game_progress(get_current_question_id())
     start_character_enter()
 }
 
@@ -7782,7 +8627,7 @@ def resume_day_visitor_after_cutscene() {
     refresh_character_visuals()
     hide_dialogue_ui()
     dialogPhase = DIALOG_IDLE
-    save_game_progress(main_question_id(currentEncounterIdx, currentNodeIdx))
+    save_game_progress(get_current_question_id())
     start_character_enter()
 }
 
@@ -7978,11 +8823,11 @@ def refresh_character_visuals() {
     if (!characterImageNode.isAlive) {
         return
     }
-    apply_character_visual(texture_path_for(characterTexture))
-    characterImageNode?.UIImage.textureId = characterTexture
-    if (characterOutlineNode.isAlive) {
-        characterOutlineNode?.UIImage.textureId = characterOutlineTexture
+    let path = texture_path_for(characterTexture)
+    if (!apply_character_visual(path)) {
+        update_character_texture_aspect(characterTexture)
     }
+    characterImageNode?.UIImage.textureId = characterTexture
     if (characterSilhouetteOverlay.isAlive) {
         characterSilhouetteOverlay?.UIImage.textureId = characterTexture
     }
@@ -8202,7 +9047,7 @@ def stat_hover_target(statIdx : int) : float {
         return 0.0
     }
     let node = get_current_dialogue_node()
-    if (hoveredChoice >= node.choiceCount) {
+    if (hoveredChoice >= visible_choice_count(node)) {
         return 0.0
     }
     let modified = get_hovered_choice_modified_deltas()
@@ -8263,11 +9108,66 @@ def apply_stat_icon_visual(statIdx : int) {
 }
 
 
-def apply_stat_column_visual(statIdx : int) {
+def apply_stat_column_layout(statIdx : int) {
     apply_stat_icon_visual(statIdx)
-    apply_stat_icon_color(statIdx)
     layout_stat_bar_fill_value(statIdx, stat_column_fill_value(statIdx))
+    statLastAppliedFillValue[statIdx] = stat_column_fill_value(statIdx)
+}
+
+
+def apply_stat_column_colors(statIdx : int) {
+    apply_stat_icon_color(statIdx)
     apply_stat_fill_color(statIdx)
+}
+
+
+def stat_needs_layout_update(statIdx : int) : bool {
+    if (!statUnlocked[statIdx]) {
+        return false
+    }
+    if (statUnlockRevealT[statIdx] < 0.999) {
+        return true
+    }
+    if (abs(statEmphasisT[statIdx] - stat_emphasis_target(statIdx)) > 0.001) {
+        return true
+    }
+    if (abs(statChoiceHoverT[statIdx] - stat_hover_target(statIdx)) > 0.001) {
+        return true
+    }
+    let fillVal = stat_column_fill_value(statIdx)
+    if (abs(statLastAppliedFillValue[statIdx] - fillVal) > 0.01) {
+        return true
+    }
+    return false
+}
+
+
+def stat_needs_color_update(statIdx : int) : bool {
+    if (!statUnlocked[statIdx]) {
+        return false
+    }
+    if (stat_needs_layout_update(statIdx)) {
+        return true
+    }
+    if (statConfirmPhase[statIdx] != STAT_CONFIRM_IDLE) {
+        return true
+    }
+    if (statFlashT[statIdx] > 0.001) {
+        return true
+    }
+    if (stat_hover_target(statIdx) > 0.0) {
+        return true
+    }
+    if (stat_info_hover_target(statIdx) > 0.0) {
+        return true
+    }
+    return false
+}
+
+
+def apply_stat_column_visual(statIdx : int) {
+    apply_stat_column_layout(statIdx)
+    apply_stat_column_colors(statIdx)
 }
 
 
@@ -8365,8 +9265,19 @@ def update_stat_bar_anims(dt : float) {
             statEmphasisT[i] = move_toward(statEmphasisT[i], target, STAT_EMPHASIS_LERP_SPEED * dt)
         }
         statChoiceHoverT[i] = move_toward(statChoiceHoverT[i], stat_hover_target(i), STAT_EMPHASIS_LERP_SPEED * dt)
-        if (statUnlocked[i]) {
-            apply_stat_column_visual(i)
+        if (!statUnlocked[i]) {
+            continue
+        }
+        let needsLayout = stat_needs_layout_update(i)
+        let needsColor = stat_needs_color_update(i)
+        if (!needsLayout && !needsColor) {
+            continue
+        }
+        if (needsLayout) {
+            apply_stat_column_layout(i)
+        }
+        if (needsColor) {
+            apply_stat_column_colors(i)
         }
     }
 }
@@ -8569,10 +9480,12 @@ def create_stat_column(statIdx : int) : NodeId {
     let columnSize = stat_column_size()
 
     let column = panel(columnSize, [])
+    column.name = "statColumn_{statIdx}"
     set_image_color(column, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(column, float2(0.5, 0.5))
 
     let iconOutline = panel(iconSize, [])
+    iconOutline.name = "statIconOutline_{statIdx}"
     iconOutline?.UIImage.textureId = statTextures[statIdx]
     configure_stat_icon_outline(iconOutline)
     iconOutline.set_parent(column, AddChildStrategy.KeepLocalTransform)
@@ -8581,6 +9494,7 @@ def create_stat_column(statIdx : int) : NodeId {
     statIconOutlineNodes[statIdx] = iconOutline
 
     let icon = panel(iconSize, [])
+    icon.name = "statIcon_{statIdx}"
     icon?.UIImage.textureId = statTextures[statIdx]
     configure_stat_icon(icon)
     configure_stat_icon_mask(icon)
@@ -8589,28 +9503,33 @@ def create_stat_column(statIdx : int) : NodeId {
     set_frame_pivot(icon, float2(0.5, 0.0))
 
     let iconColorFill = panel(iconSize, [])
+    iconColorFill.name = "statIconColorFill_{statIdx}"
     configure_stat_icon_color_fill(iconColorFill)
     set_parent(iconColorFill, icon, AddChildStrategy.KeepLocalTransform)
     add_anchor(iconColorFill, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     statIconColorFillNodes[statIdx] = iconColorFill
 
     let barTrack = panel(float2(barW, barH), [])
+    barTrack.name = "statBarTrack_{statIdx}"
     barTrack?.UIImage.textureId = statBarTrackTexture
     set_image_color(barTrack, STAT_BAR_TRACK_COLOR)
     set_frame_pivot(barTrack, float2(0.0, 0.0))
     statBarTrackNodes[statIdx] = barTrack
 
     let barFill = panel(float2(barW * 0.5, barH), [])
+    barFill.name = "statBarFill_{statIdx}"
     barFill?.UIImage.textureId = statBarFillTexture
     set_image_color(barFill, stat_fill_color_for_percent(float(kingdomStats[statIdx])))
     set_frame_pivot(barFill, float2(0.0, 0.0))
     statBarFillNodes[statIdx] = barFill
 
     let barStack = panel(float2(barW, barH), [barTrack, barFill])
+    barStack.name = "statBarStack_{statIdx}"
     set_image_color(barStack, float4(0.0, 0.0, 0.0, 0.0))
     set_frame_pivot(barStack, float2(0.0, 0.0))
 
     let barWrapper = panel(float2(columnW, barH), [barStack])
+    barWrapper.name = "statBarWrapper_{statIdx}"
     set_image_color(barWrapper, float4(0.0, 0.0, 0.0, 0.0))
     layout_stat_bar_stack(columnW, barStack)
 
@@ -8635,6 +9554,7 @@ def build_dialogue_ui() {
     let textW = innerW - 2.0 * padding
 
     questionNameNode = text("")
+    questionNameNode.name = "questionNameNode"
     set_text_font_size(questionNameNode, ui_h(DIALOGUE_NAME_FONT_SIZE))
     set_text_color(questionNameNode, DIALOGUE_NAME_COLOR)
     apply_name_font(questionNameNode)
@@ -8645,7 +9565,23 @@ def build_dialogue_ui() {
     questionNameNode?.UIText.pivot = float2(0.0, 0.0)
     set_frame_pivot(questionNameNode, float2(0.0, 0.0))
 
+    questionResponseNode = text("")
+    questionResponseNode.name = "questionResponseNode"
+    set_text_font_size(questionResponseNode, ui_h(DIALOGUE_BRANCH_RESPONSE_FONT_SIZE))
+    set_text_color(questionResponseNode, DIALOGUE_BRANCH_RESPONSE_COLOR)
+    apply_dialogue_font(questionResponseNode)
+    set_frame_width(questionResponseNode, textW)
+    questionResponseNode?.UIText.fontScaling = false
+    questionResponseNode?.UIText.autoResizeFrame = true
+    questionResponseNode?.UIText.wordWrapping = true
+    questionResponseNode?.UIText.horAlignment = TextHorAlignment.Left
+    questionResponseNode?.UIText.vertAlignment = TextVertAlignment.Top
+    questionResponseNode?.UIText.pivot = float2(0.0, 0.0)
+    set_frame_pivot(questionResponseNode, float2(0.0, 0.0))
+    questionResponseNode.isActive = false
+
     questionTextNode = text("")
+    questionTextNode.name = "questionTextNode"
     set_text_font_size(questionTextNode, ui_h(QUESTION_FONT_SIZE))
     set_text_color(questionTextNode, DIALOGUE_TEXT_COLOR)
     apply_dialogue_font(questionTextNode)
@@ -8658,18 +9594,21 @@ def build_dialogue_ui() {
     questionTextNode?.UIText.pivot = float2(0.0, 0.0)
     set_frame_pivot(questionTextNode, float2(0.0, 0.0))
 
-    questionContentNode = vbox([questionNameNode, questionTextNode])
+    questionContentNode = vbox([questionNameNode, questionResponseNode, questionTextNode])
+    questionContentNode.name = "questionContentNode"
     set_spacing(questionContentNode, ui_h(DIALOGUE_NAME_SPACING))
     set_padding(questionContentNode, float4(padding, padding, padding, padding))
     set_alignment(questionContentNode, LayoutAlignment.TopLeft)
     set_frame_pivot(questionContentNode, float2(0.0, 0.0))
 
     questionBoxNode = panel(float2(innerW, 80.0), [questionContentNode])
+    questionBoxNode.name = "questionBoxNode"
     set_image_color(questionBoxNode, DIALOGUE_BOX_BG_COLOR)
     set_alignment(questionBoxNode, LayoutAlignment.TopLeft)
     set_frame_pivot(questionBoxNode, float2(0.0, 0.0))
 
     questionBorderNode = panel(float2(dialogueW, 86.0), [questionBoxNode])
+    questionBorderNode.name = "questionBorderNode"
     set_image_color(questionBorderNode, UI_BOX_BORDER_COLOR)
     set_alignment(questionBorderNode, LayoutAlignment.TopLeft)
     set_frame_pivot(questionBorderNode, float2(0.0, 0.0))
@@ -8678,17 +9617,20 @@ def build_dialogue_ui() {
     let buttonW = compute_answer_button_width(dialogueW)
     var choiceButtons : array<NodeId>
     for (i in range(MAX_CHOICES)) {
-        let btn = create_answer_button("", buttonW)
+        let btn = create_choice_button("", buttonW)
         choiceButtonNodes[i] = btn
+        choiceButtonNodes[i].name = "choiceButton_{i}"
         push(choiceButtons, btn)
     }
     answerRoot = vbox(choiceButtons)
+    answerRoot.name = "answerRoot"
     set_spacing(answerRoot, ui_h(ANSWER_SPACING))
     set_alignment(answerRoot, LayoutAlignment.TopLeft)
     set_frame_pivot(answerRoot, float2(0.0, 0.0))
     layout_visible_choice_buttons(dialogueW)
 
     dialogueRoot = vbox([questionBorderNode, answerRoot])
+    dialogueRoot.name = "dialogueRoot"
     set_spacing(dialogueRoot, ui_h(DIALOGUE_ANSWER_SPACING))
     set_alignment(dialogueRoot, LayoutAlignment.TopLeft)
     set_frame_width(dialogueRoot, dialogueW)
@@ -8708,6 +9650,7 @@ def build_character() {
     characterRestOffsetX = compute_character_rest_offset_x()
 
     characterRoot = panel(charSize, [])
+    characterRoot.name = "characterRoot"
     set_image_color(characterRoot, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(characterRoot, zoomRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(characterRoot, float2(0.5, 1.0))
@@ -8718,6 +9661,7 @@ def build_character() {
     add_component(characterRoot, new CharacterHover())
 
     characterImageNode = panel(charSize, [])
+    characterImageNode.name = "characterImageNode"
     characterImageNode?.UIImage.textureId = characterTexture
     characterImageNode?.UIImage.size = charSize
     characterImageNode?.UIImage.uvRegion = characterTextureUvRegion
@@ -8726,18 +9670,8 @@ def build_character() {
     add_anchor(characterImageNode, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     apply_character_image_top_clip(characterImageNode)
 
-    // Outline renders on top of the sprite so the opaque panel does not bury it.
-    characterOutlineNode = panel(charSize, [])
-    characterOutlineNode?.UIImage.textureId = characterOutlineTexture
-    characterOutlineNode?.UIImage.size = charSize
-    characterOutlineNode?.UIImage.uvRegion = character_outline_uv_region()
-    set_image_color(characterOutlineNode, CHARACTER_OUTLINE_COLOR)
-    set_parent(characterOutlineNode, characterRoot, AddChildStrategy.KeepLocalTransform)
-    add_anchor(characterOutlineNode, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
-    apply_character_outline_top_clip(characterOutlineNode)
-    characterOutlineNode.isActive = false
-
     characterSilhouetteOverlay = panel(charSize, [])
+    characterSilhouetteOverlay.name = "characterSilhouetteOverlay"
     characterSilhouetteOverlay?.UIImage.textureId = characterTexture
     characterSilhouetteOverlay?.UIImage.size = charSize
     characterSilhouetteOverlay?.UIImage.uvRegion = characterTextureUvRegion
@@ -8752,6 +9686,7 @@ def build_character() {
 def build_incoming_visitor() {
     let charSize = character_size()
     incomingVisitorRoot = panel(charSize, [])
+    incomingVisitorRoot.name = "incomingVisitorRoot"
     set_image_color(incomingVisitorRoot, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(incomingVisitorRoot, zoomRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(incomingVisitorRoot, float2(0.5, 1.0))
@@ -8760,6 +9695,7 @@ def build_incoming_visitor() {
     incomingVisitorRoot.isActive = false
 
     incomingVisitorImageNode = panel(charSize, [])
+    incomingVisitorImageNode.name = "incomingVisitorImageNode"
     incomingVisitorImageNode?.UIImage.textureId = characterTexture
     incomingVisitorImageNode?.UIImage.size = charSize
     incomingVisitorImageNode?.UIImage.uvRegion = characterTextureUvRegion
@@ -8769,6 +9705,7 @@ def build_incoming_visitor() {
     apply_character_image_top_clip(incomingVisitorImageNode)
 
     incomingVisitorSilhouetteNode = panel(charSize, [])
+    incomingVisitorSilhouetteNode.name = "incomingVisitorSilhouetteNode"
     incomingVisitorSilhouetteNode?.UIImage.textureId = characterTexture
     incomingVisitorSilhouetteNode?.UIImage.size = charSize
     incomingVisitorSilhouetteNode?.UIImage.uvRegion = characterTextureUvRegion
@@ -8862,6 +9799,7 @@ def apply_info_tooltip_layout() {
 
 def build_info_tooltip_section_node(textW : float; color : float4) : NodeId {
     let node = text("")
+    node.name = "infoTooltipSection"
     set_text_font_size(node, ui_h(INFO_TOOLTIP_FONT_SIZE))
     configure_info_tooltip_section_node(node, textW, color)
     apply_dialogue_font(node)
@@ -8876,13 +9814,21 @@ def build_info_tooltip_ui() {
     let textW = innerW - 2.0 * pad
 
     infoTooltipTitleNode = build_info_tooltip_section_node(textW, INFO_TOOLTIP_TITLE_COLOR)
+    infoTooltipTitleNode.name = "infoTooltipTitleNode"
     infoTooltipBodyNode = build_info_tooltip_section_node(textW, INFO_TOOLTIP_BODY_COLOR)
+    infoTooltipBodyNode.name = "infoTooltipBodyNode"
     infoTooltipInfluenceHeaderNode = build_info_tooltip_section_node(textW, INFO_TOOLTIP_INFLUENCE_HEADER_COLOR)
+    infoTooltipInfluenceHeaderNode.name = "infoTooltipInfluenceHeaderNode"
     infoTooltipInfluenceBuffNode = build_info_tooltip_section_node(textW, STAT_FLASH_POSITIVE_COLOR)
+    infoTooltipInfluenceBuffNode.name = "infoTooltipInfluenceBuffNode"
     infoTooltipInfluenceDebuffNode = build_info_tooltip_section_node(textW, STAT_FLASH_NEGATIVE_COLOR)
+    infoTooltipInfluenceDebuffNode.name = "infoTooltipInfluenceDebuffNode"
     infoTooltipActiveHeaderNode = build_info_tooltip_section_node(textW, INFO_TOOLTIP_INFLUENCE_HEADER_COLOR)
+    infoTooltipActiveHeaderNode.name = "infoTooltipActiveHeaderNode"
     infoTooltipActiveBuffNode = build_info_tooltip_section_node(textW, STAT_FLASH_POSITIVE_COLOR)
+    infoTooltipActiveBuffNode.name = "infoTooltipActiveBuffNode"
     infoTooltipActiveDebuffNode = build_info_tooltip_section_node(textW, STAT_FLASH_NEGATIVE_COLOR)
+    infoTooltipActiveDebuffNode.name = "infoTooltipActiveDebuffNode"
 
     infoTooltipContentNode = vbox([
         infoTooltipTitleNode,
@@ -8894,6 +9840,7 @@ def build_info_tooltip_ui() {
         infoTooltipActiveBuffNode,
         infoTooltipActiveDebuffNode
     ])
+    infoTooltipContentNode.name = "infoTooltipContentNode"
     set_spacing(infoTooltipContentNode, 0.0)
     set_alignment(infoTooltipContentNode, LayoutAlignment.TopLeft)
     set_padding(infoTooltipContentNode, float4(pad, pad, pad, pad))
@@ -8902,11 +9849,13 @@ def build_info_tooltip_ui() {
     infoTooltipContentNode?.UIVerticalLayout.childForceExpandHeight = false
 
     infoTooltipBoxNode = panel(float2(innerW, ui_h(80.0)), [infoTooltipContentNode])
+    infoTooltipBoxNode.name = "infoTooltipBoxNode"
     set_image_color(infoTooltipBoxNode, DEATH_SUMMARY_BOX_BG_COLOR)
     set_alignment(infoTooltipBoxNode, LayoutAlignment.TopLeft)
     set_frame_pivot(infoTooltipBoxNode, float2(0.0, 0.0))
 
     infoTooltipRoot = panel(float2(ui_w(INFO_TOOLTIP_WIDTH), ui_h(84.0)), [infoTooltipBoxNode])
+    infoTooltipRoot.name = "infoTooltipRoot"
     set_image_color(infoTooltipRoot, UI_BOX_BORDER_COLOR)
     set_alignment(infoTooltipRoot, LayoutAlignment.TopLeft)
     set_frame_pos(infoTooltipBoxNode, float2(border, border))
@@ -8945,6 +9894,7 @@ def build_character_profile_ui() {
     let btnH = ui_h(CHARACTER_PROFILE_BUTTON_HEIGHT)
 
     characterProfilePortraitNode = panel(float2(portraitW, portraitH), [])
+    characterProfilePortraitNode.name = "characterProfilePortraitNode"
     characterProfilePortraitNode?.UIImage.textureId = portraitTextures[0]
     characterProfilePortraitNode?.UIImage.size = float2(portraitW, portraitH)
     characterProfilePortraitNode?.UIImage.uvRegion = float4(0.0, 0.0, 1.0, 1.0)
@@ -8952,34 +9902,40 @@ def build_character_profile_ui() {
     set_frame_pivot(characterProfilePortraitNode, float2(0.0, 0.0))
 
     characterProfilePortraitInsetNode = panel(float2(portraitFrameW, portraitFrameH), [characterProfilePortraitNode])
+    characterProfilePortraitInsetNode.name = "characterProfilePortraitInsetNode"
     set_image_color(characterProfilePortraitInsetNode, CHARACTER_PROFILE_PORTRAIT_INSET_COLOR)
     set_alignment(characterProfilePortraitInsetNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfilePortraitInsetNode, float2(0.0, 0.0))
 
     characterProfilePortraitFrameNode = panel(float2(portraitFrameW, portraitFrameH), [characterProfilePortraitInsetNode])
+    characterProfilePortraitFrameNode.name = "characterProfilePortraitFrameNode"
     set_image_color(characterProfilePortraitFrameNode, CHARACTER_PROFILE_PORTRAIT_BORDER_COLOR)
     set_alignment(characterProfilePortraitFrameNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfilePortraitFrameNode, float2(0.0, 0.0))
     apply_profile_portrait_layout(portraitW, portraitH)
 
     characterProfileTitleNode = text("")
+    characterProfileTitleNode.name = "characterProfileTitleNode"
     set_text_font_size(characterProfileTitleNode, ui_h(CHARACTER_PROFILE_TITLE_FONT_SIZE))
     set_text_color(characterProfileTitleNode, CHARACTER_PROFILE_TITLE_COLOR)
     configure_profile_title_text(characterProfileTitleNode)
 
     characterProfileDescBesideNode = text("")
+    characterProfileDescBesideNode.name = "characterProfileDescBesideNode"
     set_text_font_size(characterProfileDescBesideNode, ui_h(CHARACTER_PROFILE_BODY_FONT_SIZE))
     set_text_color(characterProfileDescBesideNode, CHARACTER_PROFILE_BODY_COLOR)
     configure_profile_body_text(characterProfileDescBesideNode)
     apply_dialogue_font(characterProfileDescBesideNode)
 
     characterProfileDescBelowNode = text("")
+    characterProfileDescBelowNode.name = "characterProfileDescBelowNode"
     set_text_font_size(characterProfileDescBelowNode, ui_h(CHARACTER_PROFILE_BODY_FONT_SIZE))
     set_text_color(characterProfileDescBelowNode, CHARACTER_PROFILE_BODY_COLOR)
     configure_profile_body_text(characterProfileDescBelowNode)
     apply_dialogue_font(characterProfileDescBelowNode)
 
     characterProfileTextColumnNode = vbox([characterProfileTitleNode, characterProfileDescBesideNode])
+    characterProfileTextColumnNode.name = "characterProfileTextColumnNode"
     set_spacing(characterProfileTextColumnNode, ui_h(CHARACTER_PROFILE_SPACING))
     set_alignment(characterProfileTextColumnNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfileTextColumnNode, float2(0.0, 0.0))
@@ -8987,6 +9943,7 @@ def build_character_profile_ui() {
     characterProfileTextColumnNode?.UIVerticalLayout.childForceExpandHeight = false
 
     characterProfileHeaderNode = hbox([characterProfilePortraitFrameNode, characterProfileTextColumnNode])
+    characterProfileHeaderNode.name = "characterProfileHeaderNode"
     set_spacing(characterProfileHeaderNode, ui_w(CHARACTER_PROFILE_HEADER_GAP))
     set_alignment(characterProfileHeaderNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfileHeaderNode, float2(0.0, 0.0))
@@ -8994,26 +9951,31 @@ def build_character_profile_ui() {
     characterProfileHeaderNode?.UIHorizontalLayout.childForceExpandHeight = false
 
     characterProfileLikesNode = text("")
+    characterProfileLikesNode.name = "characterProfileLikesNode"
     set_text_font_size(characterProfileLikesNode, ui_h(CHARACTER_PROFILE_TRAIT_FONT_SIZE))
     set_text_color(characterProfileLikesNode, float4(0.55, 0.88, 0.45, 1.0))
     configure_profile_body_text(characterProfileLikesNode)
     apply_plain_font(characterProfileLikesNode)
 
     characterProfileDislikesNode = text("")
+    characterProfileDislikesNode.name = "characterProfileDislikesNode"
     set_text_font_size(characterProfileDislikesNode, ui_h(CHARACTER_PROFILE_TRAIT_FONT_SIZE))
     set_text_color(characterProfileDislikesNode, float4(0.92, 0.45, 0.38, 1.0))
     configure_profile_body_text(characterProfileDislikesNode)
     apply_plain_font(characterProfileDislikesNode)
 
     characterProfileDividerNode = panel(float2(innerW, ui_h(CHARACTER_PROFILE_DIVIDER_HEIGHT)), [])
+    characterProfileDividerNode.name = "characterProfileDividerNode"
     set_image_color(characterProfileDividerNode, CHARACTER_PROFILE_DIVIDER_COLOR)
     set_alignment(characterProfileDividerNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfileDividerNode, float2(0.0, 0.0))
 
     let okayBtnW = compute_profile_okay_button_outer_width()
     characterProfileOkayButtonNode = create_pause_menu_button(menu_okay(), true, okayBtnW, btnH, false)
+    characterProfileOkayButtonNode.name = "characterProfileOkayButtonNode"
 
     characterProfileOkayRowNode = hbox([characterProfileOkayButtonNode])
+    characterProfileOkayRowNode.name = "characterProfileOkayRowNode"
     set_alignment(characterProfileOkayRowNode, LayoutAlignment.MiddleCenter)
     set_frame_pivot(characterProfileOkayRowNode, float2(0.0, 0.0))
     characterProfileOkayRowNode?.UIHorizontalLayout.childForceExpandWidth = false
@@ -9027,6 +9989,7 @@ def build_character_profile_ui() {
         characterProfileDislikesNode,
         characterProfileOkayRowNode
     ])
+    characterProfileContentNode.name = "characterProfileContentNode"
     set_spacing(characterProfileContentNode, ui_h(CHARACTER_PROFILE_SPACING))
     set_alignment(characterProfileContentNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfileContentNode, float2(0.0, 0.0))
@@ -9039,12 +10002,14 @@ def build_character_profile_ui() {
     set_padding(characterProfileContentNode, float4(pad, pad, pad, pad))
     set_frame_size(characterProfileContentNode, float2(innerW, contentH))
     characterProfileInnerNode = panel(float2(innerW, contentH), [characterProfileContentNode])
+    characterProfileInnerNode.name = "characterProfileInnerNode"
     set_image_color(characterProfileInnerNode, CHARACTER_PROFILE_INNER_BG_COLOR)
     set_alignment(characterProfileInnerNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfileInnerNode, float2(0.0, 0.0))
     set_frame_pos(characterProfileInnerNode, float2(border, border))
 
     characterProfilePanelNode = panel(float2(panelW, contentH + 2.0 * border), [characterProfileInnerNode])
+    characterProfilePanelNode.name = "characterProfilePanelNode"
     set_image_color(characterProfilePanelNode, CHARACTER_PROFILE_BORDER_COLOR)
     set_alignment(characterProfilePanelNode, LayoutAlignment.TopLeft)
     set_frame_pivot(characterProfilePanelNode, float2(0.0, 0.0))
@@ -9065,40 +10030,50 @@ def build_main_menu_ui() {
     let rowH = menu_button_outer_height(btnH)
 
     mainMenuRoot = panel(res, [])
+    mainMenuRoot.name = "mainMenuRoot"
     set_image_color(mainMenuRoot, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(mainMenuRoot, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(mainMenuRoot, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     set_frame_pivot(mainMenuRoot, float2(0.5, 0.5))
 
     mainMenuBackgroundZoomRoot = panel(res, [])
+    mainMenuBackgroundZoomRoot.name = "mainMenuBackgroundZoomRoot"
     set_image_color(mainMenuBackgroundZoomRoot, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(mainMenuBackgroundZoomRoot, mainMenuRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(mainMenuBackgroundZoomRoot, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     set_frame_pivot(mainMenuBackgroundZoomRoot, float2(0.5, 0.5))
 
     mainMenuBackgroundNode = panel(res, [])
+    mainMenuBackgroundNode.name = "mainMenuBackgroundNode"
     mainMenuBackgroundNode?.UIImage.textureId = mainMenuBackgroundTexture
     set_image_color(mainMenuBackgroundNode, float4(1.0, 1.0, 1.0, 1.0))
     set_parent(mainMenuBackgroundNode, mainMenuBackgroundZoomRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(mainMenuBackgroundNode, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
 
     mainMenuBottomBarRoot = panel(float2(res.x, barH), [])
+    mainMenuBottomBarRoot.name = "mainMenuBottomBarRoot"
     set_image_color(mainMenuBottomBarRoot, TOP_BAR_BG_COLOR)
     set_parent(mainMenuBottomBarRoot, mainMenuRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(mainMenuBottomBarRoot, float2(0.0, 1.0), float2(1.0, 1.0))
     set_frame_pivot(mainMenuBottomBarRoot, float2(0.5, 1.0))
 
     mainMenuBottomBarBorderNode = panel(float2(res.x, ui_box_border()), [])
+    mainMenuBottomBarBorderNode.name = "mainMenuBottomBarBorderNode"
     set_image_color(mainMenuBottomBarBorderNode, UI_BOX_BORDER_COLOR)
     set_parent(mainMenuBottomBarBorderNode, mainMenuBottomBarRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(mainMenuBottomBarBorderNode, float2(0.0, 0.0), float2(1.0, 0.0))
     set_frame_pivot(mainMenuBottomBarBorderNode, float2(0.5, 0.0))
 
     mainMenuButtonNodes[MAIN_MENU_CONTINUE_IDX] = create_pause_menu_button(menu_continue(), hasSaveGame, btnW, btnH)
+    mainMenuButtonNodes[MAIN_MENU_CONTINUE_IDX].name = "mainMenuButton_continue"
     mainMenuButtonNodes[MAIN_MENU_NEW_GAME_IDX] = create_pause_menu_button(menu_new_game(), true, btnW, btnH)
+    mainMenuButtonNodes[MAIN_MENU_NEW_GAME_IDX].name = "mainMenuButton_newGame"
     mainMenuButtonNodes[MAIN_MENU_OPTIONS_IDX] = create_pause_menu_button(menu_options(), true, btnW, btnH)
+    mainMenuButtonNodes[MAIN_MENU_OPTIONS_IDX].name = "mainMenuButton_options"
     mainMenuButtonNodes[MAIN_MENU_ABOUT_IDX] = create_pause_menu_button(menu_about(), false, btnW, btnH)
+    mainMenuButtonNodes[MAIN_MENU_ABOUT_IDX].name = "mainMenuButton_about"
     mainMenuButtonNodes[MAIN_MENU_EXIT_IDX] = create_pause_menu_button(menu_exit(), false, btnW, btnH)
+    mainMenuButtonNodes[MAIN_MENU_EXIT_IDX].name = "mainMenuButton_exit"
     for (i in range(MAIN_MENU_BUTTON_COUNT)) {
         setup_main_menu_button_decoration(mainMenuButtonNodes[i], i)
     }
@@ -9111,6 +10086,7 @@ def build_main_menu_ui() {
         mainMenuButtonNodes[MAIN_MENU_ABOUT_IDX],
         mainMenuButtonNodes[MAIN_MENU_EXIT_IDX]
     ])
+    mainMenuButtonsRowNode.name = "mainMenuButtonsRowNode"
     set_spacing(mainMenuButtonsRowNode, btnSpacing)
     set_alignment(mainMenuButtonsRowNode, LayoutAlignment.MiddleCenter)
     set_frame_size(mainMenuButtonsRowNode, float2(rowW, rowH))
@@ -9124,16 +10100,20 @@ def build_ui() {
     let res = float2(get_resolution())
     if (!uiCanvas.isAlive) {
         uiCanvas = canvas(res)
+        uiCanvas.name = "uiCanvas"
     } else {
         set_frame_size(uiCanvas, res)
+        uiCanvas.name = "uiCanvas"
     }
 
     zoomRoot = panel(res, [])
+    zoomRoot.name = "zoomRoot"
     set_parent(zoomRoot, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(zoomRoot, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     set_frame_pivot(zoomRoot, float2(0.5, 0.5))
 
     backgroundNode = panel(res, [])
+    backgroundNode.name = "backgroundNode"
     backgroundNode?.UIImage.textureId = backgroundTexture
     set_image_color(backgroundNode, float4(1.0, 1.0, 1.0, 1.0))
     set_parent(backgroundNode, zoomRoot, AddChildStrategy.KeepLocalTransform)
@@ -9144,18 +10124,21 @@ def build_ui() {
     build_dialogue_ui()
 
     topBarRoot = panel(float2(res.x, ui_h(TOP_BAR_HEIGHT)), [])
+    topBarRoot.name = "topBarRoot"
     set_image_color(topBarRoot, TOP_BAR_BG_COLOR)
     set_parent(topBarRoot, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(topBarRoot, float2(0.0, 0.0), float2(1.0, 0.0))
     set_frame_pivot(topBarRoot, float2(0.5, 0.0))
 
     bottomBarRoot = panel(float2(res.x, ui_h(BOTTOM_BAR_HEIGHT)), [])
+    bottomBarRoot.name = "bottomBarRoot"
     set_image_color(bottomBarRoot, TOP_BAR_BG_COLOR)
     set_parent(bottomBarRoot, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(bottomBarRoot, float2(0.0, 1.0), float2(1.0, 1.0))
     set_frame_pivot(bottomBarRoot, float2(0.5, 1.0))
 
     statColumnHiddenRoot = panel(float2(0.0, 0.0), [])
+    statColumnHiddenRoot.name = "statColumnHiddenRoot"
     set_image_color(statColumnHiddenRoot, float4(0.0, 0.0, 0.0, 0.0))
     statColumnHiddenRoot.isActive = false
     set_parent(statColumnHiddenRoot, bottomBarRoot, AddChildStrategy.KeepLocalTransform)
@@ -9170,12 +10153,14 @@ def build_ui() {
         }
     }
     statBarDividerNode = panel(float2(ui_w(STAT_BAR_DIVIDER_WIDTH), ui_h(STAT_BAR_DIVIDER_HEIGHT)), [])
+    statBarDividerNode.name = "statBarDividerNode"
     set_image_color(statBarDividerNode, STAT_BAR_DIVIDER_COLOR)
     statBarDividerNode.isActive = false
     set_parent(statBarDividerNode, statColumnHiddenRoot, AddChildStrategy.KeepLocalTransform)
 
     let columnSize = stat_column_size()
     statBarRoot = hbox([])
+    statBarRoot.name = "statBarRoot"
     set_spacing(statBarRoot, ui_w(STAT_COLUMN_GAP))
     set_alignment(statBarRoot, LayoutAlignment.MiddleCenter)
     set_frame_size(statBarRoot, float2(stat_bar_total_width(), columnSize.y))
@@ -9186,12 +10171,14 @@ def build_ui() {
     sync_stat_bar_children()
 
     bottomBarBorderNode = panel(float2(res.x, ui_box_border()), [])
+    bottomBarBorderNode.name = "bottomBarBorderNode"
     set_image_color(bottomBarBorderNode, UI_BOX_BORDER_COLOR)
     set_parent(bottomBarBorderNode, bottomBarRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(bottomBarBorderNode, float2(0.0, 0.0), float2(1.0, 0.0))
     set_frame_pivot(bottomBarBorderNode, float2(0.5, 0.0))
 
     advisorButtonNode = create_menu_button(advisor_bar_button(), ui_w(BOTTOM_BAR_ADVISOR_BUTTON_WIDTH), ui_h(BOTTOM_BAR_ADVISOR_BUTTON_HEIGHT), true, BOTTOM_BAR_ADVISOR_BUTTON_FONT_SIZE)
+    advisorButtonNode.name = "advisorButtonNode"
     set_parent(advisorButtonNode, bottomBarRoot, AddChildStrategy.KeepLocalTransform)
     set_frame_pivot(advisorButtonNode, float2(1.0, 0.5))
     set_frame_pos(advisorButtonNode, float2(-ui_w(BOTTOM_BAR_ADVISOR_MARGIN), 0.0))
@@ -9199,6 +10186,7 @@ def build_ui() {
     set_anchor_insets(advisorButtonNode, -ui_w(BOTTOM_BAR_ADVISOR_MARGIN), 0.0)
 
     dayTextNode = text(day_label(1))
+    dayTextNode.name = "dayTextNode"
     set_text_font_size(dayTextNode, ui_h(DAY_FONT_SIZE))
     set_text_color(dayTextNode, float4(1.0, 1.0, 1.0, 1.0))
     apply_ui_font(dayTextNode)
@@ -9206,6 +10194,7 @@ def build_ui() {
     configure_info_hover_target(dayTextNode)
 
     nicknameTextNode = text(default_nickname())
+    nicknameTextNode.name = "nicknameTextNode"
     set_text_font_size(nicknameTextNode, ui_h(NICKNAME_FONT_SIZE))
     set_text_color(nicknameTextNode, float4(0.85, 0.78, 0.65, 1.0))
     apply_ui_font(nicknameTextNode)
@@ -9213,6 +10202,7 @@ def build_ui() {
     configure_info_hover_target(nicknameTextNode)
 
     topBarLeftInfoNode = hbox([dayTextNode, nicknameTextNode])
+    topBarLeftInfoNode.name = "topBarLeftInfoNode"
     set_spacing(topBarLeftInfoNode, ui_w(TOP_BAR_LEFT_INFO_SPACING))
     set_alignment(topBarLeftInfoNode, LayoutAlignment.MiddleLeft)
     set_frame_size(topBarLeftInfoNode, float2(ui_w(TOP_BAR_LEFT_INFO_WIDTH), ui_h(TOP_BAR_HEIGHT)))
@@ -9223,6 +10213,7 @@ def build_ui() {
     set_anchor_insets(topBarLeftInfoNode, ui_w(TOP_BAR_HORIZONTAL_PADDING), 0.0)
 
     menuButtonNode = create_menu_button(menu_pause(), ui_w(TOP_BAR_PAUSE_BUTTON_WIDTH), ui_h(TOP_BAR_PAUSE_BUTTON_HEIGHT), true, TOP_BAR_PAUSE_BUTTON_FONT_SIZE)
+    menuButtonNode.name = "menuButtonNode"
     set_parent(menuButtonNode, topBarRoot, AddChildStrategy.KeepLocalTransform)
     set_frame_pivot(menuButtonNode, float2(1.0, 0.5))
     set_frame_pos(menuButtonNode, float2(-ui_w(TOP_BAR_PAUSE_MARGIN), 0.0))
@@ -9230,6 +10221,7 @@ def build_ui() {
     set_anchor_insets(menuButtonNode, -ui_w(TOP_BAR_PAUSE_MARGIN), 0.0)
 
     topBarBorderNode = panel(float2(res.x, ui_box_border()), [])
+    topBarBorderNode.name = "topBarBorderNode"
     set_image_color(topBarBorderNode, UI_BOX_BORDER_COLOR)
     set_parent(topBarBorderNode, topBarRoot, AddChildStrategy.KeepLocalTransform)
     add_anchor(topBarBorderNode, float2(0.0, 1.0), float2(1.0, 1.0))
@@ -9238,6 +10230,7 @@ def build_ui() {
     build_advisor_hud_icon()
 
     menuOverlay = panel(res, [])
+    menuOverlay.name = "menuOverlay"
     set_parent(menuOverlay, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(menuOverlay, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     set_image_color(menuOverlay, float4(MENU_OVERLAY_COLOR.x, MENU_OVERLAY_COLOR.y, MENU_OVERLAY_COLOR.z, 0.0))
@@ -9255,9 +10248,13 @@ def build_ui() {
     let contentH = btnOuterH * 3.0 + btnSpacing * 2.0 + menuPad * 2.0
 
     menuContinueButtonNode = create_pause_menu_button(menu_continue(), true, buttonW, btnH)
+    menuContinueButtonNode.name = "menuContinueButtonNode"
     menuOptionsButtonNode = create_pause_menu_button(menu_options(), false, buttonW, btnH)
+    menuOptionsButtonNode.name = "menuOptionsButtonNode"
     menuExitButtonNode = create_pause_menu_button(menu_exit(), true, buttonW, btnH)
+    menuExitButtonNode.name = "menuExitButtonNode"
     menuPanelContentNode = vbox([menuContinueButtonNode, menuOptionsButtonNode, menuExitButtonNode])
+    menuPanelContentNode.name = "menuPanelContentNode"
     set_spacing(menuPanelContentNode, btnSpacing)
     set_alignment(menuPanelContentNode, LayoutAlignment.MiddleCenter)
     set_padding(menuPanelContentNode, float4(menuPad, menuPad, menuPad, menuPad))
@@ -9267,11 +10264,13 @@ def build_ui() {
     menuPanelContentNode?.UIVerticalLayout.childForceExpandHeight = false
 
     menuPanelInnerNode = panel(float2(innerW, contentH), [menuPanelContentNode])
+    menuPanelInnerNode.name = "menuPanelInnerNode"
     set_image_color(menuPanelInnerNode, DEATH_SUMMARY_BOX_BG_COLOR)
     set_alignment(menuPanelInnerNode, LayoutAlignment.TopLeft)
     set_frame_pivot(menuPanelInnerNode, float2(0.0, 0.0))
 
     menuPanelNode = panel(float2(panelW, contentH + 2.0 * menuBorder), [menuPanelInnerNode])
+    menuPanelNode.name = "menuPanelNode"
     set_image_color(menuPanelNode, UI_BOX_BORDER_COLOR)
     set_alignment(menuPanelNode, LayoutAlignment.TopLeft)
     set_frame_pos(menuPanelInnerNode, float2(menuBorder, menuBorder))
@@ -9282,6 +10281,7 @@ def build_ui() {
     menuPanelNode.isActive = false
 
     characterProfileOverlay = panel(res, [])
+    characterProfileOverlay.name = "characterProfileOverlay"
     set_parent(characterProfileOverlay, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(characterProfileOverlay, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     set_image_color(characterProfileOverlay, float4(MENU_OVERLAY_COLOR.x, MENU_OVERLAY_COLOR.y, MENU_OVERLAY_COLOR.z, 0.0))
@@ -9291,6 +10291,7 @@ def build_ui() {
     build_character_profile_ui()
 
     advisorPopupOverlay = panel(res, [])
+    advisorPopupOverlay.name = "advisorPopupOverlay"
     set_parent(advisorPopupOverlay, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(advisorPopupOverlay, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     set_image_color(advisorPopupOverlay, float4(MENU_OVERLAY_COLOR.x, MENU_OVERLAY_COLOR.y, MENU_OVERLAY_COLOR.z, 0.0))
@@ -9298,19 +10299,22 @@ def build_ui() {
     build_advisor_popup_ui()
 
     deathFadeOverlay = panel(res, [])
+    deathFadeOverlay.name = "deathFadeOverlay"
     set_image_color(deathFadeOverlay, float4(0.0, 0.0, 0.0, 0.0))
     set_parent(deathFadeOverlay, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(deathFadeOverlay, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     deathFadeOverlay.isActive = false
 
     deathScreenNode = panel(res, [])
-    deathScreenNode?.UIImage.textureId = deathScreenTextures[STAT_GOLD_IDX]
+    deathScreenNode.name = "deathScreenNode"
+    deathScreenNode?.UIImage.textureId = backgroundTexture
     set_image_color(deathScreenNode, float4(1.0, 1.0, 1.0, 0.0))
     set_parent(deathScreenNode, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(deathScreenNode, TOP_LEFT_ANCHOR, BOTTOM_RIGHT_ANCHOR)
     deathScreenNode.isActive = false
 
     deathSummaryTextNode = text("")
+    deathSummaryTextNode.name = "deathSummaryTextNode"
     set_text_font_size(deathSummaryTextNode, ui_h(DEATH_SUMMARY_FONT_SIZE))
     set_text_color(deathSummaryTextNode, float4(1.0, 1.0, 1.0, 0.0))
     apply_ui_font(deathSummaryTextNode)
@@ -9320,6 +10324,7 @@ def build_ui() {
     deathSummaryTextNode?.UIText.horAlignment = TextHorAlignment.Center
 
     deathRecordTextNode = text("")
+    deathRecordTextNode.name = "deathRecordTextNode"
     set_text_font_size(deathRecordTextNode, ui_h(DEATH_RECORD_FONT_SIZE))
     set_text_color(deathRecordTextNode, float4(0.85, 0.85, 0.85, 0.0))
     apply_ui_font(deathRecordTextNode)
@@ -9329,6 +10334,7 @@ def build_ui() {
     deathRecordTextNode?.UIText.horAlignment = TextHorAlignment.Center
 
     tryAgainButtonNode = create_answer_button(try_again(), ui_w(TRY_AGAIN_BUTTON_WIDTH))
+    tryAgainButtonNode.name = "tryAgainButtonNode"
     layout_centered_answer_button(tryAgainButtonNode, ui_w(TRY_AGAIN_BUTTON_WIDTH))
     set_image_color(tryAgainButtonNode, float4(UI_BOX_BORDER_COLOR.x, UI_BOX_BORDER_COLOR.y, UI_BOX_BORDER_COLOR.z, 0.0))
     let tryAgainFill = answer_button_fill(tryAgainButtonNode)
@@ -9340,10 +10346,12 @@ def build_ui() {
     }
 
     tryAgainRowNode = hbox([tryAgainButtonNode])
+    tryAgainRowNode.name = "tryAgainRowNode"
     set_alignment(tryAgainRowNode, LayoutAlignment.MiddleCenter)
     set_frame_pivot(tryAgainRowNode, float2(0.5, 0.5))
 
     deathSummaryContentNode = vbox([deathSummaryTextNode, deathRecordTextNode, tryAgainRowNode])
+    deathSummaryContentNode.name = "deathSummaryContentNode"
     set_spacing(deathSummaryContentNode, ui_h(20.0))
     set_alignment(deathSummaryContentNode, LayoutAlignment.MiddleCenter)
     set_padding(deathSummaryContentNode, float4(ui_h(DEATH_SUMMARY_BOX_PADDING), ui_h(DEATH_SUMMARY_BOX_PADDING), ui_h(DEATH_SUMMARY_BOX_PADDING), ui_h(DEATH_SUMMARY_BOX_PADDING)))
@@ -9354,17 +10362,20 @@ def build_ui() {
 
     let summaryInnerW = ui_w(DEATH_SUMMARY_BOX_WIDTH) - 2.0 * ui_box_border()
     deathSummaryBoxNode = panel(float2(summaryInnerW, ui_h(200.0)), [deathSummaryContentNode])
+    deathSummaryBoxNode.name = "deathSummaryBoxNode"
     set_image_color(deathSummaryBoxNode, float4(DEATH_SUMMARY_BOX_BG_COLOR.x, DEATH_SUMMARY_BOX_BG_COLOR.y, DEATH_SUMMARY_BOX_BG_COLOR.z, 0.0))
     set_alignment(deathSummaryBoxNode, LayoutAlignment.TopLeft)
     set_frame_pivot(deathSummaryBoxNode, float2(0.0, 0.0))
 
     deathSummaryBorderNode = panel(float2(ui_w(DEATH_SUMMARY_BOX_WIDTH), ui_h(204.0)), [deathSummaryBoxNode])
+    deathSummaryBorderNode.name = "deathSummaryBorderNode"
     set_image_color(deathSummaryBorderNode, float4(UI_BOX_BORDER_COLOR.x, UI_BOX_BORDER_COLOR.y, UI_BOX_BORDER_COLOR.z, 0.0))
     set_alignment(deathSummaryBorderNode, LayoutAlignment.TopLeft)
     set_frame_pivot(deathSummaryBorderNode, float2(0.5, 0.5))
     set_frame_pos(deathSummaryBoxNode, float2(ui_box_border(), ui_box_border()))
 
     deathSummaryRoot = deathSummaryBorderNode
+    deathSummaryRoot.name = "deathSummaryRoot"
     set_parent(deathSummaryRoot, uiCanvas, AddChildStrategy.KeepLocalTransform)
     add_anchor(deathSummaryRoot, MIDDLE_CENTER_ANCHOR)
     deathSummaryRoot.isActive = false
@@ -9528,8 +10539,19 @@ def apply_loaded_intro_textures() {
     update_intro_texture4_aspect()
     update_intro_texture5_aspect()
     update_intro_texture6_aspect()
+    update_intro_texture7_aspect()
+    update_intro_texture8_aspect()
+    update_intro_texture9_aspect()
+    update_intro_texture10_aspect()
+    update_intro_texture11_aspect()
+    update_intro_texture12_aspect()
+    update_intro_texture13_aspect()
+    update_intro_texture14_aspect()
+    update_intro_texture15_aspect()
+    update_intro_texture16_aspect()
     if (introCutsceneImageNode.isAlive) {
         introCutsceneImageNode?.UIImage.textureId = introCutsceneTexture
+    introActiveMainTextureAspect = introTextureAspect
     }
     if (introCutsceneImage3Node.isAlive) {
         introCutsceneImage3Node?.UIImage.textureId = introCutsceneTexture3
@@ -9543,6 +10565,80 @@ def apply_loaded_intro_textures() {
     if (introCutsceneImage6Node.isAlive) {
         introCutsceneImage6Node?.UIImage.textureId = introCutsceneTexture6
     }
+}
+
+
+def court_portrait_texture_is_valid(tex : TextureId) : bool {
+    var valid = false
+    get_texture_size(tex) $(size : int2) {
+        valid = size.x > 0 && size.y > 0
+    }
+    return valid
+}
+
+
+def load_court_character_batch(fromIdx : int; toIdxEx : int) {
+    for (i in range(fromIdx, toIdxEx)) {
+        courtBodyTextures[i] = request_texture(COURT_BODY_PATHS[i])
+        if (COURT_PORTRAIT_PATHS[i] != COURT_BODY_PATHS[i]) {
+            courtPortraitTextures[i] = request_texture(COURT_PORTRAIT_PATHS[i])
+            if (!court_portrait_texture_is_valid(courtPortraitTextures[i])) {
+                courtPortraitTextures[i] = courtBodyTextures[i]
+            }
+        } else {
+            courtPortraitTextures[i] = courtBodyTextures[i]
+        }
+    }
+}
+
+
+def ensure_death_screen_textures_loaded() {
+    if (deathScreenTexturesLoaded) {
+        return
+    }
+    for (i in range(STAT_COUNT)) {
+        deathScreenTextures[i] = request_texture(get_defeat_screen_texture_path(i))
+    }
+    deathScreenTexturesLoaded = true
+}
+
+
+def ensure_intro_cutscene_assets_loaded() {
+    if (introCutsceneAssetsLoaded) {
+        return
+    }
+    ashfordCutsceneTexture = request_texture(ASHFORD_CUTSCENE_TEXTURE_PATH)
+    introCutsceneTexture = request_texture(INTRO_TEXTURE_PATH_SEQ1)
+    introCutsceneTexture2 = request_texture(INTRO_TEXTURE_PATH_SEQ2)
+    introCutsceneTexture3 = request_texture(INTRO_TEXTURE_PATH_SEQ3)
+    introCutsceneTexture4 = request_texture(INTRO_TEXTURE_PATH_SEQ4)
+    introCutsceneTexture5 = request_texture(INTRO_TEXTURE_PATH_SEQ5)
+    introCutsceneTexture6 = request_texture(INTRO_TEXTURE_PATH_SEQ6)
+    introCutsceneTexture7 = request_texture(INTRO_TEXTURE_PATH_SEQ7)
+    introCutsceneTexture8 = request_texture(INTRO_TEXTURE_PATH_SEQ8)
+    introCutsceneTexture9 = request_texture(INTRO_TEXTURE_PATH_SEQ9)
+    introCutsceneTexture10 = request_texture(INTRO_TEXTURE_PATH_SEQ10)
+    introCutsceneTexture11 = request_texture(INTRO_TEXTURE_PATH_SEQ11)
+    introCutsceneTexture12 = request_texture(INTRO_TEXTURE_PATH_SEQ12)
+    introCutsceneTexture13 = request_texture(INTRO_TEXTURE_PATH_SEQ13)
+    introCutsceneTexture14 = request_texture(INTRO_TEXTURE_PATH_SEQ14)
+    introCutsceneTexture15 = request_texture(INTRO_TEXTURE_PATH_SEQ15)
+    introCutsceneTexture16 = request_texture(INTRO_TEXTURE_PATH_SEQ16)
+    churchCutsceneTexture = request_texture(CHURCH_CUTSCENE_TEXTURE_PATH)
+    for (i in range(INTRO_DIALOGUE_BEAT_COUNT)) {
+        if (intro_dialogue_sound_path(i) != "") {
+            introDialogueSounds[i] = request_sound(intro_dialogue_sound_path(i))
+        }
+    }
+    for (i in range(CHURCH_CUTSCENE_SOUND_COUNT)) {
+        if (church_cutscene_sound_path(i) != "") {
+            churchCutsceneSounds[i] = request_sound(church_cutscene_sound_path(i))
+        }
+    }
+    load_intro_cutscene_music()
+    load_intro_battle_sfx()
+    introCutsceneAssetsLoaded = true
+    apply_loaded_intro_textures()
 }
 
 
@@ -9583,103 +10679,52 @@ def advance_bootstrap_loading() {
         return
     }
     if (bootstrapLoadStep == 3) {
-        for (i in range(3)) {
-            deathScreenTextures[i] = request_texture(get_defeat_screen_texture_path(i))
+        for (i in range(VISITOR_TEXTURE_COUNT)) {
+            visitorTextures[i] = request_texture(VISITOR_TEXTURE_PATHS[i])
         }
         bootstrapLoadStep = 4
         return
     }
     if (bootstrapLoadStep == 4) {
-        for (i in range(3)) {
-            deathScreenTextures[i + 3] = request_texture(get_defeat_screen_texture_path(i + 3))
+        for (i in range(STAT_COUNT)) {
+            statTextures[i] = request_texture(STAT_TEXTURE_PATHS[i])
         }
         bootstrapLoadStep = 5
         return
     }
     if (bootstrapLoadStep == 5) {
-        for (i in range(STAT_COUNT - 6)) {
-            deathScreenTextures[i + 6] = request_texture(get_defeat_screen_texture_path(i + 6))
+        for (i in range(CHARACTER_COUNT)) {
+            portraitTextures[i] = request_texture(PORTRAIT_TEXTURE_PATHS[i])
         }
         bootstrapLoadStep = 6
         return
     }
     if (bootstrapLoadStep == 6) {
-        ashfordCutsceneTexture = request_texture(ASHFORD_CUTSCENE_TEXTURE_PATH)
-        introCutsceneTexture = request_texture(INTRO_TEXTURE_PATH_SEQ1)
-        introCutsceneTexture2 = request_texture(INTRO_TEXTURE_PATH_SEQ2)
-        for (i in range(INTRO_DIALOGUE_BEAT_COUNT)) {
-            introDialogueSounds[i] = request_sound(INTRO_DIALOGUE_SOUND_PATHS[i])
-        }
+        load_court_character_batch(0, 3)
         bootstrapLoadStep = 7
         return
     }
     if (bootstrapLoadStep == 7) {
-        introCutsceneTexture3 = request_texture(INTRO_TEXTURE_PATH_SEQ3)
-        introCutsceneTexture4 = request_texture(INTRO_TEXTURE_PATH_SEQ4)
-        introCutsceneTexture5 = request_texture(INTRO_TEXTURE_PATH_SEQ5)
-        introCutsceneTexture6 = request_texture(INTRO_TEXTURE_PATH_SEQ6)
+        load_court_character_batch(3, 6)
         bootstrapLoadStep = 8
         return
     }
     if (bootstrapLoadStep == 8) {
-        for (i in range(VISITOR_TEXTURE_COUNT)) {
-            visitorTextures[i] = request_texture(VISITOR_TEXTURE_PATHS[i])
-        }
+        load_court_character_batch(6, 9)
         bootstrapLoadStep = 9
         return
     }
     if (bootstrapLoadStep == 9) {
-        for (i in range(STAT_COUNT)) {
-            statTextures[i] = request_texture(STAT_TEXTURE_PATHS[i])
-        }
+        load_court_character_batch(9, COURT_CHARACTER_COUNT)
         bootstrapLoadStep = 10
         return
     }
     if (bootstrapLoadStep == 10) {
-        for (i in range(CHARACTER_COUNT)) {
-            portraitTextures[i] = request_texture(PORTRAIT_TEXTURE_PATHS[i])
-        }
-        bootstrapLoadStep = 11
-        return
-    }
-    if (bootstrapLoadStep == 11) {
-        for (i in range(3)) {
-            courtBodyTextures[i] = request_texture(COURT_BODY_PATHS[i])
-            courtPortraitTextures[i] = request_texture(COURT_PORTRAIT_PATHS[i])
-        }
-        bootstrapLoadStep = 12
-        return
-    }
-    if (bootstrapLoadStep == 12) {
-        for (i in range(3, 6)) {
-            courtBodyTextures[i] = request_texture(COURT_BODY_PATHS[i])
-            courtPortraitTextures[i] = request_texture(COURT_PORTRAIT_PATHS[i])
-        }
-        bootstrapLoadStep = 13
-        return
-    }
-    if (bootstrapLoadStep == 13) {
-        for (i in range(6, 9)) {
-            courtBodyTextures[i] = request_texture(COURT_BODY_PATHS[i])
-            courtPortraitTextures[i] = request_texture(COURT_PORTRAIT_PATHS[i])
-        }
-        bootstrapLoadStep = 14
-        return
-    }
-    if (bootstrapLoadStep == 14) {
-        for (i in range(9, COURT_CHARACTER_COUNT)) {
-            courtBodyTextures[i] = request_texture(COURT_BODY_PATHS[i])
-            courtPortraitTextures[i] = request_texture(COURT_PORTRAIT_PATHS[i])
-        }
-        bootstrapLoadStep = 15
-        return
-    }
-    if (bootstrapLoadStep == 15) {
         statBarTrackTexture = create_solid_stat_bar_texture()
         statBarFillTexture = create_solid_stat_bar_texture()
         characterTexture = kingTexture
         update_character_texture_aspect(characterTexture)
-        bootstrapLoadStep = 16
+        bootstrapLoadStep = 11
         return
     }
     finish_game_bootstrap()
@@ -9800,9 +10845,10 @@ def finish_game_bootstrap() {
     load_game_options()
     load_record_days()
     refresh_save_availability()
-    prepare_character_visual_fully(COURT_BODY_PATHS[CHAR_EDRIC])
     build_ui()
-    apply_loaded_intro_textures()
+    warm_character_alpha(KING_TEXTURE_PATH)
+    warm_character_visual(COURT_BODY_PATHS[CHAR_EDRIC])
+    warm_character_alpha(COURT_BODY_PATHS[CHAR_EDRIC])
     wire_ui_event_listeners()
     update_stat_bar_anims(0.0)
     sync_options_ui_from_settings()
@@ -9818,7 +10864,7 @@ def finish_game_bootstrap() {
         apply_startup_splash_layout()
     }
     gameBootstrapComplete = true
-    bootstrapLoadStep = 16
+    bootstrapLoadStep = 11
 }
 
 
@@ -9829,8 +10875,99 @@ def load_resources() {
 }
 
 
+[cheat]
+def jump_day(day : int) {
+    currentDay = clamp(day, 1, 365)
+    if (currentDay >= STAT_PEOPLE_UNLOCK_DAY) {
+        statUnlocked[STAT_PEOPLE_IDX] = true
+    }
+    if (currentDay >= STAT_NOBILITY_UNLOCK_DAY) {
+        statUnlocked[STAT_RICH_LOVE_IDX] = true
+    }
+    if (currentDay >= STAT_LOYALTY_UNLOCK_DAY) {
+        statUnlocked[STAT_LOYALTY_IDX] = true
+    }
+    if (currentDay >= STAT_SUCCESSION_UNLOCK_DAY) {
+        statUnlocked[STAT_SUCCESSION_IDX] = true
+    }
+    update_day_text()
+    setup_encounter_for_day(currentDay)
+    apply_current_encounter_character()
+    refresh_character_visuals()
+    hide_dialogue_ui()
+    dialogPhase = DIALOG_IDLE
+    start_character_enter()
+}
+
+
+[cheat]
+def fire_arc_beat(arcId : int; beatIdx : int) {
+    begin_arc_encounter(arcId, beatIdx)
+    apply_current_encounter_character()
+    refresh_character_visuals()
+    hide_dialogue_ui()
+    dialogPhase = DIALOG_IDLE
+    start_character_enter()
+}
+
+
+[cheat]
+def jump_day_30() {
+    currentDay = 30
+    update_day_text()
+    setup_encounter_for_day(currentDay)
+    apply_current_encounter_character()
+    refresh_character_visuals()
+    hide_dialogue_ui()
+    dialogPhase = DIALOG_IDLE
+    start_character_enter()
+}
+
+
+[cheat]
+def jump_day_90() {
+    currentDay = 90
+    statUnlocked[STAT_PEOPLE_IDX] = true
+    update_day_text()
+    setup_encounter_for_day(currentDay)
+    apply_current_encounter_character()
+    refresh_character_visuals()
+    hide_dialogue_ui()
+    dialogPhase = DIALOG_IDLE
+    start_character_enter()
+}
+
+
+[cheat]
+def jump_day_175() {
+    currentDay = 175
+    statUnlocked[STAT_RICH_LOVE_IDX] = true
+    update_day_text()
+    setup_encounter_for_day(currentDay)
+    apply_current_encounter_character()
+    refresh_character_visuals()
+    hide_dialogue_ui()
+    dialogPhase = DIALOG_IDLE
+    start_character_enter()
+}
+
+
+[cheat]
+def fire_household_finale() {
+    currentDay = 86
+    begin_arc_encounter(ARC_HOUSEHOLD, 7)
+    apply_current_encounter_character()
+    refresh_character_visuals()
+    hide_dialogue_ui()
+    dialogPhase = DIALOG_IDLE
+    start_character_enter()
+}
+
+
 [export]
 def on_initialize() {
+    refresh_layout_resolution()
+    reset_arc_state()
     reset_kingdom_stats()
     reset_stat_anim_state()
     setup_encounter_for_day(1)
@@ -9927,7 +11064,7 @@ def on_update() {
     if (dialogPhase != DIALOG_CHOOSING) {
         return
     }
-    let choiceCount = get_current_dialogue_node().choiceCount
+    let choiceCount = visible_choice_count(get_current_dialogue_node())
     if (is_action_just_pressed("choice1") && choiceCount > 0) {
         select_choice(0)
     } elif (is_action_just_pressed("choice2") && choiceCount > 1) {
@@ -9944,6 +11081,7 @@ def on_update() {
 
 [export]
 def on_resolution_changed(res : int2) {
+    refresh_layout_resolution()
     if (!uiCanvas.isAlive) {
         return
     }
@@ -10001,6 +11139,7 @@ def on_resolution_changed(res : int2) {
     apply_character_layout()
     apply_death_summary_layout()
     apply_info_tooltip_layout()
+    mark_dialogue_layout_dirty()
     if (hoveredInfoTarget != INFO_HOVER_NONE && infoTooltipRoot.isAlive && infoTooltipRoot.isActive) {
         position_info_tooltip(hoveredInfoTarget)
     }
@@ -10031,16 +11170,19 @@ class AdvisorIconHover : Component {
 
 class AdvisorActionCardHover : Component {
     def override on_update {
-        let dt = get_delta_time()
         let popupVisible = is_advisor_popup_open() && advisorPopupAnimPhase != ADVISOR_ANIM_CLOSING && advisorPopupPanelNode.isActive
-        for (i in range(MAX_ADVISOR_ACTIONS)) {
-            if (!popupVisible) {
+        if (!popupVisible) {
+            for (i in range(MAX_ADVISOR_ACTIONS)) {
                 advisorActionHovered[i] = false
-            } else {
-                advisorActionHovered[i] = is_mouse_over_advisor_action_card(i)
+                advisorActionHoverT[i] = 0.0
             }
-            let available = popupVisible && is_advisor_action_available(i) && can_execute_advisor_actions()
-            let target = (popupVisible && advisorActionHovered[i] && available) ? 1.0 : 0.0
+            return
+        }
+        let dt = get_delta_time()
+        for (i in range(MAX_ADVISOR_ACTIONS)) {
+            advisorActionHovered[i] = is_mouse_over_advisor_action_card(i)
+            let available = is_advisor_action_available(i) && can_execute_advisor_actions()
+            let target = (advisorActionHovered[i] && available) ? 1.0 : 0.0
             advisorActionHoverT[i] = move_toward(advisorActionHoverT[i], target, ANSWER_HOVER_LERP_SPEED * dt)
             if (advisorActionSlotFillNodes[i].isAlive) {
                 apply_advisor_action_card_visual(i, advisorActionHoverT[i], available)
@@ -10054,13 +11196,15 @@ class CharacterHover : Component {
     def override on_update {
         if (!characterRoot.isAlive || !characterRoot.isActive) {
             characterHovered = false
+        } elif (characterHoverT <= 0.0 && !is_mouse_over_character_frame()) {
+            characterHovered = false
         } else {
             characterHovered = is_mouse_over_character_opaque()
         }
         let dt = get_delta_time()
         let target = characterHovered ? 1.0 : 0.0
         characterHoverT = move_toward(characterHoverT, target, ANSWER_HOVER_LERP_SPEED * dt)
-        apply_character_outline_visual(characterHoverT)
+        apply_character_image_color(current_character_reveal_t())
     }
 }
 
@@ -10115,6 +11259,172 @@ def intro_tick_post_text_wait(dt : float) : bool {
     }
     introCutsceneT += dt
     return introCutsceneT >= INTRO_POST_TEXT_WAIT_DURATION
+}
+
+
+def intro_clear_multi_corner_images() {
+    set_intro_seq3_visible(false)
+    set_intro_seq4_visible(false)
+    set_intro_seq5_visible(false)
+    set_intro_seq6_visible(false)
+    introSeq3SlideX = 0.0
+    introSeq4SlideX = 0.0
+    introSeq5SlideX = 0.0
+    introSeq6SlideX = 0.0
+    introSeq3SlideDone = false
+    introSeq4SlideDone = false
+    introSeq5SlideDone = false
+    introSeq6SlideDone = false
+}
+
+
+def intro_reset_shake_state() {
+    introShakeT = 0.0
+    introShakeOffsetX = 0.0
+    introShakeOffsetY = 0.0
+    introPostShakeAction = INTRO_POST_SHAKE_ACTION_NONE
+}
+
+
+def intro_tick_shake_offset(dt : float) {
+    introShakeT += dt
+    if (introShakeT >= INTRO_SHAKE_DURATION) {
+        introShakeOffsetX = 0.0
+        introShakeOffsetY = 0.0
+        return
+    }
+    let decay = 1.0 - introShakeT / INTRO_SHAKE_DURATION
+    let amp = ui_w(INTRO_SHAKE_AMPLITUDE) * decay
+    let freq = 28.0
+    introShakeOffsetX = sin(introShakeT * freq * PI * 2.0) * amp
+    introShakeOffsetY = cos(introShakeT * freq * 1.3 * PI * 2.0) * amp * 0.6
+}
+
+
+def intro_begin_single_image_scene(sceneIdx : int; tex : TextureId; aspect : float; beat : int) {
+    introStorySceneIdx = sceneIdx
+    introCutsceneLayoutMode = INTRO_LAYOUT_SEQ1
+    introActiveBottomYRatio = INTRO_IMAGE_BOTTOM_Y_RATIO
+    intro_clear_multi_corner_images()
+    set_intro_image_visible(false)
+    intro_set_main_texture(tex, aspect)
+    introCutsceneSlideX = intro_image_hidden_left_x()
+    introPictureSlideDone = false
+    introSlideTargetBeat = beat
+    introCutscenePhase = INTRO_PICTURE_WAIT
+    introCutsceneT = 0.0
+    set_intro_text_visible(false)
+    set_intro_image_visible(true)
+    apply_intro_cutscene_layout()
+}
+
+
+def intro_begin_scene3() {
+    set_intro_text_visible(false)
+    intro_clear_multi_corner_images()
+    set_intro_image_visible(false)
+    introStorySceneIdx = INTRO_STORY_SCENE_3
+    introCutsceneLayoutMode = INTRO_LAYOUT_SCENE3_PAIR
+    intro_update_scene3_layout_metrics()
+    intro_set_main_texture(introCutsceneTexture7, introTextureAspect7)
+    introCutsceneImage3Node?.UIImage.textureId = introCutsceneTexture8
+    introCutsceneSlideX = intro_image_hidden_left_x()
+    introPictureSlideDone = false
+    introSlideTargetBeat = 17
+    introCutscenePhase = INTRO_PICTURE_WAIT
+    introCutsceneT = 0.0
+    set_intro_image_visible(true)
+    apply_intro_cutscene_layout()
+}
+
+
+def intro_begin_scene3_seq8_slide() {
+    set_intro_text_visible(false)
+    introSlideTargetBeat = 19
+    introCutscenePhase = INTRO_SEQ3_SLIDE_IN
+    introCutsceneT = 0.0
+    introSeq3SlideDone = false
+    introSeq3SlideX = intro_scene3_seq8_hidden_left_x()
+    set_intro_seq3_visible(true)
+    apply_intro_cutscene_layout()
+}
+
+
+def intro_begin_scene4() {
+    intro_begin_single_image_scene(INTRO_STORY_SCENE_4, introCutsceneTexture9, introTextureAspect9, 23)
+}
+
+
+def intro_begin_scene5() {
+    intro_start_seq10_battle_sfx()
+    intro_begin_single_image_scene(INTRO_STORY_SCENE_5, introCutsceneTexture10, introTextureAspect10, 25)
+}
+
+
+def intro_begin_scene6() {
+    intro_begin_single_image_scene(INTRO_STORY_SCENE_6, introCutsceneTexture13, introTextureAspect13, 28)
+}
+
+
+def intro_begin_scene7() {
+    intro_begin_single_image_scene(INTRO_STORY_SCENE_7, introCutsceneTexture16, introTextureAspect16, 33)
+}
+
+
+def intro_begin_shake_transition(fromTex : TextureId; fromAspect : float; toTex : TextureId; toAspect : float; postAction : int) {
+    set_intro_text_visible(false)
+    intro_reset_shake_state()
+    intro_set_main_texture(fromTex, fromAspect)
+    introShakeToTexture = toTex
+    introShakeToAspect = toAspect
+    introPostShakeAction = postAction
+    introCutscenePhase = INTRO_IMAGE_SHAKE
+    introCutsceneT = 0.0
+    apply_intro_cutscene_layout()
+}
+
+
+def intro_finish_shake_transition() {
+    let postAction = introPostShakeAction
+    introShakeT = 0.0
+    introShakeOffsetX = 0.0
+    introShakeOffsetY = 0.0
+    introPostShakeAction = INTRO_POST_SHAKE_ACTION_NONE
+    intro_set_main_texture(introShakeToTexture, introShakeToAspect)
+    apply_intro_cutscene_layout()
+    if (postAction == INTRO_POST_SHAKE_ACTION_SCENE_6) {
+        introCutscenePhase = INTRO_POST_SHAKE_WAIT
+        introCutsceneT = 0.0
+    } elif (postAction == INTRO_POST_SHAKE_ACTION_DIALOGUE_23) {
+        begin_intro_dialogue_beat(29, true)
+        introCutscenePhase = INTRO_DIALOGUE
+        set_intro_text_visible(true)
+        apply_intro_slide_positions()
+    }
+}
+
+
+def intro_seq3_slide_target_beat() : int {
+    if (intro_seq3_slide_is_scene3_pair()) {
+        return introSlideTargetBeat
+    }
+    return 7
+}
+
+
+def intro_seq3_slide_speed_for_current() : float {
+    if (intro_seq3_slide_is_scene3_pair()) {
+        return intro_scene3_seq8_slide_speed()
+    }
+    return intro_corner_slide_speed()
+}
+
+
+def intro_seq3_hidden_left_x_for_current() : float {
+    if (intro_seq3_slide_is_scene3_pair()) {
+        return intro_scene3_seq8_hidden_left_x()
+    }
+    return intro_seq3_hidden_left_x()
 }
 
 
@@ -10199,6 +11509,73 @@ def intro_advance_after_dialogue_wait() {
         introCutscenePhase = INTRO_DIALOGUE
         return
     }
+    if (beat == 16) {
+        intro_begin_scene3()
+        return
+    }
+    if (beat == 17) {
+        begin_intro_dialogue_beat(18, true)
+        introCutscenePhase = INTRO_DIALOGUE
+        return
+    }
+    if (beat == 18) {
+        intro_begin_scene3_seq8_slide()
+        return
+    }
+    if (beat >= 19 && beat <= 21) {
+        begin_intro_dialogue_beat(beat + 1, true)
+        introCutscenePhase = INTRO_DIALOGUE
+        return
+    }
+    if (beat == 22) {
+        intro_begin_scene4()
+        return
+    }
+    if (beat == 23) {
+        begin_intro_dialogue_beat(24, false)
+        introCutscenePhase = INTRO_DIALOGUE
+        return
+    }
+    if (beat == 24) {
+        intro_begin_scene5()
+        return
+    }
+    if (beat >= 25 && beat <= 26) {
+        begin_intro_dialogue_beat(beat + 1, true)
+        introCutscenePhase = INTRO_DIALOGUE
+        return
+    }
+    if (beat == 27) {
+        intro_begin_shake_transition(
+            introCutsceneTexture11, introTextureAspect11,
+            introCutsceneTexture12, introTextureAspect12,
+            INTRO_POST_SHAKE_ACTION_SCENE_6
+        )
+        return
+    }
+    if (beat == 28) {
+        intro_begin_black_pause_before_edwin_death()
+        return
+    }
+    if (beat >= 29 && beat <= 31) {
+        begin_intro_dialogue_beat(beat + 1, true)
+        introCutscenePhase = INTRO_DIALOGUE
+        return
+    }
+    if (beat == 32) {
+        intro_begin_scene7()
+        return
+    }
+    if (beat >= 33 && beat <= 38) {
+        begin_intro_dialogue_beat(beat + 1, true)
+        introCutscenePhase = INTRO_DIALOGUE
+        return
+    }
+    if (beat == 39) {
+        begin_intro_dialogue_beat(40, false)
+        introCutscenePhase = INTRO_DIALOGUE
+        return
+    }
     introCutscenePhase = INTRO_FADE_OUT
     introCutsceneT = 0.0
 }
@@ -10210,12 +11587,16 @@ class StartupSplashFlow : Component {
             return
         }
         advance_bootstrap_loading()
+        if (gameBootstrapComplete) {
+            tick_character_visual_prep("", "")
+        }
         let dt = get_delta_time()
 
         if (startupSplashPhase == SPLASH_BLACK_HOLD) {
             set_startup_splash_overlay_alpha(1.0)
             set_startup_splash_logo_visible(false)
             startupSplashT += dt
+            sync_background_music()
             if (startupSplashT >= SPLASH_BLACK_HOLD_DURATION) {
                 startupSplashPhase = SPLASH_FADE_IN_LOGO
                 startupSplashT = 0.0
@@ -10226,6 +11607,7 @@ class StartupSplashFlow : Component {
 
         if (startupSplashPhase == SPLASH_FADE_IN_LOGO) {
             startupSplashT += dt / SPLASH_FADE_IN_LOGO_DURATION
+            sync_background_music()
             if (startupSplashT >= 1.0) {
                 startupSplashT = 1.0
                 set_startup_splash_overlay_alpha(0.0)
@@ -10241,6 +11623,7 @@ class StartupSplashFlow : Component {
             set_startup_splash_overlay_alpha(0.0)
             set_startup_splash_bg_alpha(1.0)
             startupSplashT += dt
+            sync_background_music()
             if (startupSplashT >= SPLASH_HOLD_LOGO_DURATION && gameBootstrapComplete) {
                 startupSplashPhase = SPLASH_FADE_IN_MENU
                 startupSplashT = 0.0
@@ -10255,6 +11638,7 @@ class StartupSplashFlow : Component {
                 return
             }
             apply_screen_visibility()
+            sync_background_music()
             startupSplashT += dt / SPLASH_FADE_IN_MENU_DURATION
             if (startupSplashT >= 1.0) {
                 startupSplashT = 1.0
@@ -10363,7 +11747,12 @@ class IntroCutsceneFlow : Component {
                 if (!introPictureSlideDone) {
                     intro_snap_main_image_in_place()
                 }
-                intro_begin_replica_immediately_for_current_beat()
+                if (introSlideTargetBeat > 0) {
+                    intro_begin_dialogue_beat_immediately(introSlideTargetBeat)
+                    introSlideTargetBeat = 0
+                } else {
+                    intro_begin_replica_immediately_for_current_beat()
+                }
                 return
             }
             if (!introPictureSlideDone) {
@@ -10371,7 +11760,12 @@ class IntroCutsceneFlow : Component {
                 apply_intro_slide_positions()
                 if (abs(introCutsceneSlideX) < 1.0) {
                     intro_snap_main_image_in_place()
-                    intro_begin_replica_immediately_for_current_beat()
+                    if (introSlideTargetBeat > 0) {
+                        intro_begin_dialogue_beat_immediately(introSlideTargetBeat)
+                        introSlideTargetBeat = 0
+                    } else {
+                        intro_begin_replica_immediately_for_current_beat()
+                    }
                 }
             }
             return
@@ -10402,7 +11796,14 @@ class IntroCutsceneFlow : Component {
 
         if (introCutscenePhase == INTRO_POST_TEXT_WAIT) {
             if (intro_tick_post_text_wait(dt)) {
-                if (ashfordCutsceneActive || statUnlockCutsceneActive) {
+                if (ashfordCutsceneActive) {
+                    introCutscenePhase = INTRO_FADE_OUT
+                } elif (statUnlockCutsceneActive && statUnlockCutsceneStatIdx == STAT_CHURCH_IDX && has_next_church_cutscene_replica(introDialogueBeat)) {
+                    introDialogueBeat += 1
+                    introCutscenePhase = INTRO_TYPEWRITER
+                    introCutsceneT = 0.0
+                    intro_begin_typewriter_for_current_beat()
+                } elif (statUnlockCutsceneActive) {
                     introCutscenePhase = INTRO_FADE_OUT
                 } elif (introCutsceneLayoutMode == INTRO_LAYOUT_SEQ1 && introDialogueBeat == 0) {
                     begin_intro_dialogue_beat(1, true)
@@ -10488,19 +11889,20 @@ class IntroCutsceneFlow : Component {
         }
 
         if (introCutscenePhase == INTRO_SEQ3_SLIDE_IN) {
+            let targetBeat = intro_seq3_slide_target_beat()
             if (intro_any_input_pressed()) {
                 if (!introSeq3SlideDone) {
                     intro_snap_seq3_in_place()
                 }
-                intro_begin_dialogue_beat_immediately(7)
+                intro_begin_dialogue_beat_immediately(targetBeat)
                 return
             }
             if (!introSeq3SlideDone) {
-                introSeq3SlideX = move_toward(introSeq3SlideX, 0.0, intro_corner_slide_speed() * dt)
+                introSeq3SlideX = move_toward(introSeq3SlideX, 0.0, intro_seq3_slide_speed_for_current() * dt)
                 apply_intro_slide_positions()
                 if (abs(introSeq3SlideX) < 1.0) {
                     intro_snap_seq3_in_place()
-                    intro_begin_dialogue_beat_immediately(7)
+                    intro_begin_dialogue_beat_immediately(targetBeat)
                 }
             }
             return
@@ -10563,7 +11965,49 @@ class IntroCutsceneFlow : Component {
             return
         }
 
+        if (introCutscenePhase == INTRO_BLACK_PAUSE) {
+            if (intro_any_input_pressed()) {
+                intro_leave_black_pause_and_begin_edwin_shake()
+                return
+            }
+            introCutsceneT += dt
+            if (introCutsceneT >= INTRO_BLACK_PAUSE_DURATION) {
+                intro_leave_black_pause_and_begin_edwin_shake()
+            }
+            return
+        }
+
+        if (introCutscenePhase == INTRO_IMAGE_SHAKE) {
+            if (intro_any_input_pressed()) {
+                introShakeT = INTRO_SHAKE_DURATION
+                intro_finish_shake_transition()
+                return
+            }
+            intro_tick_shake_offset(dt)
+            apply_intro_slide_positions()
+            if (introShakeT >= INTRO_SHAKE_DURATION) {
+                intro_finish_shake_transition()
+            }
+            return
+        }
+
+        if (introCutscenePhase == INTRO_POST_SHAKE_WAIT) {
+            if (intro_any_input_pressed()) {
+                intro_begin_scene6()
+                intro_snap_main_image_in_place()
+                intro_begin_dialogue_beat_immediately(28)
+                return
+            }
+            introCutsceneT += dt
+            if (introCutsceneT >= INTRO_POST_SHAKE_WAIT_DURATION) {
+                intro_begin_scene6()
+            }
+            return
+        }
+
         if (introCutscenePhase == INTRO_FADE_OUT) {
+            sync_intro_cutscene_music()
+            sync_background_music()
             introCutsceneT += dt / intro_cutscene_exit_fade_duration()
             if (introCutsceneT >= 1.0) {
                 introCutsceneT = 1.0
@@ -10782,14 +12226,16 @@ class ParallelHandoffFlow : Component {
 
 class CharacterVisualPrep : Component {
     def override on_update {
-        if (!gameBootstrapComplete || is_game_paused()) {
+        if (is_game_paused()) {
             return
         }
-        let activePath = texture_path_for(characterTexture)
-        let priorityPath = incoming_character_body_path()
-        if (tick_character_visual_prep(activePath, priorityPath)) {
-            update_character_outline_node_texture()
+        if (!gameBootstrapComplete) {
+            return
         }
+        let onMainMenu = screenPhase == SCREEN_MAIN_MENU
+        let activePath = onMainMenu ? "" : texture_path_for(characterTexture)
+        let priorityPath = onMainMenu ? "" : incoming_character_body_path()
+        tick_character_visual_prep(activePath, priorityPath)
     }
 }
 
@@ -10876,6 +12322,13 @@ class DialogueLayout : Component {
         if (!dialogueRoot.isAlive || !dialogueRoot.isActive) {
             return
         }
+        let zoomAnimating = cameraZoomPhase != CAM_ZOOM_IDLE
+        let typewriting = dialogPhase == DIALOG_TYPEWRITER
+        let choosing = dialogPhase == DIALOG_CHOOSING
+        let postResponse = dialogPhase == DIALOG_POST_RESPONSE_HOLD
+        if (!dialogueLayoutDirty && !zoomAnimating && !typewriting && !choosing && !postResponse) {
+            return
+        }
         apply_dialogue_layout()
     }
 }
@@ -10883,16 +12336,18 @@ class DialogueLayout : Component {
 
 class AnswerChoiceHover : Component {
     def override on_update {
-        let choosing = (dialogPhase == DIALOG_CHOOSING && !is_game_paused())
+        if (dialogPhase != DIALOG_CHOOSING || is_game_paused()) {
+            return
+        }
         let dt = get_delta_time()
-        let choiceCount = get_current_dialogue_node().choiceCount
+        let choiceCount = visible_choice_count(get_current_dialogue_node())
 
         for (i in range(MAX_CHOICES)) {
-            let target = (choosing && hoveredChoice == i && i < choiceCount) ? 1.0 : 0.0
+            let target = (hoveredChoice == i && i < choiceCount) ? 1.0 : 0.0
             choiceHoverT[i] = move_toward(choiceHoverT[i], target, ANSWER_HOVER_LERP_SPEED * dt)
             let btn = choiceButtonNodes[i]
             if (btn.isAlive && i < choiceCount) {
-                apply_answer_button_visual(btn, choiceHoverT[i])
+                apply_menu_button_visual(btn, choiceHoverT[i], true)
             }
         }
     }
@@ -10926,6 +12381,11 @@ class MainMenuButtonHover : Component {
 
 class MenuButtonHover : Component {
     def override on_update {
+        let onMainMenu = is_on_main_menu()
+        let pauseMenuOpen = is_pause_menu_open()
+        if (onMainMenu && !pauseMenuOpen) {
+            return
+        }
         let dt = get_delta_time()
 
         let pauseTarget = (!is_in_defeat_flow() && !is_on_main_menu() && menuButtonHovered) ? 1.0 : 0.0

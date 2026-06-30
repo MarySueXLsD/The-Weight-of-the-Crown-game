@@ -2,7 +2,7 @@
 # fmt: off
 POOL3_ENCOUNTERS = [
     ('malrik', [
-        ('Ваше Величество, народ знает вашу корону, но не знает, благословлена ли она. Сегодня церковь должна решить, как называть вас: королём или узурпатором.', 'Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or usurper.', [
+        ('Ваше Величество, народ знает вашу корону, но не знает, благословлена ли она. Сегодня церковь должна решить, как называть вас: королём или тем, кто взял трон.', 'Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or one who took the throne.', [
             ('Попросить церковь о благословении.', 'Ask the church for a blessing.', 'Смирение — хорошее начало для того, кто пришёл к трону через кровь.', 'Humility is a fitting beginning for one who reached the throne through blood.', {'c': 20, 'g': -10}),
             ('Потребовать признания моей власти.', 'Demand recognition of my authority.', 'Приказы доходят до солдат. До небес они поднимаются хуже.', 'Orders reach soldiers. They rise to heaven far less well.', {'a': 8, 'c': -15}),
             ('Предложить церкви союз.', 'Offer the church an alliance.', 'Союз трона и алтаря может спасти страну. Или задушить её.', 'An alliance of throne and altar may save the realm. Or smother it.', {'c': 10, 'g': -5, 'h': 5})
@@ -16,9 +16,9 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('borvin', [
-        ('Храмы собирают десятину. Казна собирает налоги. Народ скоро поймёт, что платит дважды.', 'Temples collect tithe. The treasury collects taxes. Soon the people will see they pay twice.', [
-            ('Ограничить церковную десятину.', 'Limit the church tithe.', 'Казна благодарна. Алтарь будет шипеть.', 'The treasury is grateful. The altar will hiss.', {'c': -20, 'g': 15, 'h': 5}),
-            ('Оставить десятину церкви.', 'Leave the tithe to the church.', 'Священники любят, когда их золото называют верой.', 'Priests love it when their gold is called faith.', {'c': 10, 'g': -10}),
+        ('Храмы собирают церковный налог. Казна собирает налоги. Народ скоро поймёт, что платит дважды.', 'Temples collect church tax. The treasury collects taxes. Soon the people will see they pay twice.', [
+            ('Ограничить церковный налог.', 'Limit the church tax.', 'Казна благодарна. Алтарь будет шипеть.', 'The treasury is grateful. The altar will hiss.', {'c': -20, 'g': 15, 'h': 5}),
+            ('Оставить церковный налог церкви.', 'Leave the church tax to the church.', 'Священники любят, когда их золото называют верой.', 'Priests love it when their gold is called faith.', {'c': 10, 'g': -10}),
             ('Собирать налоги вместе с церковью.', 'Collect taxes together with the church.', 'Двойная рука в одном кармане. Удобно, но опасно.', 'Two hands in one pocket. Convenient, yet dangerous.', {'c': 5, 'g': 10, 'h': -8})
         ]),
     ]),
@@ -61,7 +61,7 @@ POOL3_ENCOUNTERS = [
         ('После открытия церкви люди покупают свечи, иконы, амулеты. Я могу наладить торговлю. И отдать вам долю.', 'Since the church reopened, people buy candles, icons, and amulets. I can organize the trade and pay you a share.', [
             ('Разрешить торговлю святынями.', 'Permit trade in holy wares.', 'Вера продаётся лучше хлеба. И хранится дольше.', 'Faith sells better than bread, and keeps longer.', {'c': -8, 'g': 20}),
             ('Запретить наживаться на вере.', 'Forbid profit from faith.', 'Благородно. Очень невыгодно.', 'Noble. Very unprofitable.', {'c': 10, 'g': -10, 'h': 5}),
-            ('Разрешить только храмовые товары.', 'Allow only temple-controlled goods.', 'Монополия святости. Церковь быстро учится торговле.', 'A monopoly of holiness. The church learns commerce quickly.', {'c': 8, 'g': 8})
+            ('Разрешить только храмовые товары.', 'Allow only temple-controlled goods.', 'Единоличная власть святости. Церковь быстро учится торговле.', 'A monopoly of holiness. The church learns commerce quickly.', {'c': 8, 'g': 8})
         ]),
     ]),
     ('morwen', [
@@ -163,7 +163,7 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('rudolf', [
-        ('Священники говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны.', 'Priests say the northerners are godless. If they continue, soldiers will start waiting for war.', [
+        ('Священники в казармах говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны. Что прикажете с их проповедями?', 'Priests in the barracks say the northerners are godless. If they continue, soldiers will start hungering for war. What is your command on their sermons?', [
             ('Разрешить такие проповеди.', 'Allow such sermons.', 'Солдаты любят врага, которого им благословили ненавидеть.', 'Soldiers love an enemy they were blessed to hate.', {'a': 10, 'c': 15, 'g': -5}),
             ('Запретить военные проповеди.', 'Forbid war sermons.', 'Разумно. Войны хватает и без святых криков.', 'Sensible. There is war enough without holy cries.', {'a': -5, 'c': -12, 'g': 5}),
             ('Разрешить только молитвы за защиту.', 'Allow only prayers for protection.', 'Оборона звучит тише нападения. Иногда это полезно.', 'Defense sounds quieter than attack. Sometimes that helps.', {'a': 5, 'c': 5})
@@ -177,15 +177,15 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('gromm', [
-        ('К столице идут паломники. Если их не накормить, они рухнут у ворот. Если накормить — рухнут наши запасы.', 'Pilgrims are coming to the capital. If unfed they collapse at the gates. If fed, our stores collapse.', [
-            ('Накормить паломников.', 'Feed the pilgrims.', 'Святые люди едят как обычные. Иногда даже больше.', 'Holy folk eat like anyone else. Sometimes even more.', {'c': 15, 'f': -20, 'h': 10}),
-            ('Пустить только тех, кто несёт еду с собой.', 'Admit only those who bring their own food.', 'Город сохранит зерно. Паломники сохранят обиду.', 'The city keeps grain. Pilgrims keep resentment.', {'c': -8, 'f': 5, 'h': -3}),
-            ('Организовать дешёвую похлёбку.', 'Organize cheap porridge.', 'Жидко, но честно. Для паломников сойдёт.', 'Thin but honest. Good enough for pilgrims.', {'c': 8, 'f': -10, 'g': -5, 'h': 5})
+        ('К столице идут странники. Если их не накормить, они рухнут у ворот. Если накормить — рухнут наши запасы.', 'Pilgrims are coming to the capital. If unfed they collapse at the gates. If fed, our stores collapse.', [
+            ('Накормить странников.', 'Feed the pilgrims.', 'Святые люди едят как обычные. Иногда даже больше.', 'Holy folk eat like anyone else. Sometimes even more.', {'c': 15, 'f': -20, 'h': 10}),
+            ('Пустить только тех, кто несёт еду с собой.', 'Admit only those who bring their own food.', 'Город сохранит зерно. Странники сохранят обиду.', 'The city keeps grain. Pilgrims keep resentment.', {'c': -8, 'f': 5, 'h': -3}),
+            ('Организовать дешёвую похлёбку.', 'Organize cheap porridge.', 'Жидко, но честно. Для странников сойдёт.', 'Thin but honest. Good enough for pilgrims.', {'c': 8, 'f': -10, 'g': -5, 'h': 5})
         ]),
     ]),
     ('varn', [
-        ('В город идут паломники. Среди них легко спрятать шпионов, убийц и беглых солдат.', 'Pilgrims enter the city. Among them one can hide spies, killers, and deserters.', [
-            ('Обыскивать всех паломников.', 'Search all pilgrims.', 'Безопаснее. Но святость будет стоять в очереди на досмотр.', 'Safer. But holiness will wait in line for inspection.', {'a': 10, 'c': -8, 'h': -3}),
+        ('В город идут странники. Среди них легко спрятать шпионов, убийц и беглых солдат.', 'Pilgrims enter the city. Among them one can hide spies, killers, and deserters.', [
+            ('Обыскивать всех странников.', 'Search all pilgrims.', 'Безопаснее. Но святость будет стоять в очереди на досмотр.', 'Safer. But holiness will wait in line for inspection.', {'a': 10, 'c': -8, 'h': -3}),
             ('Пускать всех без проверки.', 'Let all pass unchecked.', 'Открытые ворота любят не только верующие.', 'Open gates are loved by more than the faithful.', {'a': -10, 'c': 10}),
             ('Проверять только мужчин с оружием.', 'Search only armed men.', 'Компромисс. Не идеальный, но живой.', 'A compromise. Not perfect, but livable.', {'a': 5, 'c': 3})
         ]),
@@ -198,7 +198,7 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('selena', [
-        ('Паломники покупают всё: хлеб, свечи, воду, тряпки, надежду. Разрешите временный рынок у храма.', 'Pilgrims buy everything: bread, candles, water, rags, hope. Permit a temporary market by the temple.', [
+        ('Странники покупают всё: хлеб, свечи, воду, тряпки, надежду. Разрешите временный рынок у храма.', 'Pilgrims buy everything: bread, candles, water, rags, hope. Permit a temporary market by the temple.', [
             ('Разрешить рынок и взять пошлину.', 'Allow the market and take a toll.', 'Вера приведёт покупателей. Корона заберёт монеты.', 'Faith brings buyers. The crown takes the coins.', {'c': -5, 'f': -5, 'g': 20}),
             ('Разрешить рынок без пошлины.', 'Allow the market without toll.', 'Редкая щедрость. Купцы будут молиться за вас.', 'Rare generosity. Merchants will pray for you.', {'c': 8, 'g': -5, 'h': 3}),
             ('Запретить рынок у храма.', 'Ban the market by the temple.', 'Святость сохранена. Прибыль ушла мимо.', 'Holiness preserved. Profit passed by.', {'c': 5, 'f': 5, 'g': -10})
@@ -233,10 +233,10 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('arvel', [
-        ('Паломники продают свои вещи за кусок хлеба. Некоторые уже падают на дороге к храму.', 'Pilgrims sell their belongings for bread. Some already fall on the road to the temple.', [
+        ('Странники продают свои вещи за кусок хлеба. Некоторые уже падают на дороге к храму.', 'Pilgrims sell their belongings for bread. Some already fall on the road to the temple.', [
             ('Открыть бесплатную кухню.', 'Open a free kitchen.', 'Дорога к храму сегодня станет менее смертельной.', 'The road to the temple will be less deadly today.', {'c': 10, 'f': -18, 'h': 18}),
             ('Продавать им дешёвый хлеб.', 'Sell them cheap bread.', 'Не милость, но помощь. Иногда это всё, что есть.', 'Not mercy, but help. Sometimes that is all there is.', {'f': -8, 'g': 5, 'h': 8}),
-            ('Закрыть город для новых паломников.', 'Close the city to new pilgrims.', 'Ворота сохранят хлеб. И потеряют сердца.', 'The gates keep bread. And lose hearts.', {'c': -15, 'f': 10, 'h': -5})
+            ('Закрыть город для новых странников.', 'Close the city to new pilgrims.', 'Ворота сохранят хлеб. И потеряют сердца.', 'The gates keep bread. And lose hearts.', {'c': -15, 'f': 10, 'h': -5})
         ]),
     ]),
     ('borvin', [
@@ -338,9 +338,9 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('selena', [
-        ('Храмы требуют тысячи свечей. Дайте мне монополию на воск, и половина прибыли ваша.', 'Temples demand thousands of candles. Give me a wax monopoly and half the profit is yours.', [
-            ('Дать монополию.', 'Grant the monopoly.', 'Свечи будут гореть. Монеты тоже.', 'Candles will burn. So will coins.', {'c': 5, 'g': 20, 'h': -5}),
-            ('Запретить монополию.', 'Forbid the monopoly.', 'Свободный рынок свечей. Как возвышенно скучно.', 'A free market in candles. How nobly dull.', {'g': -5, 'h': 5}),
+        ('Храмы требуют тысячи свечей. Дайте мне единоличную власть над рынком на воск, и половина прибыли ваша.', 'Temples demand thousands of candles. Give me a wax monopoly and half the profit is yours.', [
+            ('Дать единоличную власть над рынком.', 'Grant the monopoly.', 'Свечи будут гореть. Монеты тоже.', 'Candles will burn. So will coins.', {'c': 5, 'g': 20, 'h': -5}),
+            ('Запретить единоличную власть над рынком.', 'Forbid the monopoly.', 'Свободный рынок свечей. Как возвышенно скучно.', 'A free market in candles. How nobly dull.', {'g': -5, 'h': 5}),
             ('Поставить королевскую цену на воск.', 'Set a royal price on wax.', 'Вы портите прибыль, но красиво называете это порядком.', 'You spoil profit but call it order.', {'c': 3, 'g': 8, 'h': 3})
         ]),
     ]),
@@ -373,10 +373,10 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('arvel', [
-        ('Городские бедняки злятся: паломников кормят, а местные голодают. Милость стала поводом для зависти.', 'City poor are angry: pilgrims are fed while locals starve. Mercy became envy.', [
+        ('Городские бедняки злятся: странников кормят, а местные голодают. Милость стала поводом для зависти.', 'City poor are angry: pilgrims are fed while locals starve. Mercy became envy.', [
             ('Кормить сначала жителей города.', 'Feed city dwellers first.', 'Дом нужно спасать до гостей. Это понятно.', 'Save the house before the guests. That is clear.', {'c': -5, 'f': -10, 'h': 12}),
             ('Кормить всех поровну.', 'Feed all equally.', 'Трудно, дорого, правильно.', 'Hard, costly, right.', {'c': 8, 'f': -18, 'h': 15}),
-            ('Кормить только паломников у храма.', 'Feed only pilgrims at the temple.', 'Тогда город решит, что вера пришла не к нему.', 'Then the city will think faith came for others.', {'c': 10, 'f': -8, 'h': -12})
+            ('Кормить только странников у храма.', 'Feed only pilgrims at the temple.', 'Тогда город решит, что вера пришла не к нему.', 'Then the city will think faith came for others.', {'c': 10, 'f': -8, 'h': -12})
         ]),
     ]),
     ('borvin', [
@@ -437,7 +437,7 @@ POOL3_ENCOUNTERS = [
     ]),
     ('borvin', [
         ('Храм просит серебро на новый колокол. Говорят, его звон будет защищать город. Я бы предпочёл защитные стены.', 'The temple wants silver for a new bell. They say its ring will guard the city. I would prefer walls.', [
-            ('Дать серебро на колокол.', 'Fund the bell.', 'Колокол будет звонить. Казна — пустеть.', 'The bell will ring. The treasury will empty.', {'c': 15, 'g': -15, 'h': 5}),
+            ('Дать серебро на колокол.', 'Fund the bell.', 'Колокол будет звонить. Казна опустеет.', 'The bell will ring. The treasury will empty.', {'c': 15, 'g': -15, 'h': 5}),
             ('Отказать.', 'Refuse.', 'Тишина дешевле серебра.', 'Silence is cheaper than silver.', {'c': -10, 'g': 5}),
             ('Дать бронзу вместо серебра.', 'Give bronze instead of silver.', 'Колокол будет беднее, но всё ещё громче моего недовольства.', 'A poorer bell, still louder than my displeasure.', {'c': 5, 'g': -5})
         ]),
@@ -450,9 +450,9 @@ POOL3_ENCOUNTERS = [
         ]),
     ]),
     ('mira', [
-        ('Паломники принесли новую болезнь. Священники называют её испытанием. Я называю её заразой.', 'Pilgrims brought a new disease. Priests call it a trial. I call it plague.', [
-            ('Закрыть город для паломников.', 'Close the city to pilgrims.', 'Это спасёт город. И разозлит тех, кто идёт к святыне.', 'It saves the city. And angers those bound for the shrine.', {'c': -15, 'f': 5, 'h': 20}),
-            ('Проверять паломников у ворот.', 'Screen pilgrims at the gates.', 'Медленно, но лучше, чем пускать болезнь с песнями.', 'Slow, but better than letting sickness in with hymns.', {'c': -3, 'g': -8, 'h': 12}),
+        ('Странники принесли новую болезнь. Священники называют её испытанием. Я называю её заразой.', 'Pilgrims brought a new disease. Priests call it a trial. I call it plague.', [
+            ('Закрыть город для странников.', 'Close the city to pilgrims.', 'Это спасёт город. И разозлит тех, кто идёт к святыне.', 'It saves the city. And angers those bound for the shrine.', {'c': -15, 'f': 5, 'h': 20}),
+            ('Проверять странников у ворот.', 'Screen pilgrims at the gates.', 'Медленно, но лучше, чем пускать болезнь с песнями.', 'Slow, but better than letting sickness in with hymns.', {'c': -3, 'g': -8, 'h': 12}),
             ('Не мешать паломничеству.', 'Do not hinder pilgrimage.', 'Тогда испытание станет массовым.', 'Then the trial becomes mass.', {'c': 12, 'h': -20})
         ]),
     ]),
@@ -586,7 +586,7 @@ POOL3_ENCOUNTERS = [
         ('Малрик хочет везти реликвии вместе с армией. Если враг захватит обоз, это станет позором.', 'Malrik wants relics with the army. If the enemy takes the train, it is disgrace.', [
             ('Взять реликвии с армией.', 'Take relics with the army.', 'Солдаты пойдут смелее. Обоз станет целью.', 'Soldiers march bolder. The train becomes a target.', {'a': 5, 'c': 15, 'g': -8}),
             ('Оставить реликвии в столице.', 'Leave relics in the capital.', 'Правильно. Война и так тащит достаточно лишнего.', 'Right. War hauls enough already.', {'a': 5, 'c': -10}),
-            ('Взять копии реликвий.', 'Take copies of relics.', 'Подделка для храбрости. Странно, но легче защищать.', 'Fakes for courage. Strange, but easier to guard.', {'c': 5, 'g': -3})
+            ('Взять копии реликвий.', 'Take copies of relics.', 'Фальшивая монета для храбрости. Странно, но легче защищать.', 'Fakes for courage. Strange, but easier to guard.', {'c': 5, 'g': -3})
         ]),
     ]),
     ('mira', [
@@ -607,7 +607,7 @@ POOL3_ENCOUNTERS = [
         ('Один стражник признался священнику, что брал взятки. Священник не хочет выдавать его имя.', 'A guard confessed bribes to a priest. The priest will not give his name.', [
             ('Уважать тайну исповеди.', 'Respect confession secrecy.', 'Стража поймёт, что храм над законом. Опасный урок.', 'Guards learn the temple is above law. A dangerous lesson.', {'a': -8, 'c': 12}),
             ('Потребовать имя.', 'Demand the name.', 'Хорошо. Взятки прячутся хуже, когда исповедь не щит.', 'Good. Bribes hide poorly when confession is no shield.', {'a': 10, 'c': -12}),
-            ('Объявить амнистию тем, кто признается сам.', 'Amnesty for those who confess themselves.', 'Мягкий капкан. Иногда лучшие.', 'A soft trap. Sometimes the best.', {'a': 5, 'c': 5, 'g': 3})
+            ('Объявить прощение тем, кто признается сам.', 'forgiveness for those who confess themselves.', 'Мягкий капкан. Иногда лучшие.', 'A soft trap. Sometimes the best.', {'a': 5, 'c': 5, 'g': 3})
         ]),
     ]),
     ('edric', [
@@ -675,7 +675,7 @@ POOL3_ENCOUNTERS = [
     ]),
     ('malrik', [
         ('Если вы продолжите спорить с храмом, некоторые священники могут отказать вам в молитвах. Народ услышит это как приговор.', 'If you keep quarreling with the temple, some priests may refuse you prayers. The people will hear that as verdict.', [
-            ('Уступить храму.', 'Yield to the temple.', 'Молитвы продолжатся. Цена мира всегда ниже цены раскола.', 'Prayers continue. Peace costs less than schism.', {'a': -5, 'c': 20, 'g': -10}),
+            ('Уступить храму.', 'Yield to the temple.', 'Молитвы продолжатся. Цена мира всегда ниже цены раскола.', 'Prayers continue. Peace costs less than church split.', {'a': -5, 'c': 20, 'g': -10}),
             ('Пригрозить храму.', 'Threaten the temple.', 'Вы можете напугать священника. Но не веру, которая стоит за ним.', 'You may frighten a priest. Not the faith behind him.', {'a': 12, 'c': -20}),
             ('Провести переговоры.', 'Negotiate.', 'Разговор — тонкий мост. Но мы пока ещё на нём.', 'Talk is a thin bridge. We are still on it.', {'c': 5, 'g': -5, 'h': 5})
         ]),

@@ -27,7 +27,7 @@ let DEFEAT_SCREEN_TEXTURE_PATHS : string[STAT_COUNT] <- fixed_array(
 
 let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
     DialogueNode(
-        prompt = "The commons are at the gates, Your Grace. They say the usurper stole a crown and left their children hungry. Your reign ends here.",
+        prompt = "The commons are at the gates, Your Majesty. They say the king who took the throne stole a crown and left their children hungry. Your reign ends here.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -46,7 +46,7 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "The bells toll for a cursed reign. The faithful will not kneel to a regicide whose soul is black in the eyes of heaven.",
+        prompt = "The bells toll for a cursed reign. The faithful will not kneel to a regicide whose soul is black in heaven's eyes.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -65,7 +65,7 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "The men who crowned you have turned their blades. An unpaid army does not guard a bankrupt usurper.",
+        prompt = "The men who crowned you have turned their blades. An unpaid army does not guard a bankrupt king who took the throne.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -74,7 +74,7 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(
-                choiceText = "Double their pay — tomorrow",
+                choiceText = "Double their pay",
                 response = "Tomorrow is a long way off for men with empty purses and sharper memories.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -84,7 +84,7 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "The treasury is empty and the mob remembers why you sit on that throne. Your reign ends here, usurper.",
+        prompt = "The treasury is empty and the mob remembers why you sit on that throne. Your reign ends here, king who took the throne.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -107,7 +107,7 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
-                choiceText = "I am not sick — the realm is",
+                choiceText = "I am not sick",
                 response = "Coughing guards abandon their posts. Death does not distinguish usurper from sovereign.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -160,17 +160,17 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "The granaries are bare and famine walks the streets. Hungry men do not debate legitimacy — they tear down thrones.",
+        prompt = "The granaries are bare and famine walks the streets. Hungry men do not debate who may rule — they tear down thrones.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
-                choiceText = "There must be grain somewhere",
-                response = "There is — in the storehouses you refused to open. The mob knows where to look.",
+                choiceText = "Open the royal granaries!",
+                response = "There is grain — in the storehouses you refused to open. The mob knows where to look.",
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(
-                choiceText = "The people must endure",
-                response = "They endured long enough. Tonight they feast — on your reign.",
+                choiceText = "The realm must endure hardship",
+                response = "They endured long enough. Tonight hunger chooses a new master.",
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(),
@@ -201,7 +201,7 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
 
 let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
     DialogueNode(
-        prompt = "Чернь у ворот, государь. Говорят, узурпатор украл корону и оставил их детей голодными. Здесь ваше правление кончается.",
+        prompt = "Чернь у ворот, Ваше Величество. Говорят, вы украли корону и оставили их детей голодными. Здесь ваше правление кончается.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -220,11 +220,11 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "Колокола бьют по проклятому правлению. Верующие не преклонят колена перед узурпатором, чья душа чёрна в глазах небес.",
+        prompt = "Колокола бьют по проклятому правлению. Верующие не преклонят колена перед узурпатором — душа ваша чёрна в глазах небес.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
-                choiceText = "Церкви нужен я больше, чем мне она",
+                choiceText = "Без меня церкви не обойтись",
                 response = "Отлучение звучит с каждой кафедры. Даже стража крестит себя и отходит в сторону.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -239,7 +239,7 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "Люди, что возвели вас на трон, обернули клинки. Неоплаченная армия не охраняет разорённого узурпатора.",
+        prompt = "Люди, что возвели вас на трон, обернули клинки. Неоплаченная армия не охраняет разорённого короля.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -248,7 +248,7 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(
-                choiceText = "Удвоить плату — завтра",
+                choiceText = "Удвоить плату",
                 response = "Завтра далеко для людей с пустыми кошельками и острой памятью.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -281,7 +281,7 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
-                choiceText = "Я не болен — болеет страна",
+                choiceText = "Я не болен",
                 response = "Кашляющая стража бросает посты. Смерть не различает узурпатора и суверена.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -338,13 +338,13 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
-                choiceText = "Где-то должен быть зерно",
-                response = "Оно есть — в закромах, которые вы не открыли. Толпа знает, куда идти.",
+                choiceText = "Открыть королевские закрома!",
+                response = "Зерно есть — в закромах, которые вы не открыли. Толпа знает, куда идти.",
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(
-                choiceText = "Народ должен терпеть",
-                response = "Они терпели достаточно. Сегодня они пируют — вашим правлением.",
+                choiceText = "Королевство должно терпеть лишения",
+                response = "Они терпели достаточно. Нынче голод избирает нового хозяина.",
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(),
@@ -362,7 +362,7 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(
-                choiceText = "Племянник — выдумка",
+                choiceText = "Племянник — всего лишь миф",
                 response = "Выдумки не едут во главе армий. Ваше отсутствие наследника едет с ними.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -443,7 +443,7 @@ def public format_defeat_summary_text(statIdx : int; days : int) : string {
     if (statIdx == 7) {
         return "Famine reached the palace gates on day {days}. Empty granaries topple crowns."
     }
-    return "With no heir and no legitimacy, your reign collapsed on day {days}."
+    return "With no heir and no lawful rule, your reign collapsed on day {days}."
 }
 
 

@@ -2,6 +2,8 @@ require engine.core
 require constants
 require game_state
 require question_pools public
+require edric_opener
+require arc_engine
 
 
 module dialogue_ids public
@@ -36,9 +38,28 @@ def public reply_id(questionId : int; choiceIdx : int) : int {
 }
 
 
+def public arc_question_id(arcId : int; beatIdx : int; nodeIdx : int) : int {
+    return ARC_QUESTION_ID_BASE + arcId * 100 + beatIdx * 10 + nodeIdx
+}
+
+
+def public stat_unlock_question_id(kind : int; nodeIdx : int) : int {
+    return 900 + kind * 10 + nodeIdx
+}
+
+
 def public get_current_question_id() : int {
     if (usingAshfordDebutEncounter) {
         return ashford_question_id(currentNodeIdx)
+    }
+    if (usingStatUnlockEncounter) {
+        return stat_unlock_question_id(statUnlockEncounterKind, currentNodeIdx)
+    }
+    if (usingArcEncounter) {
+        return arc_question_id(activeArcId, activeArcBeatIdx, currentNodeIdx)
+    }
+    if (is_edric_day_one_encounter(currentEncounterIdx)) {
+        return main_question_id(POOL_EARLY_FIXED_IDX, currentNodeIdx)
     }
     return main_question_id(currentEncounterIdx, currentNodeIdx)
 }
@@ -50,7 +71,7 @@ def public get_reply_id_for_choice(choiceIdx : int) : int {
 
 
 def public is_ashford_question_id(questionId : int) : bool {
-    return questionId >= ASHFORD_QUESTION_ID_BASE
+    return questionId >= ASHFORD_QUESTION_ID_BASE && questionId < ARC_QUESTION_ID_BASE
 }
 
 
@@ -117,11 +138,36 @@ def public resolve_main_question_id(questionId : int) : int2 {
 def public apply_question_id_to_state(questionId : int) {
     if (is_ashford_question_id(questionId)) {
         usingAshfordDebutEncounter = true
+        usingArcEncounter = false
+        usingStatUnlockEncounter = false
         currentNodeIdx = questionId - ASHFORD_QUESTION_ID_BASE
         pendingNextNodeIdx = NO_NEXT_NODE
         return
     }
+    if (questionId >= ARC_QUESTION_ID_BASE) {
+        usingAshfordDebutEncounter = false
+        usingStatUnlockEncounter = false
+        usingArcEncounter = true
+        let localId = questionId - ARC_QUESTION_ID_BASE
+        activeArcId = localId / 100
+        activeArcBeatIdx = (localId % 100) / 10
+        currentNodeIdx = localId % 10
+        pendingNextNodeIdx = NO_NEXT_NODE
+        currentCourtCharacterIdx = get_arc_character_idx(activeArcId, activeArcBeatIdx)
+        return
+    }
+    if (questionId >= 900) {
+        usingAshfordDebutEncounter = false
+        usingArcEncounter = false
+        usingStatUnlockEncounter = true
+        statUnlockEncounterKind = (questionId - 900) / 10
+        currentNodeIdx = (questionId - 900) % 10
+        pendingNextNodeIdx = NO_NEXT_NODE
+        return
+    }
     usingAshfordDebutEncounter = false
+    usingArcEncounter = false
+    usingStatUnlockEncounter = false
     let loc = resolve_main_question_id(questionId)
     currentEncounterIdx = loc.x
     currentNodeIdx = loc.y

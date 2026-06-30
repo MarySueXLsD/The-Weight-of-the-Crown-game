@@ -54,10 +54,10 @@ ENCOUNTERS = [
              ('Заморозить выплаты до проверки.', 'Freeze payments until verification.', 'Проверки кормят бумагу, не солдат. Я предупреждал.', 'Checks feed paper, not soldiers. I warned you.', {'a': -12, 'g': 10}),
          ]),
     ]),
-    # 1 — Благословение узурпатора
+    # 1 — Благословение того, кто взял трон
     ('malrik', [
-        ('Народ шепчет слово ‘узурпатор’. Но если церковь проведёт обряд очищения короны, шёпот станет молитвой.',
-         "The people whisper the word 'usurper'. But if the church performs a rite of purification of the crown, the whisper will become a prayer.",
+        ('Народ шепчет: «тот, кто взял трон». Но если церковь проведёт обряд очищения короны, шёпот станет молитвой.',
+         "The people whisper: the king who took the throne. But if the church performs a rite of purification of the crown, the whisper will become a prayer.",
          [
              ('Провести дорогой обряд.', 'Carry out an expensive ritual.', 'Боги любят смирение. А народ любит видеть, что король склоняет голову.', 'The gods love humility. And the people love to see the king bow his head.', {'g': -15, 'p': 5}),
              ('Провести скромный обряд.', 'Perform a modest ceremony.', 'Скромность тоже добродетель. Хотя золото сияет убедительнее.', 'Modesty is also a virtue. Although gold shines more convincingly.', {'g': -5, 'p': 2}),
@@ -113,7 +113,7 @@ ENCOUNTERS = [
         ('Знать ждёт первого королевского пира. Но если я накрою стол как положено, городские амбары похудеют.',
          'The nobles are waiting for the first royal feast. But if I set the table properly, the city barns will lose weight.',
          [
-             ('Устроить роскошный пир.', 'Have a luxurious feast.', 'Пир будет таким, что гости забудут голод. Правда, город — нет.', 'The feast will be such that the guests will forget hunger. True, the city is not.', {'f': -20, 'g': -10, 'a': 5}),
+             ('Устроить роскошный пир.', 'Have a luxurious feast.', 'Пир будет таким, что гости забудут голод. Город — не забудет.', 'The feast will be such that the guests will forget hunger. True, the city is not.', {'f': -20, 'g': -10, 'a': 5}),
              ('Устроить скромный пир.', 'Have a modest feast.', 'Скромный пир — это когда дворяне всё равно едят, но жалуются тише.', 'A modest feast is when the nobles still eat, but complain more quietly.', {'f': -8, 'g': -4}),
              ('Отменить пир и раздать еду бедным.', 'Call off the feast and give the food to the poor.', 'Хлеб внизу оценят больше, чем павлина наверху.', 'The bread below will be more appreciated than the peacock above.', {'f': -10, 'p': 15}),
              ('Можно обмануть гостей?', 'Is it possible to deceive guests?', '', '', None, 1),
@@ -150,7 +150,7 @@ ENCOUNTERS = [
          'Everyone will remember the first decree of the new king. It should be simple. Grace, tax or sword?',
          [
              ('Снизить цену на хлеб.', 'Reduce the price of bread.', 'Хлеб — самый тихий способ сказать народу, что он ещё нужен королю.', 'Bread is the quietest way to tell the people that the king still needs it.', {'f': -10, 'p': 15, 'g': -5}),
-             ('Увеличить сбор налогов.', 'Increase tax collection.', 'Казна оживёт. Народ, возможно, наоборот.', 'The treasury will come to life. People may be the opposite.', {'g': 20, 'p': -10}),
+             ('Увеличить сбор налогов.', 'Increase tax collection.', 'Казна оживёт. Народ, возможно, помрёт с голоду.', 'The treasury will come to life. People may be the opposite.', {'g': 20, 'p': -10}),
              ('Объявить набор в армию.', 'Announce recruitment into the army.', 'Мечей станет больше. Рук в полях — меньше.', 'There will be more swords. There are fewer hands in the fields.', {'a': 15, 'f': -5, 'g': -5}),
              ('Пока не издавать указ.', "Don't issue a decree yet.", 'Иногда молчание мудро. Но в первые дни трона его часто принимают за слабость.', 'Sometimes silence is wise. But in the early days of the throne, it is often mistaken for weakness.', None),
          ]),
@@ -259,7 +259,7 @@ ENCOUNTERS = [
              ('Оставить всех.', 'Leave everyone.', 'Машина дворца продолжит работать. Вопрос — на кого.', 'The palace machine will continue to work. The question is - to whom.', {'g': 5, 'a': -5}),
              ('Кто из них опасен?', 'Which one is dangerous?', '', '', None, 1),
          ]),
-        ('Опаснее всех те, кто молчит слишком правильно. Преданный слуга всегда немного человек. Шпион — всегда мебель.',
+        ('Опаснее всех те, кто молчит слишком правильно. Преданный слуга всё же человек. Шпион — всегда мебель.',
          'The most dangerous of all are those who are too silent. A devoted servant is always a little human. A spy is always furniture.',
          [
              ('Составить список подозрительных.', 'Make a list of suspects.', 'Список не спасёт вас сам, но подскажет, кому не доверять вино.', "The list won't save you, but it will tell you who not to trust with wine.", {'g': -5, 'a': 5}),
@@ -381,7 +381,7 @@ ENCOUNTERS = [
              ('Заплатить лекарям полностью.', 'Pay doctors in full.', 'Дорогое милосердие. Но живые налогоплательщики полезнее мёртвых.', 'Dear mercy. But living taxpayers are more useful than dead ones.', {'g': -15, 'p': 20}),
              ('Заплатить половину.', 'Pay half.', 'Половина платы — половина усердия. Иногда этого хватает.', 'Half the pay is half the effort. Sometimes this is enough.', {'g': -7, 'p': 8}),
              ('Приказать лечить бесплатно.', 'Order treatment for free.', 'Прекрасно для казны. Опасно для больных.', 'Great for the treasury. Dangerous for patients.', {'g': 5, 'p': -5, 'a': 5}),
-             ('Позволить брать плату с больных.', 'Allow patients to be charged.', 'Казна вздохнёт. Бедняки, возможно, перестанут.', 'The treasury will sigh. Poor people might stop.', {'g': 3, 'p': -15}),
+             ('Позволить брать плату с больных.', 'Allow patients to be charged.', 'Казна вздохнёт с облегчением. Бедняки, возможно, перестанут выздоравливать.', 'The treasury will sigh. Poor people might stop.', {'g': 3, 'p': -15}),
          ]),
     ]),
     # 24 — Трупы после переворота
@@ -470,8 +470,8 @@ ENCOUNTERS = [
         ('Мои караваны могут привезти зерно уже через три дня. Но я хочу исключительное право продавать хлеб в столице.',
          'My caravans can bring grain in just three days. But I want the exclusive right to sell bread in the capital.',
          [
-             ('Дать тебе монополию.', 'Give you a monopoly.', 'Мудро. Народ получит хлеб, а я — благодарность в монетах.', 'Wise. The people will receive bread, and I will receive gratitude in coins.', {'f': 25, 'g': 10, 'p': -8}),
-             ('Купить зерно без монополии.', 'Buy grain without a monopoly.', 'Вы покупаете еду, но не дружбу. Это дороже в будущем.', "You buy food, but not friendship. It's more expensive in the future.", {'f': 15, 'g': -15}),
+             ('Дать тебе единоличную власть над рынком.', 'Give you a monopoly.', 'Мудро. Народ получит хлеб, а я — благодарность в монетах.', 'Wise. The people will receive bread, and I will receive gratitude in coins.', {'f': 25, 'g': 10, 'p': -8}),
+             ('Купить зерно без единоличной власти над рынком.', 'Buy grain without a monopoly.', 'Вы покупаете еду, но не дружбу. Это дороже в будущем.', "You buy food, but not friendship. It's more expensive in the future.", {'f': 15, 'g': -15}),
              ('Корона не будет зависеть от купцов.', 'The crown will not depend on merchants.', 'Гордая корона. Посмотрим, насколько гордым бывает голод.', "Proud crown. Let's see how proud hunger can be.", {'g': 5, 'f': -15}),
              ('Почему у тебя уже есть столько зерна?', 'Why do you already have so much grain?', '', '', None, 1),
          ]),
@@ -480,7 +480,7 @@ ENCOUNTERS = [
          [
              ('Выкупить зерно по твоей цене.', 'Buy back the grain at your price.', 'Приятно иметь дело с короной, которая понимает рынок.', "It's nice to deal with a crown that understands the market.", {'f': 20, 'g': -20}),
              ('Продашь дешевле.', 'Sell \u200b\u200bit cheaper.', 'Ах, королевская торговля: сначала приказ, потом цена.', 'Ah, royal trade: first the order, then the price.', {'f': 18, 'g': -8, 'a': 3}),
-             ('Конфисковать половину.', 'Confiscate half.', 'Вы получите зерно. И купцов, которые начнут прятать всё остальное.', 'You will receive grain. And merchants who will begin to hide everything else.', {'f': 25, 'g': -5, 'p': -8}),
+             ('Конфисковать половину.', 'seize half.', 'Вы получите зерно. И купцов, которые начнут прятать всё остальное.', 'You will receive grain. And merchants who will begin to hide everything else.', {'f': 25, 'g': -5, 'p': -8}),
          ]),
     ]),
     # 31 — Слишком много приговоров
@@ -677,7 +677,7 @@ ENCOUNTERS = [
          'Some are real. Some are written in ink too fresh for an old debt. Dead people, as a rule, do not borrow money yesterday.',
          [
              ('Оплатить только доказанные долги.', 'Pay only proven debts.', 'Справедливый путь. Не самый быстрый, но крепкий.', 'The fair way. Not the fastest, but strong.', {'g': -10, 'p': 5}),
-             ('Объявить подделки изменой.', 'Declare counterfeits treason.', 'Кредиторы станут осторожнее. И злее.', 'Lenders will become more careful. And angrier.', {'g': 8, 'a': 5}),
+             ('Объявить фальшивые монеты изменой.', 'Declare fake coins treason.', 'Кредиторы станут осторожнее. И злее.', 'Lenders will become more careful. And angrier.', {'g': 8, 'a': 5}),
              ('Не платить никому.', "Don't pay anyone.", 'Иногда отказ звучит как сила. Иногда как банкротство.', "Sometimes refusal sounds like strength. Sometimes it's like bankruptcy.", {'g': 10, 'f': -8}),
          ]),
     ]),
@@ -821,7 +821,7 @@ ENCOUNTERS = [
          'Not right away. First there will be sermons. Then the crying old women. Then stones hit the tax collectors. But we will already have the silver.',
          [
              ('Взять быстро и тайно.', 'Take it quickly and secretly.', 'Тайна дешевле войны. До тех пор, пока остаётся тайной.', 'Secret is cheaper than war. As long as it remains a mystery.', {'g': 20, 'p': -8}),
-             ('Взять только у богатых монастырей.', 'Take only from rich monasteries.', 'Умеренное святотатство. Почти финансовая реформа.', 'Moderate sacrilege. Almost financial reform.', {'g': 15, 'p': -5}),
+             ('Взять только у богатых монастырей.', 'Take only from rich monasteries.', 'Умеренное оскорбление святого. Почти финансовая реформа.', 'Moderate insult to the sacred. Almost financial reform.', {'g': 15, 'p': -5}),
              ('Не трогать храмы.', "Don't touch the temples.", 'Иногда король покупает покой тем, что ничего не берёт.', 'Sometimes a king buys peace by not taking anything.', {'g': -5, 'p': 5}),
          ]),
     ]),
@@ -1090,15 +1090,15 @@ ENCOUNTERS = [
         ('Он клянётся, что не знает. А я не люблю клятвы людей, которые продают глаза за две монеты.',
          "He swears he doesn't know. And I don’t like the oaths of people who sell their eyes for two coins.",
          [
-             ('Найти телегу и конфисковать груз.', 'Find the cart and confiscate the cargo.', 'Поймаем след, пока колёса ещё свежие.', "Let's catch the trail while the wheels are still fresh.", {'f': 10, 'g': -3, 'a': 3}),
+             ('Найти телегу и конфисковать груз.', 'Find the cart and seize the cargo.', 'Поймаем след, пока колёса ещё свежие.', "Let's catch the trail while the wheels are still fresh.", {'f': 10, 'g': -3, 'a': 3}),
              ('Допросить стражника жёстко.', 'Interrogate the guard harshly.', 'Он вспомнит. Или придумает. Придётся различать.', "He will remember. Or he'll come up with an idea. We'll have to differentiate.", {'a': 8, 'p': -5}),
              ('Поставить двойной досмотр.', 'Introduce double inspection.', 'Дороже. Но ворота наконец станут воротами.', 'More expensive. But the gate will finally become a gate.', {'a': 5, 'g': -5}),
          ]),
     ]),
     # 65 — Суд или приказ
     ('edric', [
-        ('Люди боятся не наказаний, а наказаний без суда. Даже узурпатору нужен закон.',
-         'People are not afraid of punishment, but of punishment without trial. Even a usurper needs a law.',
+        ('Люди боятся не наказаний, а наказаний без суда. Даже тому, кто взял трон, нужен закон.',
+         'People are not afraid of punishment, but of punishment without trial. Even a king who took the throne needs a law.',
          [
              ('Создать временный суд.', 'Create a temporary court.', 'Закон — медленный щит. Но щит всё же.', 'Law is a slow shield. But still a shield.', {'g': -10, 'p': 15}),
              ('Судить только важных обвиняемых.', 'Try only important defendants.', 'Не справедливость, но её тень. Иногда тень лучше темноты.', 'Not justice, but its shadow. Sometimes shade is better than darkness.', {'g': -5, 'p': 5}),

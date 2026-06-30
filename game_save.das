@@ -3,14 +3,14 @@ require constants
 require game_state
 require dialogue_ids
 require question_pools public
+require arc_state
 
 
 module game_save public
 
 
 let public {
-    SAVE_VERSION = 6
-    SAVE_STORAGE_KEY = "game_progress"
+    SAVE_VERSION = 8
     HIGH_SCORE_STORAGE_KEY = "high_score"
 }
 
@@ -66,6 +66,34 @@ def public clear_reply_history() {
 }
 
 
+def public load_record_days() {
+    load_storage(HIGH_SCORE_STORAGE_KEY) $(var storage : GenericStorage#) {
+        recordDays = get_or(storage, "recordDays", 0)
+    }
+}
+
+
+def public save_record_days() {
+    var storage : GenericStorage
+    set(storage, "recordDays", recordDays)
+    save_storage(storage, HIGH_SCORE_STORAGE_KEY)
+}
+
+
+def public try_update_record_days(days : int) {
+    if (days > recordDays) {
+        recordDays = days
+        save_record_days()
+    }
+}
+
+
+def public clear_record_days() {
+    remove_storage(HIGH_SCORE_STORAGE_KEY)
+    recordDays = 0
+}
+
+
 def public save_game_progress(nextResumeId : int) {
     commit_pending_choice_stats()
     loadedNextResumeId = nextResumeId
@@ -83,6 +111,30 @@ def public save_game_progress(nextResumeId : int) {
     set(storage, "advisorUsedToday", advisorActionUsedToday ? 1 : 0)
     set(storage, "ashfordIntroduced", ashfordIntroduced ? 1 : 0)
     set(storage, "ashfordDebut", usingAshfordDebutEncounter ? 1 : 0)
+    set(storage, "usingArc", usingArcEncounter ? 1 : 0)
+    set(storage, "usingStatUnlock", usingStatUnlockEncounter ? 1 : 0)
+    set(storage, "statUnlockKind", statUnlockEncounterKind)
+    set(storage, "arcId", activeArcId)
+    set(storage, "arcBeat", activeArcBeatIdx)
+    set(storage, "householdStance", householdStance)
+    set(storage, "householdTone", householdTone)
+    set(storage, "householdConsistency", householdConsistency)
+    set(storage, "householdOutcome", householdOutcome)
+    set(storage, "householdArcPhase", householdArcPhase)
+    set(storage, "householdKeptGromm", householdKeptGromm ? 1 : 0)
+    set(storage, "householdFeastChoice", householdFeastChoice)
+    set(storage, "northernTrust", northernTrust)
+    set(storage, "northernEnvoyChoice", northernEnvoyChoice)
+    set(storage, "northernOutcome", northernOutcome)
+    set(storage, "northernArcPhase", northernArcPhase)
+    set(storage, "tapestryTrust", tapestryTrust)
+    set(storage, "tapestryOutcome", tapestryOutcome)
+    set(storage, "famineSeverity", famineSeverity)
+    set(storage, "hungryOutcome", hungryOutcome)
+    set(storage, "guildStanding", guildStanding)
+    set(storage, "guildOutcome", guildOutcome)
+    set(storage, "plagueProgress", plagueCureProgress)
+    set(storage, "plaguePath", plagueFundingPath)
     set(storage, "courtCharIdx", currentCourtCharacterIdx)
 
     for (i in range(COURT_CHARACTER_COUNT)) {
@@ -128,28 +180,6 @@ def public clear_game_save() {
 }
 
 
-def public load_record_days() {
-    load_storage(HIGH_SCORE_STORAGE_KEY) $(var storage : GenericStorage#) {
-        recordDays = get_or(storage, "recordDays", 0)
-    }
-}
-
-
-def public save_record_days() {
-    var storage : GenericStorage
-    set(storage, "recordDays", recordDays)
-    save_storage(storage, HIGH_SCORE_STORAGE_KEY)
-}
-
-
-def public try_update_record_days(days : int) {
-    if (days > recordDays) {
-        recordDays = days
-        save_record_days()
-    }
-}
-
-
 def public refresh_save_availability() {
     hasSaveGame = false
     load_storage(SAVE_STORAGE_KEY) $(var storage : GenericStorage#) {
@@ -178,6 +208,30 @@ def public load_and_apply_game_progress() : bool {
         loadedNextResumeId = get_or(storage, "nextResume", main_question_id(0, 0))
         ashfordIntroduced = get_or(storage, "ashfordIntroduced", 0) != 0
         usingAshfordDebutEncounter = get_or(storage, "ashfordDebut", 0) != 0
+        usingArcEncounter = get_or(storage, "usingArc", 0) != 0
+        usingStatUnlockEncounter = get_or(storage, "usingStatUnlock", 0) != 0
+        statUnlockEncounterKind = get_or(storage, "statUnlockKind", 0)
+        activeArcId = get_or(storage, "arcId", ARC_NONE)
+        activeArcBeatIdx = get_or(storage, "arcBeat", -1)
+        householdStance = get_or(storage, "householdStance", 0)
+        householdTone = get_or(storage, "householdTone", 0)
+        householdConsistency = get_or(storage, "householdConsistency", 50)
+        householdOutcome = get_or(storage, "householdOutcome", 0)
+        householdArcPhase = get_or(storage, "householdArcPhase", 0)
+        householdKeptGromm = get_or(storage, "householdKeptGromm", 0) != 0
+        householdFeastChoice = get_or(storage, "householdFeastChoice", -1)
+        northernTrust = get_or(storage, "northernTrust", 0)
+        northernEnvoyChoice = get_or(storage, "northernEnvoyChoice", -1)
+        northernOutcome = get_or(storage, "northernOutcome", 0)
+        northernArcPhase = get_or(storage, "northernArcPhase", 0)
+        tapestryTrust = get_or(storage, "tapestryTrust", 0)
+        tapestryOutcome = get_or(storage, "tapestryOutcome", 0)
+        famineSeverity = get_or(storage, "famineSeverity", 10)
+        hungryOutcome = get_or(storage, "hungryOutcome", 0)
+        guildStanding = get_or(storage, "guildStanding", 0)
+        guildOutcome = get_or(storage, "guildOutcome", 0)
+        plagueCureProgress = get_or(storage, "plagueProgress", 0)
+        plagueFundingPath = get_or(storage, "plaguePath", 0)
 
         let stats0 = get_or(storage, "stats0", int4(STAT_START_VALUES[0], STAT_START_VALUES[1], STAT_START_VALUES[2], STAT_START_VALUES[3]))
         let stats1 = get_or(storage, "stats1", int4(STAT_START_VALUES[4], STAT_START_VALUES[5], STAT_START_VALUES[6], STAT_START_VALUES[7]))
@@ -222,6 +276,9 @@ def public load_and_apply_game_progress() : bool {
         }
         if (usingAshfordDebutEncounter) {
             characterTexture = visitorTextures[VISITOR_LADY_ASHFORD_IDX]
+            nextVisitorTexture = visitorTextures[nextVisitorIdx]
+        } elif (usingArcEncounter || usingStatUnlockEncounter) {
+            characterTexture = courtBodyTextures[currentCourtCharacterIdx]
             nextVisitorTexture = visitorTextures[nextVisitorIdx]
         } else {
             characterTexture = courtBodyTextures[currentCourtCharacterIdx]

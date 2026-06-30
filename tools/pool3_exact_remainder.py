@@ -83,8 +83,8 @@ EXACT_16_99 = [
     ),
     (
         'rudolf',
-        'Священники говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны.',
-        'Priests say the northerners are godless. If they continue, soldiers will start waiting for war.',
+        'Священники в казармах говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны. Что прикажете с их проповедями?',
+        'Priests in the barracks say the northerners are godless. If they continue, soldiers will start hungering for war. What is your command on their sermons?',
         [
             ('Разрешить такие проповеди.', 'Allow such sermons.', 'Солдаты любят врага, которого им благословили ненавидеть.', 'Soldiers love an enemy they were blessed to hate.', {'a': 10, 'c': 15, 'g': -5}),
             ('Запретить военные проповеди.', 'Forbid war sermons.', 'Разумно. Войны хватает и без святых криков.', 'Sensible. There is war enough without holy cries.', {'a': -5, 'c': -12, 'g': 5}),

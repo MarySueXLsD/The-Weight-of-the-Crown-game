@@ -30,16 +30,17 @@ let public {
     SYNERGY_PENALTY_MAX = 3
     CHOICE_PENALTY_MULTIPLIER = 1.25f
 
-    MAX_ADVISOR_ACTIONS = 6
+    MAX_ADVISOR_ACTIONS = 8
     ADVISOR_MIN_SPEND_STAT = 25
     ADVISOR_LOYALTY_LOW_THRESHOLD = 20
     ADVISOR_LOYALTY_USE_PENALTY = 2
-    ADVISOR_DESPERATE_STAT_THRESHOLD = 25
     ADVISOR_ACTION_TITLE_FONT_SIZE = 56.0
     ADVISOR_ACTION_DESC_FONT_SIZE = 42.0
     ADVISOR_ACTION_EFFECT_FONT_SIZE = 48.0
     ADVISOR_ACTION_TITLE_DESC_SPACING = 32.0
-    ADVISOR_ACTION_DESC_EFFECT_SPACING = 14.0
+    ADVISOR_ACTION_DESC_EFFECT_SPACING = 54.0
+    ADVISOR_ACTION_EFFECT_LINE_SPACING = 16.0
+    ADVISOR_ACTION_EFFECT_LINE_HEIGHT_SCALE = 1.45f
     ADVISOR_ACTION_EFFECT_PART_SPACING = 10.0
     ADVISOR_ACTION_CARD_INNER_PAD = 28.0
     ADVISOR_ACTION_CARD_HEIGHT = 360.0
@@ -110,10 +111,11 @@ let public {
     DIALOGUE_MIN_WIDTH = 200.0
     // Offset from the character image top-right corner (design pixels).
     DIALOGUE_CHARACTER_GAP_X = -50.0
-    DIALOGUE_CHARACTER_GAP_Y = 100.0
+    DIALOGUE_CHARACTER_GAP_Y = 72.0
     DIALOGUE_ANSWER_SPACING = 16.0
     DIALOGUE_BOX_PADDING = 14.0
     UI_BOX_BORDER = 2.0
+    ANSWER_FONT_CHAR_WIDTH_RATIO = 0.38
     STAT_EMPHASIS_SCALE = 1.24
     STAT_EMPHASIS_DROP = 30.0
     STAT_EMPHASIS_LERP_SPEED = 14.0
@@ -145,12 +147,14 @@ let public {
     CHARACTER_WALK_BOB_FREQ = 3.0
     CHARACTER_BREATH_BOB_AMPLITUDE = 2.5
     CHARACTER_BREATH_BOB_FREQ = 0.55
-    QUESTION_FONT_SIZE = 37.0
+    QUESTION_FONT_SIZE = 36.0
+    DIALOGUE_BRANCH_RESPONSE_FONT_SIZE = 28.0
+    DIALOGUE_BRANCH_RESPONSE_COLOR = float4(0.78, 0.74, 0.68, 1.0)
     DIALOGUE_NAME_FONT_SIZE = 66.0
     DIALOGUE_NAME_SPACING = 8.0
     DIALOGUE_NAME_COLOR = float4(0.40, 0.70, 1.0, 1.0)
-    ANSWER_FONT_SIZE = 33.0
-    RESPONSE_FONT_SIZE = 38.0
+    ANSWER_FONT_SIZE = 32.0
+    RESPONSE_FONT_SIZE = 37.0
     MAX_REIGN_DAYS = 365
     DAY_PERIOD_LENGTH = 30
     CALENDAR_START_MONTH = 7
@@ -207,6 +211,7 @@ let public {
     OPTIONS_BUTTON_HEIGHT = 96.0
     OPTIONS_BUTTON_FONT_SIZE = 96.0
     OPTIONS_LANGUAGE_COUNT = 2
+    OPTIONS_DEFAULT_LANGUAGE_IDX = 0
     OPTIONS_STORAGE_KEY = "game_options"
     GAME_VERSION = "0.1.0"
 
@@ -214,7 +219,7 @@ let public {
     SCREEN_PLAYING = 1
 
     // Set to false before shipping; skips splash/menu/intro and starts in gameplay.
-    DEBUG_SKIP_TO_GAME_SCREEN = true
+    DEBUG_SKIP_TO_GAME_SCREEN = false
 
     SPLASH_NONE = 0
     SPLASH_BLACK_HOLD = 1
@@ -225,6 +230,7 @@ let public {
     SPLASH_BLACK_HOLD_DURATION = 1.0
     SPLASH_FADE_IN_LOGO_DURATION = 2.0
     SPLASH_HOLD_LOGO_DURATION = 2.0
+    SPLASH_MUSIC_BEFORE_MENU = 4.0
     SPLASH_FADE_IN_MENU_DURATION = 1.5
 
     SPLASH_LOGO_MAX_WIDTH_RATIO = 0.90
@@ -246,15 +252,40 @@ let public {
     INTRO_SEQ6_APPEAR = 13
     INTRO_FADE_OUT = 14
     INTRO_UNFADE = 15
+    INTRO_IMAGE_SHAKE = 16
+    INTRO_POST_SHAKE_WAIT = 17
+    INTRO_BLACK_PAUSE = 18
 
     INTRO_LAYOUT_SEQ1 = 0
     INTRO_LAYOUT_MULTI = 1
+    INTRO_LAYOUT_SCENE3_PAIR = 2
+
+    INTRO_STORY_SCENE_NONE = 0
+    INTRO_STORY_SCENE_3 = 3
+    INTRO_STORY_SCENE_4 = 4
+    INTRO_STORY_SCENE_5 = 5
+    INTRO_STORY_SCENE_6 = 6
+    INTRO_STORY_SCENE_7 = 7
+
+    INTRO_POST_SHAKE_ACTION_NONE = 0
+    INTRO_POST_SHAKE_ACTION_SCENE_6 = 1
+    INTRO_POST_SHAKE_ACTION_DIALOGUE_23 = 2
 
     INTRO_DIALOGUE_NAME_SLIDE = 0
     INTRO_DIALOGUE_TYPEWRITER = 1
     INTRO_DIALOGUE_POST_WAIT = 2
 
-    INTRO_DIALOGUE_BEAT_COUNT = 17
+    INTRO_DIALOGUE_BEAT_COUNT = 41
+    INTRO_DIALOGUE_BEAT_SPLIT = 30
+
+    INTRO_SHAKE_DURATION = 1.0
+    INTRO_SHAKE_AMPLITUDE = 12.0
+    INTRO_POST_SHAKE_WAIT_DURATION = 1.0
+    INTRO_BLACK_PAUSE_DURATION = 2.0
+    INTRO_SCENE3_SEQ7_WIDTH_RATIO = 0.35
+    INTRO_SCENE3_SEQ8_WIDTH_RATIO = 0.50
+    INTRO_SCENE3_SEQ7_UV_Y_ANCHOR = 0.0
+    INTRO_SCENE3_SEQ8_UV_Y_ANCHOR = 0.35
 
     INTRO_FADE_DURATION = 1.0
     CUTSCENE_SKIP_HOLD_DURATION = 2.0
@@ -267,6 +298,8 @@ let public {
     CUTSCENE_SKIP_PADDING_RIGHT = 72.0
     CUTSCENE_SKIP_PADDING_BOTTOM = 96.0
     CUTSCENE_SKIP_TEXT_BAR_GAP = 8.0
+    CUTSCENE_SKIP_BAR_EXTRA_UP = 10.0
+    CUTSCENE_SKIP_BAR_EXTRA_WIDTH = 36.0
     CUTSCENE_SKIP_BAR_MIN_WIDTH = 120.0
     CUTSCENE_SKIP_BAR_BG_COLOR = float4(1.0, 1.0, 1.0, 0.25)
     CUTSCENE_SKIP_BAR_FILL_COLOR = float4(1.0, 1.0, 1.0, 0.85)
@@ -275,6 +308,7 @@ let public {
     CONTINUE_FADE_NONE = 0
     CONTINUE_FADE_OUT = 1
     CONTINUE_FADE_IN = 2
+
     INTRO_SCENE_WAIT_DURATION = 1.0
     INTRO_PICTURE_WAIT_DURATION = 1.0
     INTRO_POST_TEXT_WAIT_DURATION = 0.0
@@ -305,6 +339,16 @@ let public {
     INTRO_TEXTURE_PATH_SEQ4 = "static/Cut-Scenes/sequence_4.png"
     INTRO_TEXTURE_PATH_SEQ5 = "static/Cut-Scenes/sequence_5.png"
     INTRO_TEXTURE_PATH_SEQ6 = "static/Cut-Scenes/sequence_6.png"
+    INTRO_TEXTURE_PATH_SEQ7 = "static/Cut-Scenes/sequence_7.png"
+    INTRO_TEXTURE_PATH_SEQ8 = "static/Cut-Scenes/sequence_8.png"
+    INTRO_TEXTURE_PATH_SEQ9 = "static/Cut-Scenes/sequence_9.png"
+    INTRO_TEXTURE_PATH_SEQ10 = "static/Cut-Scenes/sequence_10.png"
+    INTRO_TEXTURE_PATH_SEQ11 = "static/Cut-Scenes/sequence_11.png"
+    INTRO_TEXTURE_PATH_SEQ12 = "static/Cut-Scenes/sequence_12.png"
+    INTRO_TEXTURE_PATH_SEQ13 = "static/Cut-Scenes/sequence_13.png"
+    INTRO_TEXTURE_PATH_SEQ14 = "static/Cut-Scenes/sequence_14.png"
+    INTRO_TEXTURE_PATH_SEQ15 = "static/Cut-Scenes/sequence_15.png"
+    INTRO_TEXTURE_PATH_SEQ16 = "static/Cut-Scenes/sequence_16.png"
     MAIN_MENU_BOTTOM_BAR_HEIGHT = 100.0
     MAIN_MENU_BUTTON_HEIGHT = 64.0
     MAIN_MENU_BUTTON_SPACING = 16.0
@@ -315,6 +359,7 @@ let public {
     MAIN_MENU_OPTIONS_IDX = 2
     MAIN_MENU_ABOUT_IDX = 3
     MAIN_MENU_EXIT_IDX = 4
+    SAVE_STORAGE_KEY = "game_progress"
     MENU_BUTTON_SHINE_SWEEP_DURATION = 3.5
     MENU_BUTTON_SHINE_PAUSE_DURATION = 1.0
     MENU_BUTTON_SHINE_UV_START = 0.42
@@ -330,8 +375,8 @@ let public {
 
     CHARACTER_COUNT = 6
     CHARACTER_KING_IDX = 5
-    COURT_CHARACTER_COUNT = 12
-    TOTAL_ENCOUNTER_COUNT = 252
+    COURT_CHARACTER_COUNT = 39
+    TOTAL_ENCOUNTER_COUNT = 391
     POOL_EARLY_START = 0
     POOL_EARLY_COUNT = 30
     POOL_MID_START = 30
@@ -342,16 +387,42 @@ let public {
     POOL_LATE_B_COUNT = 20
     POOL_PEOPLE_START = 180
     POOL_PEOPLE_COUNT = 72
+    POOL_NOBILITY_START = 252
+    POOL_NOBILITY_COUNT = 55
+    POOL_LOYALTY_START = 307
+    POOL_LOYALTY_COUNT = 44
+    POOL_SUCCESSION_START = 351
+    POOL_SUCCESSION_COUNT = 40
     POOL_LATE_FIXED_IDX = 80
     POOL_EARLY_FIXED_IDX = 0
+    POOL_RUDOLF_BORDER_IDX = 14
+    CHARACTER_DEBUT_DAY_GROMM = 8
+    CHARACTER_DEBUT_DAY_INGVAR = 5
     FIXED_ARRAY_LITERAL_MAX = 80
     POOL_EARLY_FIRST_DAY = 1
     POOL_EARLY_LAST_DAY = 10
+    OPENING_WEEK_LAST_DAY = 10
+    OPENING_WEEK_ENC_BASE = 500
+    OPENING_WEEK_ENC_COUNT = 7
+    OPENING_WEEK_ENC_RUDOLF_PAY = 0
+    OPENING_WEEK_ENC_MALRIK_BLESS = 1
+    OPENING_WEEK_ENC_BORVIN_TREASURY = 2
+    OPENING_WEEK_ENC_MIRA_DISEASE = 3
+    OPENING_WEEK_ENC_VARN_GUARD = 4
+    OPENING_WEEK_ENC_EDRIC_DECREE = 5
+    OPENING_WEEK_ENC_RUDOLF_DESERTERS = 6
     POOL_MID_FIRST_DAY = 11
     POOL_MID_LAST_DAY = 29
     POOL_LATE_FIRST_DAY = 30
     POOL_LATE_LAST_DAY = 89
     POOL_PEOPLE_FIRST_DAY = 90
+    POOL_PEOPLE_LAST_DAY = 174
+    POOL_NOBILITY_FIRST_DAY = 175
+    POOL_NOBILITY_LAST_DAY = 259
+    POOL_LOYALTY_FIRST_DAY = 260
+    POOL_LOYALTY_LAST_DAY = 319
+    POOL_SUCCESSION_FIRST_DAY = 320
+    POOL_SUCCESSION_LAST_DAY = 365
     CHARACTER_QUESTION_COOLDOWN_DAYS = 2
     CHAR_RUDOLF = 0
     CHAR_MALRIK = 1
@@ -365,6 +436,64 @@ let public {
     CHAR_ARVEL = 9
     CHAR_INGVAR = 10
     CHAR_SIVIL = 11
+    CHAR_ASHFORD = 12
+    CHAR_KASPAR = 13
+    CHAR_YVETTE = 14
+    CHAR_MARIANNA = 15
+    CHAR_ILANA = 16
+    CHAR_DOMINIC = 17
+    CHAR_KNOX = 18
+    CHAR_RAENA = 19
+    CHAR_OTTO = 20
+    CHAR_LISSA = 21
+    CHAR_OSRIC = 22
+    CHAR_BRAN = 23
+    CHAR_ORM = 24
+    CHAR_FARA = 25
+    CHAR_RUTA = 26
+    CHAR_YAREK = 27
+    CHAR_ELINA = 28
+    CHAR_FINN = 29
+    CHAR_KARA = 30
+    CHAR_NERIUS = 31
+    CHAR_ODO = 32
+    CHAR_PROPHET = 33
+    CHAR_WIZARD = 34
+    CHAR_GOOSE = 35
+    CHAR_RAYMOND = 36
+    CHAR_CYRUS = 37
+    CHAR_TALEN = 38
+
+    EXTENDED_CHARACTER_COUNT = 39
+    ARC_NONE = -1
+    ARC_HOUSEHOLD = 0
+    ARC_TAPESTRY = 1
+    ARC_EMPTY_PURSE = 2
+    ARC_HUNGRY_SEASON = 3
+    ARC_GUILD_COMPACT = 4
+    ARC_CHURCH_CROWN = 5
+    ARC_NORTHERN_PRICE = 6
+    ARC_GREAT_HOUSES = 7
+    ARC_SCAFFOLD_LEDGER = 8
+    ARC_STAR_CHAMBER = 9
+    ARC_PROPHET_WINTER = 10
+    ARC_COURT_KNIVES = 11
+    ARC_NEPHEW_FOG = 12
+    ARC_PLAGUE_CURE = 13
+    ARC_COUNT = 14
+
+    HOUSEHOLD_STANCE_PURGE = 0
+    HOUSEHOLD_STANCE_INTEGRATE = 1
+    HOUSEHOLD_STANCE_IGNORE = 2
+    HOUSEHOLD_STANCE_SELECTIVE = 3
+
+    STAT_UNLOCK_CONFLICT_DAY_CHURCH = 30
+    STAT_UNLOCK_CONFLICT_DAY_PEOPLE = 90
+    STAT_UNLOCK_CONFLICT_DAY_NOBILITY = 175
+    STAT_UNLOCK_CONFLICT_DAY_LOYALTY = 261
+    STAT_UNLOCK_CONFLICT_DAY_SUCCESSION = 321
+
+    ARC_QUESTION_ID_BASE = 1000
     CHARACTER_PROFILE_PANEL_WIDTH = 1400.0
     CHARACTER_PROFILE_PADDING = 30.0
     CHARACTER_PROFILE_PORTRAIT_SIZE = 300.0
@@ -408,10 +537,17 @@ let public {
     CHARACTER_REVEAL_DURATION = 0.55
     CHARACTER_SILHOUETTE_FADE_RGB = 0.35
     CHARACTER_TEXTURE_ALPHA_THRESHOLD = 32
-    CHARACTER_TEXTURE_UV_TRIM_TOP = 2
-    CHARACTER_RENDER_TOP_CLIP = 3.0
-    CHARACTER_OUTLINE_WIDTH = 4
-    OUTLINE_BUILD_ROWS_PER_FRAME = 24
+    CHARACTER_TEXTURE_UV_TRIM_TOP = 4
+    CHARACTER_RENDER_TOP_CLIP = 4.0
+    CHARACTER_HOVER_GRAY_TINT = 0.78
+    CHARACTER_OUTLINE_WIDTH = 6
+    OUTLINE_BUILD_ROWS_PER_FRAME = 10
+    CHARACTER_VISUAL_WARM_PER_FRAME = 1
+    CHARACTER_ALPHA_CACHE_MAX_SIZE = 96
+    CHARACTER_ALPHA_CACHE_MAX_SLOTS = 8
+    CHARACTER_ALPHA_PRELOAD_PER_FRAME = 1
+    CHARACTER_OUTLINE_BUILD_MAX_SIZE = 384
+    CHARACTER_OUTLINE_CACHE_MAX = 3
     CHARACTER_OUTLINE_COLOR = float4(1.0, 0.92, 0.15, 1.0)
     DIALOG_IDLE = 0
     DIALOG_TYPEWRITER = 1
@@ -461,7 +597,8 @@ let public {
     STAT_NOBILITY_UNLOCK_DAY = 175
     STAT_LOYALTY_UNLOCK_DAY = 260
     STAT_SUCCESSION_UNLOCK_DAY = 320
-    CHURCH_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_6.png"
+    CHURCH_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/church_sequence_1.png"
+    CHURCH_CUTSCENE_SOUND_COUNT = 4
     PEOPLE_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_3.png"
     NOBILITY_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_2.png"
     LOYALTY_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_4.png"
@@ -480,6 +617,15 @@ let public {
     MENU_OVERLAY_COLOR = float4(0.0, 0.0, 0.0, 0.72)
 
     BACKGROUND_TEXTURE_PATH = "static/background.png"
+    BACKGROUND_MUSIC_PATH = "static/OST/main_theme.mp3"
+    BACKGROUND_MUSIC_MENU_VOLUME = 0.4
+    BACKGROUND_MUSIC_GAME_VOLUME = 0.1
+    BACKGROUND_MUSIC_FADE_DURATION = 1.0
+    INTRO_CUTSCENE_MUSIC_PATH = "static/Cut-Scenes/intro_background.mp3"
+    INTRO_CUTSCENE_MUSIC_VOLUME = 0.2
+    INTRO_WAR_HORN_PATH = "static/Cut-Scenes/war_horn.wav"
+    INTRO_SWORD_FIGHT_PATH = "static/Cut-Scenes/sword_fight.mp3"
+    INTRO_BATTLE_SFX_VOLUME = 0.45
     MAIN_MENU_BACKGROUND_TEXTURE_PATH = "static/Main Menu/menu_background.png"
     LOGO_TEXTURE_PATH = "static/Main Menu/logo.png"
     KING_TEXTURE_PATH = "static/Characters/king.png"
@@ -516,7 +662,7 @@ let public {
 
 let public CHARACTER_OUTLINE_TOP_CLIP = 8.0
 
-let public INTRO_DIALOGUE_NAMES : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_array(
+let public INTRO_DIALOGUE_NAMES_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
     "Narrator",
     "Narrator",
     "Narrator",
@@ -533,10 +679,37 @@ let public INTRO_DIALOGUE_NAMES : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_arr
     "Narrator",
     "Narrator",
     "Soldier",
-    "Soldier"
+    "Soldier",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Conspirator",
+    "Lord Gregor",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator"
 )
 
-let public INTRO_DIALOGUE_SOUND_PATHS : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_array(
+let public INTRO_DIALOGUE_NAMES_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Advisor"
+)
+
+let public INTRO_DIALOGUE_SOUND_PATHS_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
     "static/Cut-Scenes/Dialogue_1.mp3",
     "static/Cut-Scenes/Dialogue_2.mp3",
     "static/Cut-Scenes/Dialogue_3.mp3",
@@ -553,10 +726,44 @@ let public INTRO_DIALOGUE_SOUND_PATHS : string[INTRO_DIALOGUE_BEAT_COUNT] <- fix
     "static/Cut-Scenes/Dialogue_14.mp3",
     "static/Cut-Scenes/Dialogue_15.mp3",
     "static/Cut-Scenes/Dialogue_16.mp3",
-    "static/Cut-Scenes/Dialogue_17.mp3"
+    "static/Cut-Scenes/Dialogue_17.mp3",
+    "static/Cut-Scenes/Dialogue_18.mp3",
+    "static/Cut-Scenes/Dialogue_19.mp3",
+    "static/Cut-Scenes/Dialogue_20.mp3",
+    "static/Cut-Scenes/Dialogue_21.mp3",
+    "static/Cut-Scenes/Dialogue_22.mp3",
+    "static/Cut-Scenes/Dialogue_23.mp3",
+    "static/Cut-Scenes/Dialogue_24.mp3",
+    "static/Cut-Scenes/Dialogue_25.mp3",
+    "static/Cut-Scenes/Dialogue_26.mp3",
+    "static/Cut-Scenes/Dialogue_27.mp3",
+    "static/Cut-Scenes/Dialogue_28.mp3",
+    "static/Cut-Scenes/Dialogue_29.mp3",
+    "static/Cut-Scenes/Dialogue_30.mp3"
 )
 
-let public INTRO_DIALOGUE_REPLICS : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_array(
+let public INTRO_DIALOGUE_SOUND_PATHS_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "static/Cut-Scenes/Dialogue_31.mp3",
+    "static/Cut-Scenes/Dialogue_32.mp3",
+    "static/Cut-Scenes/Dialogue_33.mp3",
+    "static/Cut-Scenes/Dialogue_34.mp3",
+    "static/Cut-Scenes/Dialogue_35.mp3",
+    "static/Cut-Scenes/Dialogue_36.mp3",
+    "static/Cut-Scenes/Dialogue_37.mp3",
+    "static/Cut-Scenes/Dialogue_38.mp3",
+    "static/Cut-Scenes/Dialogue_39.mp3",
+    "static/Cut-Scenes/Dialogue_40.mp3",
+    "static/Cut-Scenes/Dialogue_41.mp3"
+)
+
+let public CHURCH_CUTSCENE_SOUND_PATHS : string[CHURCH_CUTSCENE_SOUND_COUNT] <- fixed_array(
+    "static/Cut-Scenes/Dialogue_42.mp3",
+    "static/Cut-Scenes/Dialogue_43.mp3",
+    "static/Cut-Scenes/Dialogue_44.mp3",
+    "static/Cut-Scenes/Dialogue_45.mp3"
+)
+
+let public INTRO_DIALOGUE_REPLICS_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
     "Estedor did not fall in a single night.",
     "It rotted slowly, stubbornly, and with dignity — like an old nobleman who died at his table but still demands wine.",
     "King Edwin called himself the Pious.",
@@ -573,8 +780,60 @@ let public INTRO_DIALOGUE_REPLICS : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_a
     "The army went three months without pay.",
     "In the fourth month it still called itself loyal. By the fifth it began asking questions.",
     "— I've already gone hungry for the king.",
-    "— Maybe if I fought for someone else, I'd at least get a meal?"
+    "— Maybe if I fought for someone else, I'd at least get a meal?",
+    "Gregor was not born a king.",
+    "He was born a lord — not the oldest line, not the richest house, but strong enough that at court they counted him a threat behind his back.",
+    "He had lands of his own.",
+    "Fortresses of his own.",
+    "Banners of his own.",
+    "Men who followed him not because the king commanded it, but because they swore fealty to Gregor himself.",
+    "— The king is weak. The realm is dying.",
+    "— Time to take matters into our own hands.",
+    "The gates to the royal chambers were not opened with a key.",
+    "They were forced with iron.",
+    "In the royal square Gregor's men met Edwin's guard — and for the first time the city heard what new power sounded like.",
+    "That night, loyalty came cheap.",
+    "So died Edwin II the Pious."
 )
+
+let public INTRO_DIALOGUE_REPLICS_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Not in prayer.",
+    "Not in the arms of a loving people.",
+    "But on cold steps where thousands had once begged for mercy.",
+    "By morning Estedor had not healed.",
+    "The dead did not rise.",
+    "Bread did not grow.",
+    "The plague did not apologize.",
+    "The nobles did not grow honest.",
+    "Envoys did not become friends.",
+    "And the people, as ever, wanted to live.",
+    "— Your Majesty… where shall we begin?"
+)
+
+
+def public intro_dialogue_name_en(beat : int) : string {
+    if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+        return INTRO_DIALOGUE_NAMES_A[beat]
+    }
+    return INTRO_DIALOGUE_NAMES_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
+}
+
+
+def public intro_dialogue_replic_en(beat : int) : string {
+    if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+        return INTRO_DIALOGUE_REPLICS_A[beat]
+    }
+    return INTRO_DIALOGUE_REPLICS_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
+}
+
+
+def public intro_dialogue_sound_path(beat : int) : string {
+    if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+        return INTRO_DIALOGUE_SOUND_PATHS_A[beat]
+    }
+    return INTRO_DIALOGUE_SOUND_PATHS_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
+}
+
 
 let public STAT_UNLOCK_DAYS : int[STAT_COUNT] <- fixed_array(
     89,  // People

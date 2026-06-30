@@ -1,0 +1,1439 @@
+﻿choices with text: 479 448
+missing by choiceText: 479
+---
+CHOICE: Hold a lavish feast
+RESP: The feast will be such that guests forget hunger. The city, perhaps, will not.
+---
+CHOICE: Hold a modest feast
+RESP: A modest feast is when nobles still eat, but complain more quietly.
+---
+CHOICE: Cancel the feast and feed the poor
+RESP: Bread below will be valued more than peacock above.
+---
+CHOICE: Can we fool the guests?
+RESP: 
+---
+CHOICE: Serve a cheap feast dressed as luxury
+RESP: I like it when royal wisdom smells of garlic and deceit.
+---
+CHOICE: No ù if there is a feast, make it real
+RESP: It will be real. So will the hunger afterward.
+---
+CHOICE: Cancel the feast entirely
+RESP: Then I will save the meat. In our times that is almost treason.
+---
+CHOICE: Replace them
+RESP: Done by morning. The old ones will hate you. The new ones will owe you. That is the trade.
+---
+CHOICE: Swear them to me
+RESP: I will extract their oaths before dawn. If one refuses, you will hear it from me first.
+---
+CHOICE: Arrest the ringleaders
+RESP: Selective steel. The barracks will call it justice or spite depending on tomorrow's rations.
+---
+CHOICE: Burn Edwin's seal
+RESP: The archives will riot in parchment before steel. But the throne will sign in your name alone.
+---
+CHOICE: Pay one season
+RESP: A soft landing. Expensive. The copyists will use the season to plot or pray.
+---
+CHOICE: Investigate
+RESP: Then we follow the wax. Names will surface. Some will be innocent. None will be cheap.
+---
+CHOICE: Shelter Aldo
+RESP: Then he stays under my roof and your risk. Malrik will hear of it before sunset.
+---
+CHOICE: Surrender him to the crown for questioning
+RESP: He will come quietly. What he knows about lords and sins could fill a scaffold schedule.
+---
+CHOICE: Exile him
+RESP: Gold buys silence and distance. Whether it buys enough depends on how loudly he prays on the road.
+---
+CHOICE: Seize loyalist storehouses
+RESP: Hungry enemies are slow enemies. Hungry subjects are loud subjects. Choose which noise you prefer.
+---
+CHOICE: Spy through Selena's routes
+RESP: I will sell you names, not honor. Remember I can sell yours as well if the price changes.
+---
+CHOICE: Ignore loyalist trade
+RESP: Then they eat in shadows and thank Edwin by candlelight. You will not see the cost until a province stops paying tax.
+---
+CHOICE: Purge the veteran companies
+RESP: Then blood in the barracks before spring. The rest will kneel harder ù if you pay the rest.
+---
+CHOICE: Pay them off
+RESP: Expensive peace. Cheaper than mutiny until the next empty purse.
+---
+CHOICE: Parade a pardon
+RESP: Theater with swords. If it works, you gain a song. If it fails, you gain a riot.
+---
+CHOICE: Amnesty
+RESP: The stair goes quiet. The whispers do not. You have chosen mercy twice ù pray it rhymes.
+---
+CHOICE: Send ringleaders to Morwen
+RESP: A few swings below, many sighs above. The middle path ù until the next crisis.
+---
+CHOICE: Bar the door
+RESP: Then I hold the stair and the realm learns coldness by knocking. You will not lack for enemies at dawn.
+---
+CHOICE: I have heard enough
+RESP: Then I write *iron* once, and close the chapter. You bought clarity at the price of warmth.
+---
+CHOICE: Hear her privately
+RESP: Then I speak softly and charge dearly. Truth is employment, not loyalty.
+---
+CHOICE: Silence her
+RESP: Then whispers go underground. Underground whispers grow mold. You chose silence.
+---
+CHOICE: Reward her silence
+RESP: Gold buys lips closed. It does not buy hearts open. I will take the coin anyway.
+---
+CHOICE: Mock the court
+RESP: Then nobles blush and commons cheer. Dangerous comedy. Delicious comedy.
+---
+CHOICE: Mock the king who took the throne
+RESP: Bold. Rare. The court relaxes because you do not flinch. They may forget to fear you.
+---
+CHOICE: Silence Til
+RESP: Then the hall learns to whisper instead of laugh. Whispers are less funny and more pointed.
+---
+CHOICE: Staff rations first
+RESP: Then pots bless your name before heralds do. Expensive ù but the stairs warm.
+---
+CHOICE: Audit the kitchens
+RESP: Then spoons hide and whispers sharpen. Order without love. Familiar palace music.
+---
+CHOICE: Shared hardship
+RESP: Dangerous solidarity. I will not call it noble until it works.
+---
+CHOICE: Trust Raena
+RESP: Then Lissa learns fear. I learn overtime. The door stays yours.
+---
+CHOICE: Trust the stairs
+RESP: Then I hear everything and repeat nothing ù unless you ask. Harder job. Better court.
+---
+CHOICE: Trust neither
+RESP: Then both hate you equally. Paranoia loves rotation. So does Knox, apparently.
+---
+CHOICE: Seal the chamber
+RESP: Then poets mourn and servants breathe easier. Both matter ù on different floors.
+---
+CHOICE: Use the chamber openly
+RESP: Bold insult to memory. The court calls it strength or insult to the sacred depending on who lost kin.
+---
+CHOICE: Gift chamber to loyal staff
+RESP: Then Gromm weeps or curses. I cannot tell which. You bought warmth with symbolism.
+---
+CHOICE: Roast the crown
+RESP: Then they love you for a day. A day is currency this year.
+---
+CHOICE: Roast the Church
+RESP: Malrik will call it treason. The market calls it overdue. I call it employment.
+---
+CHOICE: Cancel the roast
+RESP: Then the square goes home angry without a punchline. Hunger remains. You chose caution.
+---
+CHOICE: Purge sellers
+RESP: Then the stairs freeze. Fear works. Loyalty pretends to work. Both invoice you.
+---
+CHOICE: Outbid Knox
+RESP: Then you rent silence weekly. I appreciate repeat customers.
+---
+CHOICE: Let coup story leak
+RESP: Then the court controls nothing ù but learns who moves. Dangerous pedagogy.
+---
+CHOICE: I have heard the stairs
+RESP: Then I write *warm stairs*. Upper halls will test it soon.
+---
+CHOICE: Pay half now
+RESP: Half a purse buys half loyalty. Today that may suffice. Do not make it habit.
+---
+CHOICE: Full payment
+RESP: Generous. The men will remember ù until the next muster.
+---
+CHOICE: Honor is payment
+RESP: Then pray your walls are stronger than my captains' patience.
+---
+CHOICE: Take Salt's loan on harsh terms
+RESP: Then my ink owns your mornings until the debt sleeps. The army will not know ù yet.
+---
+CHOICE: Seize his rivals' ledgers
+RESP: You will find my books clean and my enemies' dirty. Useful ù until every merchant fears you.
+---
+CHOICE: Renegotiate the debt
+RESP: Time is also currency. I will wait ù and charge for waiting.
+---
+CHOICE: forgiveness and enlistment
+RESP: Then we march for you until someone pays better. Today that is you.
+---
+CHOICE: Pay them off
+RESP: Cheap peace. They will drink your coin and remember your name in songs you will not like.
+---
+CHOICE: Hunt them
+RESP: Then send men who are paid. Unpaid hunters become deserters by supper.
+---
+CHOICE: Army first
+RESP: Hungry scribes plot slower than hungry soldiers march. Arithmetic, not mercy.
+---
+CHOICE: Balance all three
+RESP: Everyone hates you equally. Politically efficient.
+---
+CHOICE: Hold reserves
+RESP: Promises are coins you mint yourself. Spend carefully.
+---
+CHOICE: Emergency pay from reserves
+RESP: Bought time. Not bought loyalty. Know the difference.
+---
+CHOICE: Hang wagon captains
+RESP: Steel solves one company. The rest calculate whether rope pays better than gold.
+---
+CHOICE: Parade and promise after church tax negotiation
+RESP: Theatre. If Malrik takes your purse on Sunday, cancel the play with interest.
+---
+CHOICE: Crown contract
+RESP: Then my bolts point where you point ù until your purse stops singing.
+---
+CHOICE: Free company
+RESP: Gold flows. Loyalties blur. War gets cheaper for everyone except you.
+---
+CHOICE: Seize wagons
+RESP: Then you gain bolts and lose reputation. Mercenaries remember seizures longer than kings remember pay.
+---
+CHOICE: Knight's stipend
+RESP: Then I draw steel when you ask. I still prefer not to speak. Saves us both embarrassment.
+---
+CHOICE: Release with honor
+RESP: Clean exit. The court loses a sword. You gain a witness who may testify elsewhere.
+---
+CHOICE: Service without pay
+RESP: Then my silence means contempt, not devotion. Remember I warned you.
+---
+CHOICE: I have heard the barracks
+RESP: Then march when I say march. Coin bought this loyalty. Spend it wisely.
+---
+CHOICE: Open crown reserves
+RESP: Then the mills will bless you until the next wagon. Expensive. Remembered.
+---
+CHOICE: Investigate hoarders
+RESP: Rope frightens merchants faster than sermons. You may hang the wrong man. The mills will not care if the right one squea
+---
+CHOICE: The provinces must endure
+RESP: Then I return with more women and fewer manners. Remember I warned you before the ballads start.
+---
+CHOICE: Public feast
+RESP: Then the commons see smoke and believe you. The treasury sees smoke and weeps.
+---
+CHOICE: Private court
+RESP: Hypocrisy with spices. The servants talk. They always talk.
+---
+CHOICE: Fast with the city
+RESP: Thin soup for thin times. Malrik will call it piety. I call it politics that fills bellies a little.
+---
+CHOICE: Fund Arvel's lines
+RESP: Then the poor bless your name before Malrik's. He will call it theft of holiness. I call it lunch.
+---
+CHOICE: Let Malrik feed them
+RESP: Then he owns their knees. You own the walls. Standard trade.
+---
+CHOICE: Shut the lines
+RESP: Then riot becomes theology. You chose clarity. Clarity is not always mercy.
+---
+CHOICE: Grant provincial grain charters
+RESP: Then villages guard their own winter. You guard your reputation. Both are work.
+---
+CHOICE: Refuse
+RESP: Then we bury our dead and remember your answer. Ruta will rhyme it.
+---
+CHOICE: Hire Bran's militia
+RESP: Dangerous peasants with spears. Cheaper than knights ù until it isn't.
+---
+CHOICE: Bread for ore
+RESP: Then the forges breathe and the mountains whisper your name. Until the price changes.
+---
+CHOICE: Crush the strike
+RESP: Steel on starving men. The ore flows. The story spreads.
+---
+CHOICE: Let Fara's guild broker
+RESP: Merchants profit. Forges turn. You owe Fara a favor ù she will collect.
+---
+CHOICE: Crown-guild compact
+RESP: Then the realm eats steadily and I grow rich steadily. Fair, if you control the word *fair*.
+---
+CHOICE: Seize guild granaries
+RESP: Then the guild calls you tyrant. The people call you fed ù briefly.
+---
+CHOICE: Free market
+RESP: Gold flows upward. Bellies empty downward. Economics as theology.
+---
+CHOICE: Sponsor the generous ballad
+RESP: Flattering lyrics. Expensive chorus. The commons hum your name until the next hunger.
+---
+CHOICE: Ban hunger ballads
+RESP: Banned songs sing loudest. I will whisper where you cannot hang.
+---
+CHOICE: Let her mock you
+RESP: Brave or stupid. The crowd will decide. I will still eat.
+---
+CHOICE: Crown escorts
+RESP: Then Rudolf's men guard wheat. Merchants guard grudges. Food moves.
+---
+CHOICE: Pay Selena's premium
+RESP: I will deliver. I will also remember you could not negotiate. Inflation is a memoir.
+---
+CHOICE: Let hoarders starve each other
+RESP: Then routes die and bandits feast. Arithmetic of cruelty.
+---
+CHOICE: Feed locals first
+RESP: Then the ford curses you. The mills bless you. Politics as portion control.
+---
+CHOICE: Shared ration
+RESP: Expensive fairness. The only kind that sometimes keeps both song and sword quiet.
+---
+CHOICE: Church feeds the ford
+RESP: Split mercy. Malrik gains converts. You gain arithmetic. Ruta gains grudges.
+---
+CHOICE: Halve court rations
+RESP: Thin plates for thin times. Nobles sulk. Servants remember.
+---
+CHOICE: Double court rations
+RESP: Then the market smells roast while children lick pots. Elina will rhyme it.
+---
+CHOICE: Export palace stores to provinces
+RESP: Dangerous symbolism. I will cook barley and call it policy.
+---
+CHOICE: Authorize requisition
+RESP: Then villages hate you efficiently. The army marches on full bellies. Choose your enemy.
+---
+CHOICE: Half rations for soldiers
+RESP: Discipline with hunger. Mutiny with honor. A familiar recipe.
+---
+CHOICE: Buy grain at market
+RESP: Expensive peace. Cheaper than revolt ù if the treasury survives.
+---
+CHOICE: I have heard the provinces
+RESP: Then I write *bread* before *blade*. Rare for a king who took the throne. Do not waste it.
+---
+CHOICE: Accept guild terms
+RESP: Then my ledgers own your mornings until you pay. The treasury breathes ù on my schedule.
+---
+CHOICE: Reject
+RESP: Paper is not coin. Merchants will learn that at your expense.
+---
+CHOICE: Seize a guild house
+RESP: Then the guild calls you brigand ù accurately. The trade ban hardens. Enjoy solitude.
+---
+CHOICE: Pay Salt in full
+RESP: Then my quill clears your name ù temporarily. The guild will hate your priority. The army will love it.
+---
+CHOICE: Renegotiate Salt
+RESP: Time is coin. I sell both. You will buy again.
+---
+CHOICE: Default on coup debt
+RESP: Then I sell your defaults to whoever hates you most. Ingvar reads ledgers too.
+---
+CHOICE: Fund a mint purge
+RESP: Expensive honesty. Markets stall, then trust returns ù if you finish.
+---
+CHOICE: Ignore
+RESP: Then prices lie and taxes lie with them. Borvin will scream. Thieves will cheer.
+---
+CHOICE: Blame Nerius
+RESP: Convenient scapegoat. The fake seals continue without a neck to blame. You chose theatre.
+---
+CHOICE: Pay merchants first
+RESP: Then Malrik calls you usurer. The army calls you prudent. Both may be right.
+---
+CHOICE: Pay Church first
+RESP: Then Fara tightens the trade ban. Malrik smiles. Arithmetic weeps.
+---
+CHOICE: Pay army
+RESP: Soldiers eat. Merchants remember. A classic throne-stealer's triangle.
+---
+CHOICE: Crown escorts and premium
+RESP: I will deliver. I will also tell Fara you paid retail for wholesale problems.
+---
+CHOICE: Nationalize one caravan line
+RESP: Then I sell to Ingvar. You get wagons and a reputation for theft.
+---
+CHOICE: Let routes fail
+RESP: Hungry markets remember. So do ballads. You chose purity over portions.
+---
+CHOICE: Prepare ability to pay
+RESP: Theatre with receipts. Expensive. Ashford respects expensive truths.
+---
+CHOICE: Prepare bluff
+RESP: Confidence with varnish. Ashford peels paint for sport.
+---
+CHOICE: Prepare seizure
+RESP: Bold piracy. Fara will scream. Ashford may applaud ù if you win.
+---
+CHOICE: Sign the compact
+RESP: Then we are partners until you try to break us. Read the ink twice.
+---
+CHOICE: Refuse
+RESP: Then Salt finishes this conversation. I have done my courtesy.
+---
+CHOICE: Counter
+RESP: Half a compact. Half a war. Salt will price the difference.
+---
+CHOICE: Pay
+RESP: Then you are poor and alive. A respectable combination.
+---
+CHOICE: Offer Ashford marriage dowry as collateral
+RESP: Then you mortgage bloodlines for coin. Ashford will notice. So will history.
+---
+CHOICE: Grant seizure
+RESP: Then coin is honest at the cost of riots. Honesty is not free.
+---
+CHOICE: Private seizure
+RESP: Shared blame. Shared credit. Fara owns the muscle. You own the headline.
+---
+CHOICE: Deny
+RESP: Markets do not self-correct. They self-devour. You chose faith over mint.
+---
+CHOICE: Pay one big sum
+RESP: Expensive silence. The rarest music in finance.
+---
+CHOICE: Admit we have no money
+RESP: Honest catastrophe. Creditors take pieces. You keep the chair ù maybe.
+---
+CHOICE: Sell crown jewels
+RESP: Then the realm sees your mother's rubies in a guild window. You eat nonetheless.
+---
+CHOICE: Buy the ledger back
+RESP: Then you rent silence. I will sell again if the price improves.
+---
+CHOICE: Feed fake seals
+RESP: Clever until two liars compare notes. Still ù buy time.
+---
+CHOICE: Arrest Knox
+RESP: Too late. The copies already walk. You chose theatre over arithmetic.
+---
+CHOICE: *King Who Can Pay*
+RESP: Flattering if true. Dangerous if not. I will verify before I print.
+---
+CHOICE: *Debt Crown*
+RESP: Honest prose. Creditors hate it. Commons love it. You chose truth over tone.
+---
+CHOICE: Bribe the chapter
+RESP: Expensive fiction. Knox sells the footnotes anyway.
+---
+CHOICE: I have heard the creditors
+RESP: Then I write *able to pay* before *loyal*. Winter has other invoices ù pay them too.
+---
+CHOICE: Ask the Church for a blessing
+RESP: Humility is a fitting mask for one who reached the throne through blood. The faithful will hear it.
+---
+CHOICE: Demand recognition
+RESP: Orders reach soldiers. They rise to heaven far less well. You will learn that soon.
+---
+CHOICE: Offer an alliance
+RESP: An alliance of crown and crosier may save Estedor. Or smother it. We will see which hungers more.
+---
+CHOICE: Name the church split
+RESP: Then you align yourself with Arvel's muttering monks and against my choir. Dangerous. Popular, perhaps, among the hungry
+---
+CHOICE: Accept Church custody of your rule
+RESP: Then kneel in the square when I bid it. The king who took the throne becomes blessed by the church ù or becomes a lesson
+---
+CHOICE: Cooperate
+RESP: Useful. Malrik will call it crown justice. Arvel will call it cowardice. Both may be right.
+---
+CHOICE: Refuse inquiry
+RESP: Then I write *obstruction* beside *king who took the throne* and sleep well. You may not.
+---
+CHOICE: Trade Aldo's exile for ending the inquiry
+RESP: One priest for one peace. Malrik gains a scalp. You gain a week. Weeks add up.
+---
+CHOICE: Cap the church tax
+RESP: The altar will hiss. The treasury will breathe. Malrik will call it persecution by sunset.
+---
+CHOICE: Pay the church tax from treasury
+RESP: Expensive holiness. Soldiers will ask why God eats before they do.
+---
+CHOICE: Audit both
+RESP: Then we follow ink and incense. Names will surface. None will thank you.
+---
+CHOICE: Prepare secular law
+RESP: Bold. The faithful call it heresy. Soldiers may call it clarity. Write it before Sunday.
+---
+CHOICE: Negotiate boundaries
+RESP: A treaty with heaven's broker. It holds until it does not. Usually until gold runs thin.
+---
+CHOICE: Let him try forfeit
+RESP: Then you bet steel against scripture. I have seen scripture win in the square and lose in the barracks. Rarely in that o
+---
+CHOICE: Outbid the Church
+RESP: Hungry praise is expensive. Worth it, until the next empty purse.
+---
+CHOICE: Seize temple granaries
+RESP: Then hear forfeit by dawn. You will have bread and sermons about your black soul.
+---
+CHOICE: Let Selena broker
+RESP: I will sell you grain and sell Malrik your caution. Remember I sell both ways.
+---
+CHOICE: Ignore the decree
+RESP: Then the faithful call you glutton and sinner. The soldiers call you king. My patients call you sensible.
+---
+CHOICE: Observe the fast
+RESP: Humility in public, resentment in the wards. Malrik will call it conversion. I call it theatre that kills slowly.
+---
+CHOICE: Feed the barracks in secret
+RESP: Hypocrisy feeds armies. A time-honored recipe. Do not let Malrik smell the roast ù or my soup.
+---
+CHOICE: Disperse them
+RESP: Blood in a holy crowd buys martyrs. Malrik knows that. He hopes you do not.
+---
+CHOICE: Address them yourself
+RESP: Brave or foolish. The square will hear one king today. Pray it is you.
+---
+CHOICE: Let Malrik disperse his own flock
+RESP: Then he owns the miracle and the riot. You own the walls. For now.
+---
+CHOICE: Pay the army from crown reserves
+RESP: Gold before God. A soldier's theology. Expensive ù until cheaper than mutiny.
+---
+CHOICE: Arrest the ringleaders
+RESP: Then hang men who crossed themselves. The barracks will remember. The chaplains will scream.
+---
+CHOICE: Let Malrik feed their families
+RESP: You ask the altar to pay and the sword to obey. I give it one month.
+---
+CHOICE: Kneel
+RESP: Then forfeit dies in the square and lives in the chapter house. You survive. You serve.
+---
+CHOICE: Defy the interdict
+RESP: Then every pulpit names you cursed. I heard steel in your voice on day thirty. Steel must finish what it began.
+---
+CHOICE: Counter with Arvel
+RESP: Two churches, one bleeding city. You chose the fracture. May it not fracture you.
+---
+CHOICE: I have heard the conclave
+RESP: Then kneel when I ask. Heaven owns part of your mornings now.
+---
+CHOICE: I have heard the brethren
+RESP: Then Estedor has two faiths. May neither fracture you before spring.
+---
+CHOICE: Ask the Church for a blessing
+RESP: Humility is a fitting mask for one who reached the throne through blood. The faithful will hear it.
+---
+CHOICE: Demand recognition
+RESP: Orders reach soldiers. They rise to heaven far less well. You will learn that soon.
+---
+CHOICE: Offer an alliance
+RESP: An alliance of crown and crosier may save Estedor. Or smother it. We will see which hungers more.
+---
+CHOICE: Name the church split
+RESP: Then you align yourself with Arvel's muttering monks and against my choir. Dangerous. Popular, perhaps, among the hungry
+---
+CHOICE: Accept Church custody of your rule
+RESP: Then kneel in the square when I bid it. The king who took the throne becomes blessed by the church ù or becomes a lesson
+---
+CHOICE: Cooperate
+RESP: Useful. Malrik will call it crown justice. Arvel will call it cowardice. Both may be right.
+---
+CHOICE: Refuse inquiry
+RESP: Then I write *obstruction* beside *king who took the throne* and sleep well. You may not.
+---
+CHOICE: Trade Aldo's exile for ending the inquiry
+RESP: One priest for one peace. Malrik gains a scalp. You gain a week. Weeks add up.
+---
+CHOICE: Cap the church tax
+RESP: The altar will hiss. The treasury will breathe. Malrik will call it persecution by sunset.
+---
+CHOICE: Pay the church tax from treasury
+RESP: Expensive holiness. Soldiers will ask why God eats before they do.
+---
+CHOICE: Audit both
+RESP: Then we follow ink and incense. Names will surface. None will thank you.
+---
+CHOICE: Prepare secular law
+RESP: Bold. The faithful call it heresy. Soldiers may call it clarity. Write it before Sunday.
+---
+CHOICE: Negotiate boundaries
+RESP: A treaty with heaven's broker. It holds until it does not. Usually until gold runs thin.
+---
+CHOICE: Let him try forfeit
+RESP: Then you bet steel against scripture. I have seen scripture win in the square and lose in the barracks. Rarely in that o
+---
+CHOICE: Outbid the Church
+RESP: Hungry praise is expensive. Worth it, until the next empty purse.
+---
+CHOICE: Seize temple granaries
+RESP: Then hear forfeit by dawn. You will have bread and sermons about your black soul.
+---
+CHOICE: Let Selena broker
+RESP: I will sell you grain and sell Malrik your caution. Remember I sell both ways.
+---
+CHOICE: Ignore the decree
+RESP: Then the faithful call you glutton and sinner. The soldiers call you king. My patients call you sensible.
+---
+CHOICE: Observe the fast
+RESP: Humility in public, resentment in the wards. Malrik will call it conversion. I call it theatre that kills slowly.
+---
+CHOICE: Feed the barracks in secret
+RESP: Hypocrisy feeds armies. A time-honored recipe. Do not let Malrik smell the roast ù or my soup.
+---
+CHOICE: Disperse them
+RESP: Blood in a holy crowd buys martyrs. Malrik knows that. He hopes you do not.
+---
+CHOICE: Address them yourself
+RESP: Brave or foolish. The square will hear one king today. Pray it is you.
+---
+CHOICE: Let Malrik disperse his own flock
+RESP: Then he owns the miracle and the riot. You own the walls. For now.
+---
+CHOICE: Pay the army from crown reserves
+RESP: Gold before God. A soldier's theology. Expensive ù until cheaper than mutiny.
+---
+CHOICE: Arrest the ringleaders
+RESP: Then hang men who crossed themselves. The barracks will remember. The chaplains will scream.
+---
+CHOICE: Let Malrik feed their families
+RESP: You ask the altar to pay and the sword to obey. I give it one month.
+---
+CHOICE: Kneel
+RESP: Then forfeit dies in the square and lives in the chapter house. You survive. You serve.
+---
+CHOICE: Defy the interdict
+RESP: Then every pulpit names you cursed. I heard steel in your voice on day thirty. Steel must finish what it began.
+---
+CHOICE: Counter with Arvel
+RESP: Two churches, one bleeding city. You chose the fracture. May it not fracture you.
+---
+CHOICE: I have heard the conclave
+RESP: Then kneel when I ask. Heaven owns part of your mornings now.
+---
+CHOICE: I have heard the brethren
+RESP: Then Estedor has two faiths. May neither fracture you before spring.
+---
+CHOICE: Receive him as an equal envoy
+RESP: Then they will call you prudent. For a week. After that they price respect in coin and corpses.
+---
+CHOICE: Insult the princes ù the throne was ours by right of conquest
+RESP: I will carry your eloquence north. They will answer with winter and horses. You chose the loud door.
+---
+CHOICE: Placate him with gold for time
+RESP: I am not cheap, but I am persuadable. They will hear you are buying days, not alliances.
+---
+CHOICE: Send recognition papers
+RESP: Then you ask wolves to bless the lamb. Brave. They will answer with conditions, not hymns.
+---
+CHOICE: Refuse all forms
+RESP: Ink is cheaper than cavalry. You will learn which runs out first.
+---
+CHOICE: Trade receipts
+RESP: A merchant's peace. Borvin will curse you. The princes will read your ledgers before your titles.
+---
+CHOICE: Reinforce Grey Pass
+RESP: Then the treasury bleeds and the north knows you flinch with walls, not horses.
+---
+CHOICE: Raid northern scouts
+RESP: A border war by breakfast. Ingvar will call it banditry. The princes will call it invitation.
+---
+CHOICE: Send Ingvar to the pass
+RESP: Then we bet diplomacy on a man who sells all sides. Cheaper than graves ù if it works.
+---
+CHOICE: Pay northern tribute
+RESP: Then Borvin weeps and the pass stays quiet. Malrik will call it selling your soul to merchants instead of priests.
+---
+CHOICE: Refuse
+RESP: Then you enter day thirty with two enemies and no ledger. Bold arithmetic.
+---
+CHOICE: Offer double trade
+RESP: Commerce as diplomacy. Selena will grow rich. Rudolf will grow suspicious. Useful tensions.
+---
+CHOICE: Take the northern loan
+RESP: Gold in the chest, rope around the crown. Standard diplomacy.
+---
+CHOICE: Refuse foreign coin
+RESP: Honorable and slow. Rudolf approves. Ingvar smiles elsewhere.
+---
+CHOICE: Let Selena finance the pass
+RESP: Merchants own the battlements. For a time. Then they own the conversation.
+---
+CHOICE: Return them politely
+RESP: Courtesy with shackles. He will call it trust. I call it habit.
+---
+CHOICE: Interrogate
+RESP: Ink and screams. Useful mix. Ingvar will hear before sunset.
+---
+CHOICE: Execute as spies
+RESP: Then war speaks a dialect everyone understands.
+---
+CHOICE: Sign the alliance
+RESP: Then we are partners in more than ink. Rudolf grumbles. Malrik fumes. You breathe.
+---
+CHOICE: Sign trade only
+RESP: Half a friendship. Cheaper until the first raid.
+---
+CHOICE: Refuse
+RESP: Alone is how kings who took the throne often end. You chose it with eyes open.
+---
+CHOICE: Accept terms
+RESP: Then you are tributary, not king. Cheaper than graves ù for now.
+---
+CHOICE: Reject
+RESP: Then Rudolf earns his keep. Ingvar earns his commission. Winter earns its reputation.
+---
+CHOICE: Pursue into the pass
+RESP: Victory wins songs. Defeat wins northern sermons about killing a king's price.
+---
+CHOICE: Hold the line
+RESP: Discipline before glory. The men will call it caution. The treasury will call it wisdom.
+---
+CHOICE: Parley under white banner
+RESP: Then we bet words again. Cheaper if you still have credit with him.
+---
+CHOICE: Shelter refugees
+RESP: Mercy with a bill. The People will see it ù if they are allowed to look.
+---
+CHOICE: Turn them back
+RESP: Cold borders make clean arithmetic. Loud sermons follow.
+---
+CHOICE: Let Arvel feed them
+RESP: Then Malrik owns the miracle. You own the wall. Standard trade.
+---
+CHOICE: Renew alliance
+RESP: Then your seal and ours share winter. Rudolf mutters. You endure.
+---
+CHOICE: Offer plague formula
+RESP: Then we owe you breath. Dangerous debt. Better than siege.
+---
+CHOICE: End alliance
+RESP: Then we are strangers who remember each other's ledgers. War becomes possible again.
+---
+CHOICE: Withdraw from the pass
+RESP: Then you gift them the heights. The court will call it peace. The barracks will call it something else.
+---
+CHOICE: Refuse
+RESP: Then Rudolf stops pretending diplomacy is a career.
+---
+CHOICE: Crown monopoly
+RESP: Then the army is fed and Kara is angry. A familiar balance.
+---
+CHOICE: Free trade
+RESP: Gold flows. Loyalties blur. War gets cheaper for everyone.
+---
+CHOICE: Sell only to the north
+RESP: Then Rudolf calls it treason. Ingvar calls it friendship. You call it Tuesday.
+---
+CHOICE: Summon noble levies
+RESP: Then they bleed with you ù or plot while you bleed. Ashford will note who came.
+---
+CHOICE: Keep war a crown matter
+RESP: Privacy preserves options. It also preserves their knives until later.
+---
+CHOICE: Marry war to peace
+RESP: Ledger diplomacy. Ashford respects ledgers. Whether she respects you remains her hobby.
+---
+CHOICE: Full mobilization
+RESP: Then every coin feeds steel until steel feeds us back or buries us.
+---
+CHOICE: Parade bluff
+RESP: Theater with drums. Cheaper until someone calls the bluff with cavalry.
+---
+CHOICE: Pre-emptive strike
+RESP: Aggression as policy. Ingvar will call it banditry. History may call it survival.
+---
+CHOICE: Pay crown gold
+RESP: Expensive throne. Still a throne ù if the payments hold.
+---
+CHOICE: Expose northern bribes
+RESP: Scandal as hygiene. Someone swings. Someone talks. The court learns fear.
+---
+CHOICE: Secret deal
+RESP: Then you are merchant and monarch both. Edric would call it familiar. He would not call it wise.
+---
+CHOICE: Purge the guard
+RESP: Steel solves loyalty until it becomes the next problem.
+---
+CHOICE: Double pay and investigation
+RESP: Gold and gallows. Traditional pairing.
+---
+CHOICE: Feed Ingvar false maps
+RESP: Clever. If he believes you, the pass is yours for a month. If not, you armed him twice.
+---
+CHOICE: I have heard the princes
+RESP: Then may your heirs argue with mine in ledgers, not pass graves.
+---
+CHOICE: Promise Kaspar equal standing with Ashford
+RESP: Then I will remember you when she tries to own the king's close advisors. Eastern levies may follow ù if coin follows fi
+---
+CHOICE: Ashford leads the east
+RESP: Sulking is cheaper than war. For now. I will find other allies ù Dell, Crow, or your gallows.
+---
+CHOICE: Play them against each other
+RESP: Honest cynicism. I respect it. They will not. Expect poison in the hospitality.
+---
+CHOICE: Accept Dell's marriage terms in principle
+RESP: Then my couriers ride before Ashford's banners crest the hill. Love is politics at speed.
+---
+CHOICE: Reject
+RESP: Then I sell my cousins to Crow instead of you. Do not act surprised when the bidding starts.
+---
+CHOICE: Demand proof of dowry
+RESP: Wise. Insulting. Kaspar will forge something regardless. I will bring receipts ù and guards.
+---
+CHOICE: Favor Crow's bid
+RESP: Then Dell will call me thief. She is not wrong. She is also not louder than my coin.
+---
+CHOICE: Force Dell and Crow to share terms
+RESP: Shared? We will smile in public and cut in linen. Useful for you. Expensive for someone.
+---
+CHOICE: Reject both
+RESP: Everything is a market. You are merely bad at haggling. Watch what Ashford prices you at.
+---
+CHOICE: Promise Raymond crown lands from Edwin's loyalists
+RESP: Then lords will scream theft. I will scream hunger. You will scream order. One of us will be heard.
+---
+CHOICE: Refuse
+RESP: Then we are a storm. Storms do not need titles. Remember I warned you before the march.
+---
+CHOICE: Use Raymond against the great houses
+RESP: Dangerous hire. I will march where you point ù until I point somewhere you dislike.
+---
+CHOICE: Prepare conciliation
+RESP: Feasts buy time. Time buys options. Do not confuse either with safety.
+---
+CHOICE: Prepare division
+RESP: Then steel hides behind napkins. Efficient ù if you control the cutlery.
+---
+CHOICE: Prepare terror
+RESP: Fear opens councils and closes throats. Ashford will notice. So will history.
+---
+CHOICE: Side with Kaspar
+RESP: Then Dell screams theft. Crow will whisper alliance. Ashford will call it weak kingship. Enjoy the noise.
+---
+CHOICE: Side with Dell
+RESP: Exile is a kind of death. He may return with armies if you are not careful.
+---
+CHOICE: Defer judgment
+RESP: Then blood on marble before supper ends. At least you will learn who wants you alive.
+---
+CHOICE: Patronize the claim
+RESP: Honk and politics. Ashford will gag. The people will cheer. I accept your danger.
+---
+CHOICE: Arrest the fool
+RESP: Then the cells learn comedy. My supporters learn knives. Choose which worries you more.
+---
+CHOICE: Tournament proof
+RESP: Steel versus poultry. I accept. Bring your best knight ù or your worst, for the story.
+---
+CHOICE: Ashford leads council
+RESP: Then eastern levies die with Kaspar's patience. He will blame you ù correctly.
+---
+CHOICE: Dual eastern seats
+RESP: Shared power. Shared knives. I will smile until one of us stops.
+---
+CHOICE: Exclude Ashford
+RESP: Then you declare war on my house in all but name. I will answer in all but mercy.
+---
+CHOICE: Force Crow to apologize
+RESP: Then Crow is enemy. Dell is not friend. You have two fewer allies and one fewer problem ù for a week.
+---
+CHOICE: Force Dell to yield bid
+RESP: Dell will remember. Crow will collect. You bought quiet at someone's expense.
+---
+CHOICE: Let them duel by proxy
+RESP: Then blood before breakfast. The victor claims your favor. The loser claims a grudge.
+---
+CHOICE: Hang a small lord's title
+RESP: Then nobility screams. Raymond kneels ù today. You have bought a dangerous friend.
+---
+CHOICE: Send Ashford's knights to crush the march
+RESP: Steel on peasants. Ashford gains glory. You gain guilt. Raymond gains martyrs.
+---
+CHOICE: Let houses fight Raymond themselves
+RESP: Then I war on all of them. Chaos is also a policy. You chose spectator.
+---
+CHOICE: Levy Ashford first
+RESP: Then she marches with hatred and banners. Useful ù if she returns.
+---
+CHOICE: Levy Kaspar
+RESP: Then east splits openly. War may come from your own marches.
+---
+CHOICE: Levy no one
+RESP: Then houses call you bankrupt and correct. Kara will love you. Rudolf will not.
+---
+CHOICE: Stop the attack on Ashford
+RESP: Then someone else bleeds instead. I will tell you who ù after.
+---
+CHOICE: Allow Ashford's death
+RESP: Then the east belongs to whoever survives dawn. You chose speed over mercy.
+---
+CHOICE: Stop Dell-Crow blood
+RESP: Peace in the south for a price. Kaspar or Raymond pays it in the dark.
+---
+CHOICE: Let the knives fall
+RESP: Then I sell memoirs. You inherit a shorter council and longer nightmares.
+---
+CHOICE: Knox takes the contract
+RESP: Clean. Criminal. Yours. Name them and pay.
+---
+CHOICE: Title it Conciliation
+RESP: Flattering. Fragile. I will write what you need ù not what you earned.
+---
+CHOICE: Title it Terror
+RESP: Honest. Cruel. Future lords will read it before they plot.
+---
+CHOICE: Bribe the chronicle
+RESP: Expensive fiction. Knox will sell the true chapter anyway.
+---
+CHOICE: I have heard the peerage
+RESP: Then rule with Ashford's shadow on your shoulder. Efficient ù if you like knives at your back.
+---
+CHOICE: Hang ringleaders
+RESP: Then fear learns your handwriting. The loyalists die. The frightened obey.
+---
+CHOICE: Sell forgiveness
+RESP: Justice as tariff. Borvin will call it crude. I call it employment.
+---
+CHOICE: Empty the cells
+RESP: Dangerous mercy. Men you free may love you ù or stab you. I sharpen steel either way.
+---
+CHOICE: Hang Church's list
+RESP: Then Malrik smiles and the streets whisper *puppet*. Efficient ù if you like holy collars.
+---
+CHOICE: Hang crown traitors only
+RESP: Then Malrik calls you secular tyrant. Soldiers call you consistent. I call it busy.
+---
+CHOICE: Commute to fines
+RESP: Gold instead of necks. Priests hate it. Merchants love it. I oil the hinges.
+---
+CHOICE: Mass hanging
+RESP: Then the provinces learn fear. They may not learn loyalty. Both keep thrones ù briefly.
+---
+CHOICE: Hang officers, pardon miners
+RESP: Surgical rope. The commons may call it justice. Officers call it betrayal. Both can be true.
+---
+CHOICE: Pardon all
+RESP: Then Rudolf grumbles and Arvel prays. I idle. Rare and dangerous.
+---
+CHOICE: Hang the mad
+RESP: Cruel clarity. The square sleeps. The wards scream louder where no one listens.
+---
+CHOICE: Crown-funded asylums
+RESP: Expensive mercy. Mira will call it late. The families will call it something.
+---
+CHOICE: Morwen's private cells
+RESP: Quiet horror. Better than loud horror. The chronicles may still find out.
+---
+CHOICE: Refuse noble lists
+RESP: Then peers hate you early. You may hate them later. Fair trade.
+---
+CHOICE: Hang two commoners as warning
+RESP: Theatre for the soon-to-arrive. Cruel. Effective. I am employed.
+---
+CHOICE: Sell expedited trials
+RESP: Commerce precedes the feast. Knox smiles somewhere. I sharpen steel.
+---
+CHOICE: Hang Edwin's last captain
+RESP: Then eastern eyes see rope. Western ghosts see warning. Both look at you.
+---
+CHOICE: Empty the yard
+RESP: Bold mercy before nobility unlocks. She will call it bribery of conscience.
+---
+CHOICE: Accept Ashford's first name
+RESP: Then you hang before she bows. Partnership ù or submission. She will know which.
+---
+CHOICE: Pay Talen
+RESP: Then one throat breathes who should not. You will forget which. I will not.
+---
+CHOICE: Refuse and expose him
+RESP: Then I vanish before Morwen wakes. You gain sermon fodder and lose convenience.
+---
+CHOICE: Hire him for the crown
+RESP: Republic of rope. Morwen will hate me. You will love the quiet lists.
+---
+CHOICE: Mass forgiveness
+RESP: Then I oil unused hinges. The realm calls it weakness until it calls it wisdom.
+---
+CHOICE: Mass hanging
+RESP: Then birds avoid the square. Order arrives. Mercy leaves on horseback.
+---
+CHOICE: Case by case
+RESP: The hardest throne. I will sleep less. You will sleep barely.
+---
+CHOICE: I have heard the scaffold
+RESP: Then I write *rope* and hope fear outlasts resentment.
+---
+CHOICE: Proclaim the comet
+RESP: Then nobles look up before they look at you. Dangerous ù if heaven changes its mind.
+---
+CHOICE: Private audience only
+RESP: Prudent. Boring. The mob will still look up without your permission.
+---
+CHOICE: Hand him to Cyrus
+RESP: Inquisitors love comets ù briefly. You will not hear my tower again until you do.
+---
+CHOICE: Publish Ashford's chart
+RESP: Then she arrives already insulted. Prepared. Dangerous. Like eastern weather.
+---
+CHOICE: Share chart privately with Ashford
+RESP: Then you buy her entrance with prophecy. She will bill you in council seats.
+---
+CHOICE: Burn the chart
+RESP: Then you rule without heaven's preview. She will bring her own omens ù and soldiers.
+---
+CHOICE: Crown astronomy
+RESP: Then the Prophet's rhymes go underground. Underground rhymes grow teeth.
+---
+CHOICE: License both
+RESP: Bureaucracy of miracles. Malrik hates it. Borvin loves it. I tolerate it.
+---
+CHOICE: Let the mob choose
+RESP: Then you are not king of signs ù you are referee. Referees get hit by both teams.
+---
+CHOICE: Back the Prophet
+RESP: Then Meribald's tower darkens. Malrik roars. The poor hum your name. Dangerous music.
+---
+CHOICE: Back Meribald
+RESP: Then my market shrinks. His tower brightens. Nobles smile. Peasants calculate.
+---
+CHOICE: Hang neither
+RESP: Steel solves sermons until it becomes the next sermon. Both of us remember.
+---
+CHOICE: Publish the gap
+RESP: Honest terror. Honest policy. Ingvar will read it before Malrik does.
+---
+CHOICE: Suppress the chart
+RESP: Then Knox sells fake seals by Friday. You chose mystery. Mystery is expensive.
+---
+CHOICE: Forge a favorable heir-omen
+RESP: Beautiful fraud. Ashford will audit heaven. I will watch.
+---
+CHOICE: Publish Knox's buyers
+RESP: Then the court panics uniformly. Rare achievement. Stars approve chaos sometimes.
+---
+CHOICE: Buy Meribald's silence
+RESP: Expensive astronomy. Knox forgets nothing. Neither do I ù for a time.
+---
+CHOICE: Hang Knox
+RESP: Too late for copies. Early enough for sermon. Both of us knew that.
+---
+CHOICE: I have heard the stars
+RESP: Then govern by chart and chair. May both agree on succession.
+---
+CHOICE: Hear him publicly
+RESP: Then winter has a third voice ù yours, Malrik's, and mine. Dangerous music. The poor will hum it.
+---
+CHOICE: Give him to Cyrus
+RESP: Inquisitors love unnamed tongues. You will not hear mine again ù until you do.
+---
+CHOICE: Ignore him
+RESP: Wise. Boring. Most winters are. I will be back when the cough reaches the altar.
+---
+CHOICE: Let him preach in the wards
+RESP: Then the sick hear two cures. One may save you. One may save me. Neither is guaranteed.
+---
+CHOICE: Ban street sermons during the plague
+RESP: Bans feed martyrs. The cough does not read decrees. Remember I warned you.
+---
+CHOICE: Co-opt him
+RESP: Then I speak your winter with your accent. Useful. False. Popular enough.
+---
+CHOICE: Embrace the fox cult
+RESP: Then banners will carry whiskers. Malrik will cast out from church a mammal. You will laugh until the levies refuse to m
+---
+CHOICE: Burn the shrine
+RESP: Ash and squeals. The people will remember who killed the miracle. So will the chronicles.
+---
+CHOICE: Investigate fraud
+RESP: Clever. There are always handlers. There are also always believers. You cannot jail both.
+---
+CHOICE: Use the prophecy against a rival house
+RESP: Then you wield my tongue like a dagger. Flattering. Unworthy. Effective.
+---
+CHOICE: Denounce prophecy in the hall
+RESP: Brave words. Ashford will smile. The provinces will shrug. Winter keeps its calendar.
+---
+CHOICE: Invite him to Ashford's table
+RESP: Dangerous theatre. I will speak in tongues they understand: debt, heirs, and hunger.
+---
+CHOICE: Let him name names in the square
+RESP: Then the square decides before your judges do. Fast. Filthy. Yours if you control the outcome.
+---
+CHOICE: Arrest him
+RESP: Then I become the martyr Malrik wanted and Cyrus could not make. Hang the voice, not the message.
+---
+CHOICE: Private audience
+RESP: Then we sin together in silence. I will point at Knox. You will point at whoever serves you least.
+---
+CHOICE: I have heard the last sign
+RESP: Then rule sermons and steel. Malrik will cast out from church the year. The people will remember rhymes.
+---
+CHOICE: Refuse and purge buyers
+RESP: Then I vanish before dusk ù or sell to someone angrier. You chose steel over commerce.
+---
+CHOICE: Accept foreign retainer
+RESP: Then your court has a landlord overseas. Efficient. Treasonous. Often both.
+---
+CHOICE: Exclusive crown contract
+RESP: Expensive pet. I bite other hands. Not yours ù until the price changes.
+---
+CHOICE: Policy of purge
+RESP: Then I write *iron* early. The court will not thank you. It will obey ù briefly.
+---
+CHOICE: Policy of managed spies
+RESP: Clever. Exhausting. Like ruling two courts ù one visible, one numbered.
+---
+CHOICE: Policy of trust
+RESP: Dangerous simplicity. If you are wrong, you are wrong magnificently.
+---
+CHOICE: Authenticate all seals
+RESP: Then policy crawls and trust inches upward. Rare. Boring. Useful.
+---
+CHOICE: Feed fake seals to Knox's buyers
+RESP: Then liars eat liars. If they compare notes, you burn. Until then, you learn.
+---
+CHOICE: Hang Osric
+RESP: Convenient. fake seals continue without a neck to blame. You chose theatre.
+---
+CHOICE: Public audience
+RESP: Then rumor becomes spectacle. Spectacle is cheaper than truth and twice as loud.
+---
+CHOICE: Private council
+RESP: Then you govern whispers. I will whisper back. Knox will try to listen.
+---
+CHOICE: Refuse audience
+RESP: Then I vanish and ten masks appear. You chose mystery. Mystery multiplies.
+---
+CHOICE: Keep Raena
+RESP: Then I stay. If you fail me, you fail simplicity.
+---
+CHOICE: Rotate guard
+RESP: Then assassins schedule around shifts. So will you.
+---
+CHOICE: Hire foreign sword
+RESP: Then I leave before dusk. You chose novelty over memory.
+---
+CHOICE: Exclusive chronicle
+RESP: Then you buy sentences. Expensive. Worth it if you finish the book.
+---
+CHOICE: Let chapters leak
+RESP: Then Knox profits and you learn. Both can be true. Both hurt.
+---
+CHOICE: Burn drafts
+RESP: Then rumor owns your verbs. Soldiers may prefer it that way.
+---
+CHOICE: Publish true accounts
+RESP: Then the court panics uniformly. Honesty is a kind of purge.
+---
+CHOICE: Feed false ledgers
+RESP: Clever until two liars compare. Still ù buy time.
+---
+CHOICE: Hang clerks
+RESP: Theatre. The numbers continue without necks to blame.
+---
+CHOICE: Expose Knox publicly
+RESP: Then he vanishes and ten smaller Knoxes appear. You chose sermon over solution.
+---
+CHOICE: Join the auction
+RESP: Then you rent loyalty weekly. I approve of subscriptions.
+---
+CHOICE: Hire Talen to lie to all three crowns
+RESP: Then truth dies of overwork. You survive ù until the lies meet.
+---
+CHOICE: Purge the guard
+RESP: Then fear keeps order until fear finds a leader.
+---
+CHOICE: Reform oaths
+RESP: Gold and ledgers. Traditional pairing. Less bloody. Not bloodless.
+---
+CHOICE: Ignore the yard
+RESP: Then gossip becomes policy without your signature.
+---
+CHOICE: I have heard the court
+RESP: Then I write *iron* and hope fear outlasts resentment.
+---
+CHOICE: Deny the nephew
+RESP: Then the fog thickens. Someone will believe anyway. Lies need only patience.
+---
+CHOICE: Seek the nephew
+RESP: Then hunters multiply. I sell directions. Others sell traps. You bought motion.
+---
+CHOICE: Weaponize the claim
+RESP: Dangerous theatre. Ashford will call it slander. The market will call it policy.
+---
+CHOICE: Accept Ashford marriage
+RESP: Then my house owns eastern peace and your succession story. You gain a leash. I gain a crown-adjacent future.
+---
+CHOICE: Refuse marriage
+RESP: Then we are rivals, not kin. I will remember who refused insurance.
+---
+CHOICE: Broker nephew to Ashford
+RESP: Shared custody of a kinglet. Humiliating. Efficient. Very eastern.
+---
+CHOICE: Outbid all buyers
+RESP: Then fog is rented, not cleared. I appreciate subscriptions.
+---
+CHOICE: Sell to Ashford
+RESP: Then eastern insurance activates. You bought peace with a boy's leash.
+---
+CHOICE: Let auction run
+RESP: Then Knox profits and you learn. Both hurt. Standard Tuesday.
+---
+CHOICE: Refuse
+RESP: Then Ingvar prices your stubbornness in steel. Domestic problems beat foreign crowns ù usually.
+---
+CHOICE: Sell location north
+RESP: Then you rent peace with blood you may never see. Efficient. Monstrous. Familiar.
+---
+CHOICE: Fake death
+RESP: Then three ledgers own a dead boy who may still breathe. I admire the accounting.
+---
+CHOICE: Forge bastardy
+RESP: Then ink kills boys whom steel cannot find. Ashford will call it crude. It may work.
+---
+CHOICE: Restore Edwin's records
+RESP: Honest paperwork. Dangerous honesty. The realm reads ledgers like sermons.
+---
+CHOICE: Burn the archive
+RESP: Then historians hate you. Historians are not armies. Yet.
+---
+CHOICE: Publish nephew chapter
+RESP: Then the realm reads civil war before breakfast. Honest ù if you survive it.
+---
+CHOICE: Crown chapter only
+RESP: Then footnotes grow teeth in alley sermons. You chose narrative discipline.
+---
+CHOICE: Dual publication
+RESP: Democracy of disaster. Bold. Exhausting. Very this year.
+---
+CHOICE: Deny the north
+RESP: Then we price your denial in steel next spring. Consistent diplomacy.
+---
+CHOICE: Surrender nephew
+RESP: Then you buy peace with Edwin's bloodline. Humiliating. Durable, sometimes.
+---
+CHOICE: Offer throne-stealer's charter
+RESP: Bold insult to the sacred against blood. I will carry the message north. They will laugh ù then calculate.
+---
+CHOICE: Public unmasking
+RESP: Then the realm gasps collectively. Useful sound. Dangerous sound.
+---
+CHOICE: Private answer
+RESP: Then you carry truth alone awhile. Heavier than crowns. Lighter than mobs.
+---
+CHOICE: Reject unmasking
+RESP: Then fog persists. Fog elected kings before. It may again.
+---
+CHOICE: I have heard the line
+RESP: Then I write *survivor* and close the nephew ledger.
+---
+CHOICE: I have heard the omen
+RESP: Then fog closes. Spring opens other ledgers.
+---
+CHOICE: Fund the cure in full
+RESP: Then let the realm see a king who spends on breath, not banners. I will begin the distilleries tonight.
+---
+CHOICE: Fund half
+RESP: Half buys half a chance. I will not let the sick wait for your caution, but I will try.
+---
+CHOICE: The treasury cannot spare it
+RESP: Then prepare your coffers for funeral candles instead of soldiers. I will do what I can without your coin.
+---
+CHOICE: Return in two weeks
+RESP: Two weeks is a thousand coughs. I will count them for you, Majesty.
+---
+CHOICE: Pay for faster production
+RESP: Then the sick will have bottles before the next moon. Borvin will hate me, but the wards will bless you.
+---
+CHOICE: Use army labor in the distilleries
+RESP: Soldiers smell of pitch and vinegar, but their hands are steady. Rudolf will call it humiliation. I call it survival.
+---
+CHOICE: The formula is enough
+RESP: Patience is a virtue for the healthy. I will stretch what we have and pray it reaches in time.
+---
+CHOICE: You were right
+RESP: Late coin still buys breath. I will not shame you for changing your mind ù only for how many died while you did.
+---
+CHOICE: Quarantine the lower wards
+RESP: Walls keep the cough in and the hatred in with it. It may slow the fever. It will not slow the rumors.
+---
+CHOICE: Stand by the refusal
+RESP: Then record my words, Majesty: when the pyres smoke, do not ask why the people call you King of Ash.
+---
+CHOICE: Fund the cure in full
+RESP: Then let the realm see a king who spends on breath, not banners. I will begin the distilleries tonight.
+---
+CHOICE: Fund half
+RESP: Half buys half a chance. At least you did not make me wait a third week.
+---
+CHOICE: The treasury still cannot spare it
+RESP: Then prepare your coffers for funeral candles instead of soldiers.
+---
+CHOICE: Medicine stays with Mira
+RESP: Then let the sick thank the physic, and let the priests learn humility. I will not burn her stills ù but I will not bles
+---
+CHOICE: Shared distribution
+RESP: A prudent compromise. The faithful see God's hand; the sick still swallow the tincture. Both may call it mercy.
+---
+CHOICE: Let the Church take the cure
+RESP: Then the miracle belongs to the altar, and Mira's name fades from the ledger. The realm will hear that heaven saved Este
+---
+CHOICE: Accept holy remedies
+RESP: Then kneel with your subjects and pray. If the fever breaks, heaven receives the glory. If it does not, you will have no
+---
+CHOICE: Mira's last offer
+RESP: A king who waits until the pyres smoke to buy mercy deserves the physic he refused. Fund her, or bury your pride with th
+---
+CHOICE: Neither physic nor miracle
+RESP: Then the realm will know its king trusts nothing: not gold, not God, not the breath of his people.
+---
+CHOICE: Soldiers first
+RESP: Then my men will remember who kept them breathing. The nobles will scream. Let them.
+---
+CHOICE: Common wards first
+RESP: Bread and breath win more loyalty than banners. My soldiers will curse you ù until they stop coughing too.
+---
+CHOICE: Sell doses to nobles to refill the treasury
+RESP: Gold in the coffers, fever in the barracks. I hope your walls are stronger than your arithmetic.
+---
+CHOICE: Emergency funding
+RESP: Too late for elegance, but not too late for breath. Give me the coin and stand clear of my tables.
+---
+CHOICE: Fire-quarantine the infected quarter
+RESP: Torches at the gates and screams behind the walls. It may slow the fever. It will not slow the songs they sing about you
+---
+CHOICE: It will burn itself out
+RESP: Then write my report for the chronicles: the king who took the throne watched Estedor cough itself hollow and called it 
+---
+CHOICE: Return the cure to the physic
+RESP: Then let the priests keep their miracles and I will keep my patients. Choose who lives by fact, not by sermon.
+---
+CHOICE: Double the Church's share
+RESP: Belief does not stop lung-cough. But it may stop riots. I wash my hands ù you will need more than holy water for that.
+---
+CHOICE: Split the city
+RESP: A kingdom divided by bottles and blessings. May you outlive the experiment, Majesty.
+---
+CHOICE: I have heard the wards
+RESP: Then may the next plague find a crown that remembers the price of air.
+---
+CHOICE: I have heard the dead counted
+RESP: Grief named aloud heals faster than grief denied. You counted the dead. That matters.
+---
+CHOICE: I have heard the pyres
+RESP: Then I say it once for the ledger: King of Ash, second of his name. Outlive it if you can.
+---
+CHOICE: I have heard heaven's verdict
+RESP: Then kneel when I ask. Heaven owns part of this story now.
+---
+CHOICE: I have heard the screaming wards
+RESP: Madness in the square is worse than fever in the ward. Remember I warned you.
+---
+CHOICE: Share the formula
+RESP: Generous. The princes will call you a statesman. Borvin will call you a fool. Both may be right.
+---
+CHOICE: Sell the formula
+RESP: Commerce, not charity. They will pay and resent you. A familiar diplomacy.
+---
+CHOICE: Refuse
+RESP: Then arm your borders. Fever travels faster than envoys, but suspicion travels faster still.
+---
+CHOICE: Publicly credit Mira
+RESP: Then I will stand beside you, and let the priests choke on their hymns. Dangerous. Honest. Like you.
+---
+CHOICE: Private thanks
+RESP: Gold I will take. Glory I would have earned. I will stay ù for the sick, not for you.
+---
+CHOICE: The Church won peace
+RESP: Then I pack my stills and leave your court. The wards will find me. You will find Malrik.
+---
+CHOICE: Grant a national day of mourning
+RESP: Then the realm will know its king counts the dead as well as the living. That is rarer than cure.
+---
+CHOICE: Local vigils only
+RESP: Cold. Practical. The people will bury their own and remember who did not come.
+---
+CHOICE: Turn mourning into tax relief for the worst provinces
+RESP: Bread and remission ù the oldest mercy. They will take it. They will still whisper the names.
+---
+CHOICE: Marshal every resource
+RESP: Then stop counting coins and start counting breath. I will bring what counsel I have left.
+---
+CHOICE: Seek the Church's blessing
+RESP: Incense will not empty the pyres. But frightened men kill kings before fevers do. A grim trade.
+---
+CHOICE: If the realm wants a new king, let them try
+RESP: Bold words. The graveyard is full of bold kings. I hope you are the exception.
+---
+CHOICE: Open the coffers
+RESP: Expensive. Honest. The sort of choice that keeps a crown on your head ù if anything still can.
+---
+CHOICE: Fine Odo's estate and seize his stock
+RESP: Blood from a stone, but stones crack. The families will call it justice. Odo will call it theft.
+---
+CHOICE: Say the crown was misled
+RESP: Cowardice dressed as policy. Cheap today. Priced in daggers tomorrow.
+---
+CHOICE: Fund the statue
+RESP: Then stand still long enough to be carved. Even kings who took the throne may have one honest portrait.
+---
+CHOICE: Refuse vanity
+RESP: Wiser. Stone does not cough. Living patients do.
+---
+CHOICE: Put Malrik on the plinth instead
+RESP: You mock us both. I will take the ward. Let the priests take the stone.
+---
+CHOICE: Send physic and gold
+RESP: Too late for pride. If you can prove the fever wanes, they may unlock the gates. May.
+---
+CHOICE: Threaten reprisal if they keep the passes shut
+RESP: Threaten a kingdom that wheezes? Their archers do not cough. Yours may.
+---
+CHOICE: Accept isolation
+RESP: Alone is how empires shrink. But it is how some kings survive the winter.
+---
+CHOICE: Accept canonization
+RESP: Then kneel once more. The throne becomes altar. Your enemies lose their best argument.
+---
+CHOICE: Decline
+RESP: Proud. The See will not forget. Neither will the peasants who saw holy water work.
+---
+CHOICE: Propose Mira as the saint
+RESP: You would make Rome choke on truth. I admire the impulse. I will not deliver the letter.
+---
+CHOICE: Hang the rioters
+RESP: The scaffold creaks. The square goes quiet. Quiet is not the same as forgiven.
+---
+CHOICE: Pardon them
+RESP: Merciful. Dangerous. The collectors will arm themselves. The people will remember.
+---
+CHOICE: Fund asylums
+RESP: Expensive mercy. The rioters live. The realm learns you count madness as your sin.
+---
+CHOICE: Fund provincial memorials
+RESP: Then I will read their names aloud at my gate. That is more than most thrones offer.
+---
+CHOICE: Send Church prayers
+RESP: Prayers cost less than stone. The hungry will know which you chose.
+---
+CHOICE: Survival is mercy enough
+RESP: Then they will move on ù and remember that you told them to.
+---
+CHOICE: I have heard the legacy
+RESP: Then may the next plague find a crown that remembers the price of air.
+---
+CHOICE: I have heard the legacy
+RESP: Survival is its own hymn. The dead may disagree.
+---
+CHOICE: I have heard the legacy
+RESP: Then outlive the name. Names are lighter than coffins, but they last longer.
+---
+CHOICE: I have heard heaven's ledger
+RESP: Then kneel when I ask. Heaven owns part of your memory now.
+---
+CHOICE: I have heard the legacy
+RESP: Too late for some. Not too late for the next ward. I will stay ù not for you, for them.
+---
+CHOICE: Use Odo's compound in two test wards
+RESP: Fast and dangerous. If the men scream, remember you chose discount over caution.
+---
+CHOICE: Stick with Mira's formula
+RESP: Wise. Boring. Expensive. The qualities of a king who may survive the year.
+---
+CHOICE: Fund both
+RESP: Science by rivalry. I like it. Mira will not. The sick may benefit ù or pay.

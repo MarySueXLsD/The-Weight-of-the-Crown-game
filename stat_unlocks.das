@@ -6,7 +6,19 @@ require localization public
 module stat_unlocks public
 
 let CHURCH_CUTSCENE_TITLE = "The Faith"
-let CHURCH_CUTSCENE_BODY = "When the old king fell, the bishops held their tongues and counted their tithes. Today the Church demands to be seen — and every sermon will measure whether heaven still recognizes your crown."
+let CHURCH_CUTSCENE_REPLIC_COUNT = 4
+let CHURCH_CUTSCENE_REPLICAS_EN : string[CHURCH_CUTSCENE_REPLIC_COUNT] <- fixed_array(
+    "The Church is more important than ever. Since the coup, every village square listens to Malrik before it listens to you.",
+    "Bishops no longer count tithes in silence — they measure whether heaven still recognizes the crown on your head.",
+    "We must consider what the Church thinks of the so-called king who took Edwin's throne.",
+    "One sermon can bless your rule. One interdict can starve your name before winter. Today, faith enters the ledger."
+)
+let CHURCH_CUTSCENE_REPLICAS_RU : string[CHURCH_CUTSCENE_REPLIC_COUNT] <- fixed_array(
+    "Церковь важнее, чем когда-либо. С переворота каждая деревенская площадь слушает Малрика раньше, чем вас.",
+    "Епископы больше не считают десятины молча — они взвешивают, признаёт ли небо корону на вашей голове.",
+    "Мы должны учитывать, что Церковь думает о так называемом короле, занявшем трон Эдвина.",
+    "Одна проповедь может благословить ваше правление. Один интердикт может лишить вас имени ещё до зимы. Сегодня вера входит в книгу казны."
+)
 let PEOPLE_CUTSCENE_TITLE = "The Peasantry"
 let PEOPLE_CUTSCENE_BODY = "The common folk kept their heads down through the coup — but they never stopped counting sacks in the granary and boots in the yard. Today their patience ends and their voices find the throne room."
 let NOBILITY_CUTSCENE_TITLE = "The Great Houses"
@@ -15,6 +27,33 @@ let LOYALTY_CUTSCENE_TITLE = "Court Loyalty"
 let LOYALTY_CUTSCENE_BODY = "Every crown rests on whispers as much as steel. The courtiers who smiled through your coronation now measure whether your reign will hold — and whether their loyalty is still worth selling."
 let SUCCESSION_CUTSCENE_TITLE = "The Line of Succession"
 let SUCCESSION_CUTSCENE_BODY = "A throne without an heir is a knife left on the table. The great houses have begun asking the question you avoided since the coup: who inherits if you fall?"
+
+
+def public church_cutscene_replica_count() : int {
+    return CHURCH_CUTSCENE_REPLIC_COUNT
+}
+
+
+def public get_church_cutscene_replica(beat : int) : string {
+    let idx = (beat < 0 || beat >= CHURCH_CUTSCENE_REPLIC_COUNT) ? 0 : beat
+    if (is_russian()) {
+        return CHURCH_CUTSCENE_REPLICAS_RU[idx]
+    }
+    return CHURCH_CUTSCENE_REPLICAS_EN[idx]
+}
+
+
+def public has_next_church_cutscene_replica(beat : int) : bool {
+    return beat + 1 < CHURCH_CUTSCENE_REPLIC_COUNT
+}
+
+
+def public church_cutscene_sound_path(replicaBeat : int) : string {
+    if (replicaBeat < 0 || replicaBeat >= CHURCH_CUTSCENE_SOUND_COUNT) {
+        return ""
+    }
+    return CHURCH_CUTSCENE_SOUND_PATHS[replicaBeat]
+}
 
 
 def public is_stat_unlocked(statIdx : int) : bool {
@@ -216,7 +255,7 @@ def public get_stat_unlock_cutscene_title(statIdx : int) : string {
 def public get_stat_unlock_cutscene_body(statIdx : int) : string {
     if (is_russian()) {
         if (statIdx == STAT_CHURCH_IDX) {
-            return "Когда пал прежний король, епископы молчали и считали десятины. Сегодня Церковь требует, чтобы её видели — и каждая проповедь будет взвешивать, признаёт ли небо ещё вашу корону."
+            return get_church_cutscene_replica(0)
         }
         if (statIdx == STAT_PEOPLE_IDX) {
             return "Простой люд опустил головы во время переворота — но не перестал считать мешки в амбарах и сапоги во дворе. Сегодня их терпение кончилось, и их голоса дошли до тронного зала."
@@ -232,7 +271,7 @@ def public get_stat_unlock_cutscene_body(statIdx : int) : string {
         }
     }
     if (statIdx == STAT_CHURCH_IDX) {
-        return CHURCH_CUTSCENE_BODY
+        return get_church_cutscene_replica(0)
     }
     if (statIdx == STAT_PEOPLE_IDX) {
         return PEOPLE_CUTSCENE_BODY

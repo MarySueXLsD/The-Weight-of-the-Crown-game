@@ -185,7 +185,7 @@ def public death_summary_generic(days : int) : string {
     let dw = day_word(days)
     return loc(
         "You held the throne of Loria for {days} {dw}. The usurper's reign is over.",
-        "Вы удерживали трон Лории {days} {dw}. Правление узурпатора окончено."
+        "Вы удерживали трон Лории {days} {dw}. Ваше правление окончено."
     )
 }
 
@@ -206,7 +206,7 @@ def public cutscene_skip_hint() : string {
 }
 
 
-let INTRO_DIALOGUE_NAMES_RU : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_array(
+let INTRO_DIALOGUE_NAMES_RU_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
     "Рассказчик",
     "Рассказчик",
     "Рассказчик",
@@ -223,12 +223,39 @@ let INTRO_DIALOGUE_NAMES_RU : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_array(
     "Рассказчик",
     "Рассказчик",
     "Солдат",
-    "Солдат"
+    "Солдат",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Заговорщик",
+    "Лорд Грегор",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик"
 )
 
-let INTRO_DIALOGUE_REPLICS_RU : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_array(
+let INTRO_DIALOGUE_NAMES_RU_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Рассказчик",
+    "Советник"
+)
+
+let INTRO_DIALOGUE_REPLICS_RU_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
     "Эстедор не пал за одну ночь.",
-    "Он гнил долго, упрямо и с достоинством — как старый дворянин, который умер за столом, но всё еще требует вина.",
+    "Он гнил долго, упрямо и с достоинством — как старый дворянин, который умер за столом, но всё ещё требует вина.",
     "Король Эдвин называл себя Благочестивым.",
     "Народ называл его Тихим.",
     "Армия — Слепым.",
@@ -243,23 +270,56 @@ let INTRO_DIALOGUE_REPLICS_RU : string[INTRO_DIALOGUE_BEAT_COUNT] <- fixed_array
     "Армия три месяца не получала жалованья.",
     "Четвертый месяц она называла себя верной. На пятый начала задавать вопросы.",
     "— За короля я уже голодал.",
-    "— Может, за кого-нибудь другого хоть поем?"
+    "— Может, за кого-нибудь другого хоть поем?",
+    "Грегор не родился королем.",
+    "Он родился лордом — не самым древним, не самым богатым, но достаточно сильным, чтобы при дворе его считали угрозой за спиной.",
+    "У него были свои земли.",
+    "Свои крепости.",
+    "Свои знамена.",
+    "Свои люди, которые шли за ним не потому, что так велел король, а потому что присягали лично Грегору.",
+    "— Король слаб. Страна умирает.",
+    "— Пора брать всё в свои руки.",
+    "Врата от королевских покоев не открыли ключом.",
+    "Её вскрыли железом.",
+    "На королевской площади люди Грегора сошлись с гвардией Эдвина — и город впервые услышал, как звучит новая власть.",
+    "В ту ночь верность стоила дешево.",
+    "Так умер Эдвин II Благочестивый."
+)
+
+let INTRO_DIALOGUE_REPLICS_RU_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Не в молитве.",
+    "Не в объятиях любящего народа.",
+    "А на холодных ступенях, где до него просили милости тысячи людей.",
+    "Наутро Эстедор не исцелился.",
+    "Мёртвые не встали.",
+    "Хлеб не вырос.",
+    "Чума не извинилась.",
+    "Знать не стала честнее.",
+    "Послы не стали друзьями.",
+    "И народ, как водится, хотел жить.",
+    "— Ваше Величество… с чего начнем?"
 )
 
 
 def public intro_dialogue_name(beat : int) : string {
     if (is_russian()) {
-        return INTRO_DIALOGUE_NAMES_RU[beat]
+        if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+            return INTRO_DIALOGUE_NAMES_RU_A[beat]
+        }
+        return INTRO_DIALOGUE_NAMES_RU_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
     }
-    return INTRO_DIALOGUE_NAMES[beat]
+    return intro_dialogue_name_en(beat)
 }
 
 
 def public intro_dialogue_replic(beat : int) : string {
     if (is_russian()) {
-        return INTRO_DIALOGUE_REPLICS_RU[beat]
+        if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+            return INTRO_DIALOGUE_REPLICS_RU_A[beat]
+        }
+        return INTRO_DIALOGUE_REPLICS_RU_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
     }
-    return INTRO_DIALOGUE_REPLICS[beat]
+    return intro_dialogue_replic_en(beat)
 }
 
 
@@ -664,8 +724,8 @@ def public advisor_disabled_cooldown(daysLeft : int) : string {
 }
 
 
-def public advisor_disabled_not_desperate() : string {
-    return loc("Only when the realm is in crisis.", "Только когда держава в кризисе.")
+def public advisor_disabled_stat_locked(statName : string) : string {
+    return loc("Unlocks when {statName} is revealed.", "Откроется, когда будет раскрыт показатель «{statName}».")
 }
 
 
@@ -686,45 +746,70 @@ def public advisor_disabled_not_idle() : string {
 
 def public advisor_action_response(actionIdx : int) : string {
     if (actionIdx == 0) {
-        return loc("Regiments muster in the yards. The treasury groans, but banners rise.", "Полки собираются во дворах. Казна стонет, но знамёна поднимаются.")
+        return loc("Banners rise in the castle yards. Fresh levies take the oath, and the treasury feels the weight.", "Знамёна поднимаются во дворах замка. Новое ополчение приносит клятву, и казна чувствует тяжесть.")
     }
     if (actionIdx == 1) {
-        return loc("Grain carts roll through the gates. The commons eat — for now.", "Зерновые телеги въезжают во враота. Народ ест — пока что.")
+        return loc("Grain carts roll through the market gate. The granaries swell, and the commons breathe easier.", "Зерновые телеги въезжают с рыночных ворот. Амбары полнеют, и простой люд вздыхает свободнее.")
     }
     if (actionIdx == 2) {
-        return loc("Physicians tend the sick wards. The capital breathes easier.", "Лекари ухаживают за больными койками. Столица дышит свободнее.")
+        return loc("Bundles of herbs and tinctures fill the sick wards. The healers bow and return to their work.", "Связки трав и настоек наполняют лазареты. Лекари кланяются и возвращаются к делу.")
     }
     if (actionIdx == 3) {
-        return loc("The court nods along. Outside the windows, the murmurs do not stop.", "Двор кивает в такт. За окнами шёпот не стихает.")
+        return loc("Blades leave the armories by the wagonload. Coin flows in, but the racks look bare.", "Клинки уходят из арсеналов целыми телегами. Монета течёт внутрь, но стойки пустеют.")
     }
     if (actionIdx == 4) {
-        return loc("New faces fill the halls. Old loyalties smolder in the shadows.", "В залах новые лица. Старые верности тлеют в тени.")
+        return loc("Foreign buyers haul grain from the crown stores. The commons watch their reserves dwindle.", "Иноземные покупатели вывозят зерно из королевских запасов. Простой люд видит, как тают резервы.")
     }
     if (actionIdx == 5) {
-        return loc("The ledgers look better. The sick wards do not.", "В книгах стало лучше. В лазаретах — нет.")
+        return loc("Gold crosses the altar rail. Bells ring, and the bishops speak more kindly of your name.", "Золото пересекает алтарную преграду. Звонят колокола, и епископы мягче произносят ваше имя.")
+    }
+    if (actionIdx == 6) {
+        return loc("Debts are struck from the rolls and bread flows to the villages. The treasury groans anew.", "Долги списаны с книг, хлеб идёт в деревни. Казна снова стонет.")
+    }
+    if (actionIdx == 7) {
+        return loc("Torches blaze in the great hall. The nobles toast your health — and count every favor granted.", "Факелы пылают в большом зале. Знать пьёт за ваше здоровье — и считает каждую оказанную милость.")
     }
     return ""
 }
 
 
-def public format_advisor_action_preview(deltas : int[STAT_COUNT]) : string {
-    var result = ""
+def public format_advisor_effect_line(deltas : int[STAT_COUNT]; negativesOnly : bool) : string {
+    var line = ""
     var first = true
     for (i in range(STAT_COUNT)) {
         if (deltas[i] == 0) {
             continue
         }
+        if (negativesOnly && deltas[i] > 0) {
+            continue
+        }
+        if (!negativesOnly && deltas[i] < 0) {
+            continue
+        }
         let sign = (deltas[i] > 0) ? "+" : ""
         let part = "{sign}{deltas[i]} {stat_display_name(i)}"
         if (first) {
-            result = part
+            line = part
             first = false
         } else {
-            result = "{result} {part}"
+            line = "{line} {part}"
         }
     }
-    if (first) {
+    return line
+}
+
+
+def public format_advisor_action_preview(deltas : int[STAT_COUNT]) : string {
+    let minusLine = format_advisor_effect_line(deltas, true)
+    let plusLine = format_advisor_effect_line(deltas, false)
+    if (length(minusLine) == 0 && length(plusLine) == 0) {
         return loc("No stat changes.", "Без изменений показателей.")
     }
-    return result
+    if (length(minusLine) == 0) {
+        return plusLine
+    }
+    if (length(plusLine) == 0) {
+        return minusLine
+    }
+    return "{minusLine}\n{plusLine}"
 }

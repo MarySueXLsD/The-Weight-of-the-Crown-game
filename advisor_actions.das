@@ -10,6 +10,8 @@ require defeat
 
 require stat_synergies
 
+require stat_unlocks
+
 require localization public
 
 
@@ -21,8 +23,6 @@ module advisor_actions public
 
 
 
-
-[safe_when_uninitialized]
 
 struct AdvisorAction {
 
@@ -36,137 +36,193 @@ struct AdvisorAction {
 
     imagePath : string
 
-    statDeltas : int[STAT_COUNT]
-
     cooldownDays : int
 
     minSourceStatIdx : int = -1
 
     minSourceValue : int = ADVISOR_MIN_SPEND_STAT
 
-    desperateOnly : bool = false
+    unlockStatIdx : int = -1
 
 }
 
+// Flat storage avoids struct array-field copy issues when building previews.
+let advisorActionDeltas : int[MAX_ADVISOR_ACTIONS * STAT_COUNT] <- fixed_array(
+    0, 0, 12, -22, 0, 0, 0, 0, 0,
+    3, 0, 0, -18, 0, 0, 0, 14, 0,
+    0, 0, 0, -18, 12, 0, 0, 0, 0,
+    0, 0, -12, 20, 0, 0, 0, 0, 0,
+    -6, 0, 0, 18, 0, 0, 0, -12, 0,
+    -4, 14, 0, -20, 0, 0, 0, 0, 0,
+    16, 0, 0, -22, 0, 0, 0, -6, 0,
+    -6, 0, 0, -18, 0, 6, 14, 0, 0
+)
 
 
+def advisor_action_base_delta(actionIdx : int; statIdx : int) : int {
+    return advisorActionDeltas[actionIdx * STAT_COUNT + statIdx]
+}
 
 
 let advisorActions : AdvisorAction[MAX_ADVISOR_ACTIONS] <- fixed_array(
 
     AdvisorAction(
 
-        titleEn = "Buy more army",
+        titleEn = "Muster the ranks",
 
-        titleRu = "Купить армию",
+        titleRu = "Собрать полки",
 
-        descEn = "Recruit regiments and stock the armories.",
+        descEn = "Call levies to the banner and drill them in the castle yards.",
 
-        descRu = "Набрать полки и снарядить арсеналы.",
+        descRu = "Созвать ополчение под знамёна и обучить его во дворах замка.",
 
         imagePath = "static/Advisor_actions/buy_army.png",
 
-        statDeltas = fixed_array(0, 0, 10, -20, 0, 0, 0, 0, 0),
-
         cooldownDays = 3,
 
-        minSourceStatIdx = STAT_GOLD_IDX
+        minSourceStatIdx = STAT_GOLD_IDX,
+
+        unlockStatIdx = -1
 
     ),
 
     AdvisorAction(
 
-        titleEn = "Buy more food",
+        titleEn = "Fill the granaries",
 
-        titleRu = "Купить продовольствие",
+        titleRu = "Наполнить амбары",
 
-        descEn = "Fill the granaries before hunger turns to riot.",
+        descEn = "Buy grain and bread from merchants at the castle market.",
 
-        descRu = "Наполнить амбары, пока голод не стал бунтом.",
+        descRu = "Закупить зерно и хлеб у купцов на замковом рынке.",
 
         imagePath = "static/Advisor_actions/buy_food.png",
 
-        statDeltas = fixed_array(0, 0, 0, -15, 0, 0, 0, 12, 0),
-
         cooldownDays = 3,
 
-        minSourceStatIdx = STAT_GOLD_IDX
+        minSourceStatIdx = STAT_GOLD_IDX,
+
+        unlockStatIdx = -1
 
     ),
 
     AdvisorAction(
 
-        titleEn = "Buy medicine",
+        titleEn = "Stock the apothecary",
 
-        titleRu = "Купить лекарства",
+        titleRu = "Снабдить лазарет",
 
-        descEn = "Pay healers to keep plague from the gates.",
+        descEn = "Commission herbs and remedies from the royal healers.",
 
-        descRu = "Заплатить лекарям, чтобы чума не вошла в ворота.",
+        descRu = "Заказать травы и снадобья у королевских лекарей.",
 
         imagePath = "static/Advisor_actions/buy_medicine.png",
 
-        statDeltas = fixed_array(0, 0, 0, -20, 10, 0, 0, 0, 0),
-
         cooldownDays = 3,
 
-        minSourceStatIdx = STAT_GOLD_IDX
+        minSourceStatIdx = STAT_GOLD_IDX,
+
+        unlockStatIdx = -1
 
     ),
 
     AdvisorAction(
 
-        titleEn = "Press Enter",
+        titleEn = "Sell crown steel",
 
-        titleRu = "Нажать Enter",
+        titleRu = "Продать королевскую сталь",
 
-        descEn = "Paper over the crisis and insist the realm is fine.",
+        descEn = "Sell surplus blades from the armories to passing merchants.",
 
-        descRu = "Замять кризис и убедить всех, что в королевстве порядок.",
+        descRu = "Продать лишние клинки из арсеналов проезжающим купцам.",
 
-        imagePath = "static/Advisor_actions/use_posd.png",
+        imagePath = "static/Advisor_actions/sell_swords.png",
 
-        statDeltas = fixed_array(-12, -5, 0, 0, 0, 8, 0, 0, 0),
+        cooldownDays = 4,
 
-        cooldownDays = 4
+        minSourceStatIdx = STAT_ARMY_IDX,
+
+        unlockStatIdx = -1
 
     ),
 
     AdvisorAction(
 
-        titleEn = "Hard restart",
+        titleEn = "Auction royal grain",
 
-        titleRu = "Жёсткая перезагрузка",
+        titleRu = "Продать королевское зерно",
 
-        descEn = "Purge dissent and rebuild the court from scratch.",
+        descEn = "Let foreign buyers haul reserve grain from the crown stores.",
 
-        descRu = "Вычистить недовольных и собрать двор заново.",
+        descRu = "Позволить иноземным покупателям вывезти зерно из королевских запасов.",
 
-        imagePath = "static/Advisor_actions/use_rapam.png",
+        imagePath = "static/Advisor_actions/sell_grain.png",
 
-        statDeltas = fixed_array(-10, 0, 15, 0, 0, -25, 0, 0, 0),
+        cooldownDays = 4,
+
+        minSourceStatIdx = STAT_FOOD_IDX,
+
+        unlockStatIdx = -1
+
+    ),
+
+    AdvisorAction(
+
+        titleEn = "Grant a royal tithe",
+
+        titleRu = "Пожертвовать в храм",
+
+        descEn = "Send gold to restore churches and placate the bishops.",
+
+        descRu = "Отправить золото на восстановление храмов и умиротворение епископов.",
+
+        imagePath = "static/Advisor_actions/fund_clergy.png",
+
+        cooldownDays = 4,
+
+        minSourceStatIdx = STAT_GOLD_IDX,
+
+        unlockStatIdx = STAT_CHURCH_IDX
+
+    ),
+
+    AdvisorAction(
+
+        titleEn = "Declare a relief week",
+
+        titleRu = "Объявить неделю помощи",
+
+        descEn = "Cancel peasant debts and open the royal larders to the hungry.",
+
+        descRu = "Списать крестьянские долги и открыть королевские закрома голодным.",
+
+        imagePath = "static/Advisor_actions/grant_relief.png",
+
+        cooldownDays = 4,
+
+        minSourceStatIdx = STAT_GOLD_IDX,
+
+        unlockStatIdx = STAT_PEOPLE_IDX
+
+    ),
+
+    AdvisorAction(
+
+        titleEn = "Hold a crown banquet",
+
+        titleRu = "Устроить королевский пир",
+
+        descEn = "Feast the great houses and distribute honors they will remember.",
+
+        descRu = "Устроить пир для великих домов и раздать почести, которые они запомнят.",
+
+        imagePath = "static/Advisor_actions/host_nobility.png",
 
         cooldownDays = 5,
 
-        desperateOnly = true
+        minSourceStatIdx = STAT_GOLD_IDX,
 
-    ),
-
-    AdvisorAction(
-
-        titleEn = "Press any key",
-
-        titleRu = "Нажмите любую клавишу",
-
-        descEn = "Trudge onward and pray nothing else breaks.",
-
-        descRu = "Идти дальше и молиться, чтобы ничего больше не сломалось.",
-
-        imagePath = "static/Advisor_actions/use_leger.png",
-
-        statDeltas = fixed_array(0, 0, 0, 10, -15, 0, 0, -10, 0),
-
-        cooldownDays = 4
+        unlockStatIdx = STAT_RICH_LOVE_IDX
 
     )
 
@@ -207,22 +263,29 @@ def public advisor_action_image_path(actionIdx : int) : string {
 
 
 def public advisor_action_title(actionIdx : int) : string {
-
-    let action = advisorActions[actionIdx]
-
-    return loc(action.titleEn, action.titleRu)
-
+    return loc(advisorActions[actionIdx].titleEn, advisorActions[actionIdx].titleRu)
 }
-
-
-
 
 
 def public advisor_action_description(actionIdx : int) : string {
+    return loc(advisorActions[actionIdx].descEn, advisorActions[actionIdx].descRu)
+}
+
+
+
+
+
+def public advisor_action_is_stat_locked(actionIdx : int) : bool {
 
     let action = advisorActions[actionIdx]
 
-    return loc(action.descEn, action.descRu)
+    if (action.unlockStatIdx < 0) {
+
+        return false
+
+    }
+
+    return !is_stat_unlocked(action.unlockStatIdx)
 
 }
 
@@ -230,19 +293,19 @@ def public advisor_action_description(actionIdx : int) : string {
 
 
 
-def public has_desperate_stat() : bool {
+def public advisor_action_preview_deltas(actionIdx : int) : int[STAT_COUNT] {
 
-    for (i in range(STAT_COUNT)) {
+    return copy_action_deltas_with_loyalty_tax(actionIdx)
 
-        if (kingdomStats[i] <= ADVISOR_DESPERATE_STAT_THRESHOLD) {
+}
 
-            return true
 
-        }
 
-    }
 
-    return false
+
+def public advisor_action_apply_deltas(actionIdx : int) : int[STAT_COUNT] {
+
+    return mask_deltas_to_unlocked_stats(copy_action_deltas_with_loyalty_tax(actionIdx))
 
 }
 
@@ -280,7 +343,7 @@ def public advisor_action_meets_min_stat(actionIdx : int) : bool {
 
 def public advisor_action_would_defeat(actionIdx : int) : bool {
 
-    let deltas = copy_action_deltas_with_loyalty_tax(actionIdx)
+    let deltas = advisor_action_apply_deltas(actionIdx)
 
     return find_defeating_stat_idx_from_deltas(deltas) >= 0
 
@@ -292,25 +355,15 @@ def public advisor_action_would_defeat(actionIdx : int) : bool {
 
 def public copy_action_deltas_with_loyalty_tax(actionIdx : int) : int[STAT_COUNT] {
 
-    return copy_action_deltas_with_loyalty_tax_from(get_advisor_action(actionIdx).statDeltas)
-
-}
-
-
-
-
-
-def copy_action_deltas_with_loyalty_tax_from(base : int[STAT_COUNT]) : int[STAT_COUNT] {
-
     var deltas : int[STAT_COUNT]
 
     for (i in range(STAT_COUNT)) {
 
-        deltas[i] = base[i]
+        deltas[i] = advisor_action_base_delta(actionIdx, i)
 
     }
 
-    if (kingdomStats[STAT_LOYALTY_IDX] < ADVISOR_LOYALTY_LOW_THRESHOLD) {
+    if (is_stat_unlocked(STAT_LOYALTY_IDX) && kingdomStats[STAT_LOYALTY_IDX] < ADVISOR_LOYALTY_LOW_THRESHOLD) {
 
         deltas[STAT_LOYALTY_IDX] -= ADVISOR_LOYALTY_USE_PENALTY
 
@@ -346,9 +399,7 @@ def public is_advisor_action_available(actionIdx : int) : bool {
 
     }
 
-    let action = advisorActions[actionIdx]
-
-    if (action.desperateOnly && !has_desperate_stat()) {
+    if (advisor_action_is_stat_locked(actionIdx)) {
 
         return false
 
@@ -394,13 +445,15 @@ def public advisor_action_disabled_reason(actionIdx : int) : string {
 
     }
 
-    let action = advisorActions[actionIdx]
+    if (advisor_action_is_stat_locked(actionIdx)) {
 
-    if (action.desperateOnly && !has_desperate_stat()) {
+        let lockedStatIdx = advisorActions[actionIdx].unlockStatIdx
 
-        return advisor_disabled_not_desperate()
+        return advisor_disabled_stat_locked(stat_display_name(lockedStatIdx))
 
     }
+
+    let action = advisorActions[actionIdx]
 
     if (!advisor_action_meets_min_stat(actionIdx)) {
 

@@ -19,7 +19,7 @@ let ashfordDebutEncounter : Encounter <- Encounter(
     nodeCount = 4,
     nodes = fixed_array(
         DialogueNode(
-            prompt = "Your Grace, I am Lady Ashford of the eastern marches. My house did not bleed for your coup, nor did we kneel when the old king fell. We have waited seven days to see whether this throne belongs to a ruler — or a brigand who got lucky with a blade.",
+            prompt = "Your Majesty, I am Lady Ashford of the eastern marches. My house did not bleed for your coup, nor did we kneel when the old king fell. We have waited since the coup to see whether this throne belongs to a ruler — or a brigand who got lucky with a blade.",
             choiceCount = 3,
             choices = fixed_array(
                 DialogueChoice(
@@ -44,11 +44,11 @@ let ashfordDebutEncounter : Encounter <- Encounter(
             )
         ),
         DialogueNode(
-            prompt = "Freely? How refreshing. Most usurpers prefer flattery. So — the question every great house whispers in their halls: will you legitimise your reign through noble blood, or rule as a lone wolf until the realm tears you apart? My house can crown you in the eyes of the elite — or bury you beside the king you replaced.",
+            prompt = "Freely? How refreshing. Most kings who took the throne prefer flattery. So — the question every great house whispers in their halls: will you make lawful your reign through noble blood, or rule as a lone wolf until the realm tears you apart? My house can crown you in the eyes of the elite — or bury you beside the king you replaced.",
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
-                    choiceText = "Grant Ashford a seat on the privy council",
+                    choiceText = "Grant Ashford a seat on the king's close advisors",
                     response = "A seat, not merely a title. My house will speak for you in halls where your name still tastes of treason.",
                     statDeltas = fixed_array(0, 0, 0, -10, 0, 10, 18, 0, 8)
                 ),
@@ -72,11 +72,11 @@ let ashfordDebutEncounter : Encounter <- Encounter(
             )
         ),
         DialogueNode(
-            prompt = "A sword rusts without gold to sharpen it. I did not come to trade threats — I came to learn whether you are worth the risk of an alliance. Will you legitimise your reign through noble blood, or rule as a lone wolf until the realm tears you apart?",
+            prompt = "A sword rusts without gold to sharpen it. I did not come to trade threats — I came to learn whether you are worth the risk of an alliance. Will you make lawful your reign through noble blood, or rule as a lone wolf until the realm tears you apart?",
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
-                    choiceText = "Grant Ashford a seat on the privy council",
+                    choiceText = "Grant Ashford a seat on the king's close advisors",
                     response = "A seat, not merely a title. My house will speak for you in halls where your name still tastes of treason.",
                     statDeltas = fixed_array(0, 0, 0, -10, 0, 10, 18, 0, 8)
                 ),
@@ -110,7 +110,7 @@ let ashfordDebutEncounter : Encounter <- Encounter(
                 ),
                 DialogueChoice(
                     choiceText = "That is a matter for the crown alone",
-                    response = "Alone is how usurpers end. I wish you better fortune than your predecessor, Your Grace.",
+                    response = "Alone is how usurpers end. I wish you better fortune than your predecessor, Your Majesty.",
                     statDeltas = fixed_array(0, 0, 0, 0, 0, -5, -8, 0, -10)
                 ),
                 DialogueChoice(),
@@ -127,7 +127,7 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
     nodeCount = 4,
     nodes = fixed_array(
         DialogueNode(
-            prompt = "Государь, я леди Эшфорд с восточных марок. Мой дом не проливал кровь за ваш переворот и не преклонил колена, когда пал старый король. Мы ждали семь дней, чтобы увидеть: этот трон принадлежит правителю — или разбойнику, которому повезло с клинком.",
+            prompt = "Ваше Величество, я леди Эшфорд с восточных марок. Мой дом не проливал кровь за ваш переворот и не преклонил колена, когда пал старый король. Мы ждали с переворота, чтобы увидеть: этот трон принадлежит правителю — или разбойнику, которому повезло с клинком.",
             choiceCount = 3,
             choices = fixed_array(
                 DialogueChoice(
@@ -152,7 +152,7 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
             )
         ),
         DialogueNode(
-            prompt = "Открыто? Как освежительно. Большинство узурпаторов предпочитают лесть. Итак — вопрос, который каждый великий дом шепчет в своих залах: легитимизируете ли вы правление через дворянскую кровь, или будете править в одиночку, пока страна не разорвёт вас? Мой дом может короновать вас в глазах знати — или похоронить рядом с королём, которого вы сменили.",
+            prompt = "Открыто? Как освежительно. Большинство тех, кто взял трон предпочитают лесть. Итак — вопрос, который каждый великий дом шепчет в своих залах: сделаете ли вы правление законным через дворянскую кровь, или будете править в одиночку, пока страна не разорвёт вас? Мой дом может короновать вас в глазах знати — или похоронить рядом с королём, которого вы сменили.",
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
@@ -167,7 +167,7 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
                     nextNodeIdx = 3
                 ),
                 DialogueChoice(
-                    choiceText = "Дворянство склонится — или будет сломлено",
+                    choiceText = "Дворянство склонится",
                     response = "Вы путаете страх с верностью. Мой дом запомнит эту аудиенцию — и каждый лорд, спрашивавший, сможете ли вы удержаться.",
                     statDeltas = fixed_array(0, 0, 5, 0, 0, -10, -20, 0, -8)
                 ),
@@ -180,7 +180,7 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
             )
         ),
         DialogueNode(
-            prompt = "Меч ржавеет без золота, что его точит. Я пришла не торговаться угрозами — узнать, стоите ли вы риска союза. Легитимизируете ли вы правление через дворянскую кровь, или будете править в одиночку, пока страна не разорвёт вас?",
+            prompt = "Меч ржавеет без золота, что его точит. Я пришла не торговаться угрозами — узнать, стоите ли вы риска союза. Сделаете ли вы правление законным через дворянскую кровь, или будете править в одиночку, пока страна не разорвёт вас?",
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
@@ -195,7 +195,7 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
                     nextNodeIdx = 3
                 ),
                 DialogueChoice(
-                    choiceText = "Дворянство склонится — или будет сломлено",
+                    choiceText = "Дворянство склонится",
                     response = "Вы путаете страх с верностью. Мой дом запомнит эту аудиенцию — и каждый лорд, спрашивавший, сможете ли вы удержаться.",
                     statDeltas = fixed_array(0, 0, 5, 0, 0, -10, -20, 0, -8)
                 ),
@@ -218,7 +218,7 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
                 ),
                 DialogueChoice(
                     choiceText = "Это дело одной только короны",
-                    response = "В одиночку так заканчивают узурпаторы. Желаю вам большей удачи, чем у вашего предшественника, государь.",
+                    response = "В одиночку так заканчивают узурпаторы. Желаю вам большей удачи, чем у вашего предшественника, Ваше Величество.",
                     statDeltas = fixed_array(0, 0, 0, 0, 0, -5, -8, 0, -10)
                 ),
                 DialogueChoice(),

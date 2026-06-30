@@ -11,26 +11,26 @@ let public allEncountersEnEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "The soldiers shed blood to put you on the throne. Now they are waiting for coins. If the treasury remains silent, the swords may also speak.",
+            prompt = "Your Majesty, the soldiers shed blood to put you on the throne. Now they wait for coin. If the treasury stays silent, the swords may speak too.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Pay the army in full.",
-                response = "The soldiers will remember the generous king. At least until the next salary.",
+                response = "The soldiers will remember a generous king — at least until the next payday.",
                 statDeltas = fixed_array(0, 0, 20, -25, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
                 choiceText = "Pay half and promise the rest later.",
-                response = "Half a coin buys half peace of mind. But today that's enough.",
+                response = "Half a coin buys half the peace. For today, that will have to do.",
                 statDeltas = fixed_array(0, 0, 8, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Serving the king is already an honor.",
-                response = "Honor does not ring in your wallet. I hope your walls are stronger than your generosity.",
+                choiceText = "Serving the king is honor enough.",
+                response = "Honor does not jingle in a purse. I hope your walls are sturdier than your generosity.",
                 statDeltas = fixed_array(0, 0, -20, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "How many soldiers actually took part in the coup?",
+                choiceText = "How many soldiers truly took part in the coup?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -39,22 +39,22 @@ let public allEncountersEnEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
             )
         ),
         DialogueNode(
-            prompt = "Less than listed. The commanders attributed the dead, the lame and those who slept drunk that night.",
+            prompt = "Fewer than the rolls claim. Commanders padded the lists with the dead, the lame, and men who slept drunk that night.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Pay only honest people.",
-                response = "Fair. But the deceived commanders will begin to grumble.",
+                choiceText = "Pay only the honest men.",
+                response = "Fair. The cheated commanders will grumble.",
                 statDeltas = fixed_array(0, 0, 10, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Pay everyone so as not to anger the army.",
-                response = "Generous order. Even liars will praise you loudly.",
+                choiceText = "Pay everyone to keep the army quiet.",
+                response = "A generous order. Even liars will praise you loudly.",
                 statDeltas = fixed_array(0, 0, 18, -20, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Freeze payments until verification.",
-                response = "Checks feed paper, not soldiers. I warned you.",
+                choiceText = "Freeze payments until the rolls are checked.",
+                response = "Audits feed paper, not soldiers. I warned you.",
                 statDeltas = fixed_array(0, 0, -12, 10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -71,7 +71,7 @@ let public allEncountersEnEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or usurper.",
+            prompt = "Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or one who took the throne.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -137,16 +137,16 @@ let public allEncountersEnEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Temples collect tithe. The treasury collects taxes. Soon the people will see they pay twice.",
+            prompt = "Temples collect church tax. The treasury collects taxes. Soon the people will see they pay twice.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Limit the church tithe.",
+                choiceText = "Limit the church tax.",
                 response = "The treasury is grateful. The altar will hiss.",
                 statDeltas = fixed_array(0, -20, 0, 15, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Leave the tithe to the church.",
+                choiceText = "Leave the church tax to the church.",
                 response = "Priests love it when their gold is called faith.",
                 statDeltas = fixed_array(0, 10, 0, -10, 0, 0, 0, 0, 0)
             ),
@@ -927,7 +927,7 @@ let public allEncountersEnEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Priests say the northerners are godless. If they continue, soldiers will start waiting for war.",
+            prompt = "Priests in the barracks say the northerners are godless. If they continue, soldiers will start hungering for war. What is your command on their sermons?",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -2852,7 +2852,7 @@ let public allEncountersEnLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or usurper.",
+            prompt = "Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or one who took the throne.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -2918,16 +2918,16 @@ let public allEncountersEnLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Temples collect tithe. The treasury collects taxes. Soon the people will see they pay twice.",
+            prompt = "Temples collect church tax. The treasury collects taxes. Soon the people will see they pay twice.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Limit the church tithe.",
+                choiceText = "Limit the church tax.",
                 response = "The treasury is grateful. The altar will hiss.",
                 statDeltas = fixed_array(0, -20, 0, 15, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Leave the tithe to the church.",
+                choiceText = "Leave the church tax to the church.",
                 response = "Priests love it when their gold is called faith.",
                 statDeltas = fixed_array(0, 10, 0, -10, 0, 0, 0, 0, 0)
             ),
@@ -3611,7 +3611,7 @@ let public allEncountersEnLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Priests say the northerners are godless. If they continue, soldiers will start waiting for war.",
+            prompt = "Priests in the barracks say the northerners are godless. If they continue, soldiers will start hungering for war. What is your command on their sermons?",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -5708,7 +5708,7 @@ let public allEncountersEnLateB : Encounter[POOL_LATE_B_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, -12, 10, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Amnesty for those who confess themselves.",
+                choiceText = "forgiveness for those who confess themselves.",
                 response = "A soft trap. Sometimes the best.",
                 statDeltas = fixed_array(0, 5, 5, 3, 0, 0, 0, 0, 0)
             ),
@@ -6029,7 +6029,7 @@ let public allEncountersEnLateB : Encounter[POOL_LATE_B_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Yield to the temple.",
-                response = "Prayers continue. Peace costs less than schism.",
+                response = "Prayers continue. Peace costs less than church split.",
                 statDeltas = fixed_array(0, 20, -5, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -6164,22 +6164,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "The people whisper the word 'usurper'. But if the church performs a rite of purification of the crown, the whisper will become a prayer.",
+            prompt = "Your Majesty, the streets whisper the word usurper. If the church performs a rite to cleanse the crown, whispers may become prayers.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Carry out an expensive ritual.",
-                response = "The gods love humility. And the people love to see the king bow his head.",
+                choiceText = "Hold a costly rite in the great temple.",
+                response = "The gods love humility. The people love to see a king bow his head.",
                 statDeltas = fixed_array(5, 0, 0, -15, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Perform a modest ceremony.",
-                response = "Modesty is also a virtue. Although gold shines more convincingly.",
+                choiceText = "Hold a modest rite without excess.",
+                response = "Modesty is a virtue too — though gold shines more convincingly.",
                 statDeltas = fixed_array(2, 0, 0, -5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "The crown doesn't need prayers.",
-                response = "The throne without blessing stands high, but sways more.",
+                choiceText = "The crown needs no prayers.",
+                response = "A throne without blessing stands high — but sways harder.",
                 statDeltas = fixed_array(-5, 0, 0, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -6192,22 +6192,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             )
         ),
         DialogueNode(
-            prompt = "Little. Return the grain warehouses to the temple. We will feed souls and bodies, and you will get silence on the streets.",
+            prompt = "Little. Return the temple granaries Edwin seized. We will feed souls and bellies — you will buy quiet streets.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Return the warehouses to the temple.",
-                response = "Wise. Bread given to the temple is returned through prayer.",
+                choiceText = "Return the granaries to the church.",
+                response = "Wise. Bread given to the temple returns as prayer.",
                 statDeltas = fixed_array(10, 0, 0, 0, 0, 0, 0, -15, 0)
             ),
             DialogueChoice(
-                choiceText = "Give away only part of the grain.",
-                response = "Half mercy is still better than complete pride.",
+                choiceText = "Give only part of the grain.",
+                response = "Half a mercy is still better than full pride.",
                 statDeltas = fixed_array(5, 0, 0, 0, 0, 0, 0, -7, 0)
             ),
             DialogueChoice(
                 choiceText = "Refuse.",
-                response = "Then let the crown itself answer hunger prayers.",
+                response = "Then let the crown answer hungry prayers itself.",
                 statDeltas = fixed_array(-8, 0, 0, 0, 0, 0, 0, 5, 0)
             ),
             DialogueChoice(),
@@ -6224,22 +6224,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Your Majesty, there is more cobwebs in the treasury than gold. A temporary tax on city gates can be introduced.",
+            prompt = "Your Majesty, the treasury holds more cobwebs than gold. We could levy a temporary tax on the city gates.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Implement the tax immediately.",
-                response = "Wonderful. The gate will finally begin to bring in more than a draft.",
+                choiceText = "Levy the tax at once.",
+                response = "Excellent. The gates may finally earn more than a draft.",
                 statDeltas = fixed_array(-5, 0, 0, 20, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Introduce a tax only for merchants.",
-                response = "Merchants will complain. But they even complain about the sun if it shines freely.",
+                choiceText = "Tax merchants only.",
+                response = "Merchants will complain — they complain when the sun shines for free.",
                 statDeltas = fixed_array(0, 0, 0, 10, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Don't touch the gate.",
-                response = "Free trade is a noble idea. It’s a pity that she doesn’t give out coins right away.",
+                choiceText = "Leave the gates alone.",
+                response = "Free trade is noble. Pity it pays so slowly.",
                 statDeltas = fixed_array(0, 0, 0, -5, 0, 0, 0, 10, 0)
             ),
             DialogueChoice(
@@ -6252,22 +6252,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             )
         ),
         DialogueNode(
-            prompt = "You can sell some of the royal jewelry. Jewels are beautiful, but dead. At least the treasury is breathing.",
+            prompt = "We could sell part of the crown jewels. Gems are beautiful but dead. The treasury, at least, would breathe.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Sell ​​secretly.",
-                response = "No one will notice. Except for those who counted the stones on the crown.",
+                choiceText = "Sell them in secret.",
+                response = "No one will notice — except whoever counted the stones on the crown.",
                 statDeltas = fixed_array(0, 0, 0, 15, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Sell ​​publicly, as a sacrifice for the sake of the people.",
-                response = "Good move. Poverty looks better when it is called a virtue.",
+                choiceText = "Sell them publicly as a sacrifice for the people.",
+                response = "Clever. Poverty looks better when you call it virtue.",
                 statDeltas = fixed_array(3, 0, 0, 12, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Don't sell.",
-                response = "Greatness will remain intact. Treasury - no.",
+                choiceText = "Do not sell.",
+                response = "Splendor stays intact. The treasury does not.",
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(),
@@ -6284,22 +6284,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "In the lower city there is fever and cough. It could be a cold, or it could be the beginning of a pestilence. We need to act now.",
+            prompt = "Your Majesty, fever and cough spread in the lower city. It may be a cold — or the start of something worse. We must act now.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Close the block for quarantine.",
-                response = "Cruel, but reasonable. Sometimes a door saves more lives than a sword.",
+                choiceText = "Quarantine the district.",
+                response = "Harsh, but sensible. Sometimes a door saves more lives than a sword.",
                 statDeltas = fixed_array(20, 0, 0, -10, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Send healers and leave the gates open.",
-                response = "We'll do what we can. But disease loves the open road.",
+                choiceText = "Send healers and keep the gates open.",
+                response = "We will do what we can. Disease loves open roads.",
                 statDeltas = fixed_array(8, 0, 0, -8, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Don't cause panic.",
-                response = "Panic kills quickly. Illness is more patient.",
+                choiceText = "Do not spread panic.",
+                response = "Panic kills quickly. Disease is more patient.",
                 statDeltas = fixed_array(-20, 0, 0, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -6312,22 +6312,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             )
         ),
         DialogueNode(
-            prompt = "So far three have died. If this is what I fear, in a week we will not be counting people, but streets.",
+            prompt = "Three dead so far. If this is what I fear, in a week we will count streets, not people.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Quarantine only infected streets.",
-                response = "This will give us time. And time is the best medicine after clean water.",
+                choiceText = "Quarantine only the infected streets.",
+                response = "That buys time — and time is the best cure after clean water.",
                 statDeltas = fixed_array(12, 0, 0, -5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Burn down infected houses.",
-                response = "Fire will stop the disease. But people will remember the smoke.",
+                choiceText = "Burn the infected houses.",
+                response = "Fire will stop the sickness. People will remember the smoke.",
                 statDeltas = fixed_array(20, 0, 0, -5, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Hide news.",
-                response = "Secrets don't cure fever. She's just waiting until it's too late.",
+                choiceText = "Hide the news.",
+                response = "Secrets do not cool a fever. They only wait until it is too late.",
                 statDeltas = fixed_array(-15, 0, 0, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -6404,26 +6404,26 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "After the coup, the palace is full of strangers. I ask that the night watch be doubled. It's expensive, but you'll sleep longer.",
+            prompt = "Your Majesty, after the coup the palace crawls with unfamiliar faces. I ask to double the night watch. It is costly — but you may sleep longer.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Double the guards.",
-                response = "Fine. The night will become more expensive, but safer.",
+                choiceText = "Double the watch.",
+                response = "Good. Night grows expensive — and safer.",
                 statDeltas = fixed_array(0, 0, 10, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Supply only proven soldiers.",
-                response = "Fewer people, more trust. I can work with this.",
+                choiceText = "Post only vetted soldiers.",
+                response = "Fewer men, more trust. I can work with that.",
                 statDeltas = fixed_array(0, 0, 5, -5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Don't waste money on fears.",
-                response = "Then let's hope that fears don't waste their knives either.",
+                choiceText = "Do not spend coin on fear.",
+                response = "Then let us hope fear does not spend knives.",
                 statDeltas = fixed_array(-2, 0, -5, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Who do you suspect?",
+                choiceText = "Whom do you suspect?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -6432,22 +6432,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             )
         ),
         DialogueNode(
-            prompt = "Servants of the former king. Not everyone. But one with a key is enough for the door to become a grave.",
+            prompt = "The old king's servants. Not all of them — but one with a key is enough to turn a door into a grave.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Replace servants with soldiers.",
-                response = "The palace will become rougher, but the doors will obey.",
+                response = "The palace will grow rougher. The doors will obey.",
                 statDeltas = fixed_array(0, 0, 10, -10, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Check on the servants secretly.",
-                response = "A quiet check catches more truth than a loud order.",
+                choiceText = "Investigate the servants quietly.",
+                response = "Quiet checks catch more truth than loud orders.",
                 statDeltas = fixed_array(0, 0, 3, -5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Leave them.",
-                response = "Then I will look into their hands. Especially when they bring you wine.",
+                choiceText = "Leave them in place.",
+                response = "Then I will watch their hands — especially when they bring your wine.",
                 statDeltas = fixed_array(0, 0, -5, 3, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -6464,27 +6464,27 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Everyone will remember the first decree of the new king. It should be simple. Grace, tax or sword?",
+            prompt = "Your Majesty, the first decree of a new king is remembered forever. Keep it simple — mercy, tax, or steel?",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Reduce the price of bread.",
-                response = "Bread is the quietest way to tell the people that the king still needs it.",
+                choiceText = "Lower the price of bread.",
+                response = "Bread is the quietest way to tell the people they still matter to the crown.",
                 statDeltas = fixed_array(15, 0, 0, -5, 0, 0, 0, -10, 0)
             ),
             DialogueChoice(
-                choiceText = "Increase tax collection.",
-                response = "The treasury will come to life. People may be the opposite.",
+                choiceText = "Raise taxes.",
+                response = "The treasury will stir. The people, perhaps, the other way.",
                 statDeltas = fixed_array(-10, 0, 0, 20, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Announce recruitment into the army.",
-                response = "There will be more swords. There are fewer hands in the fields.",
+                choiceText = "Call a levy for the army.",
+                response = "More swords. Fewer hands in the fields.",
                 statDeltas = fixed_array(0, 0, 15, -5, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Don't issue a decree yet.",
-                response = "Sometimes silence is wise. But in the early days of the throne, it is often mistaken for weakness.",
+                choiceText = "Issue no decree yet.",
+                response = "Sometimes silence is wise. In the first days on a throne, it is often read as weakness.",
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice()
@@ -6501,26 +6501,26 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Six deserters were captured. They say that they fled not from fear, but from hunger. The army is watching what you do.",
+            prompt = "Your Majesty, six deserters were caught. They say they fled hunger, not fear. The army watches what you do.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Execute them publicly.",
-                response = "Cruel. But tomorrow no one will run first.",
+                response = "Cruel — but tomorrow no one runs first.",
                 statDeltas = fixed_array(-5, 0, 15, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Return them to duty after punishment.",
-                response = "They will limp, but serve. It's better than hanging.",
+                choiceText = "Return them to the ranks after punishment.",
+                response = "They will limp, but serve. Better than the rope.",
                 statDeltas = fixed_array(-2, 0, 5, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Have mercy and feed.",
-                response = "Mercy is good at the hearth. In the barracks she smells of weakness.",
+                choiceText = "Pardon and feed them.",
+                response = "Mercy by the hearth smells like weakness in the barracks.",
                 statDeltas = fixed_array(5, 0, -10, 0, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Why are soldiers starving?",
+                choiceText = "Why are the soldiers hungry?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -6529,22 +6529,22 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             )
         ),
         DialogueNode(
-            prompt = "Because quartermasters steal. War always feeds rats - in barns and in uniforms.",
+            prompt = "Because the quartermasters steal. War always feeds rats — in the granaries and in the uniforms.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Hang the quartermasters.",
-                response = "After this, grain will begin to be counted more honestly.",
+                response = "After that, grain will be counted more honestly.",
                 statDeltas = fixed_array(0, 0, 10, 0, 0, 0, 0, 5, 0)
             ),
             DialogueChoice(
                 choiceText = "Force them to return what they stole.",
-                response = "Fine. Let their greed at least feed the soldiers.",
+                response = "Good. Let their greed at least feed the soldiers.",
                 statDeltas = fixed_array(0, 0, 0, 5, 0, 0, 0, 10, 0)
             ),
             DialogueChoice(
                 choiceText = "Hide the scandal.",
-                response = "Hidden rot still smells. Just later.",
+                response = "Buried rot still stinks — only later.",
                 statDeltas = fixed_array(0, 0, -5, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -7485,7 +7485,7 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 3, -8, 0, 0, 0, 18, 0)
             ),
             DialogueChoice(
-                choiceText = "Confiscate half.",
+                choiceText = "seize half.",
                 response = "You will receive grain. And merchants who will begin to hide everything else.",
                 statDeltas = fixed_array(-8, 0, 0, -5, 0, 0, 0, 25, 0)
             ),
@@ -8080,7 +8080,7 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(5, 0, 0, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Declare counterfeits treason.",
+                choiceText = "Declare fake coins treason.",
                 response = "Lenders will become more careful. And angrier.",
                 statDeltas = fixed_array(0, 0, 5, 8, 0, 0, 0, 0, 0)
             ),
@@ -8501,7 +8501,7 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Take only from rich monasteries.",
-                response = "Moderate sacrilege. Almost financial reform.",
+                response = "Moderate insult to the sacred. Almost financial reform.",
                 statDeltas = fixed_array(-5, 0, 0, 15, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -9335,7 +9335,7 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Find the cart and confiscate the cargo.",
+                choiceText = "Find the cart and seize the cargo.",
                 response = "Let's catch the trail while the wheels are still fresh.",
                 statDeltas = fixed_array(0, 0, 3, -3, 0, 0, 0, 10, 0)
             ),
@@ -9363,7 +9363,7 @@ let public allEncountersEnPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "People are not afraid of punishment, but of punishment without trial. Even a usurper needs a law.",
+            prompt = "People are not afraid of punishment, but of punishment without trial. Even a king who took the throne needs a law.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(

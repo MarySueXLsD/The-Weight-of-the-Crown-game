@@ -2,9 +2,13 @@
 
 Complete catalogue of court encounters: prompts, player choices, NPC responses, and stat effects.
 
-**Language:** English (from `encounters_en.das`, `edric_opener.das`, `ashford.das`; story arcs documented below — implementation pending in `old_kings_household_arc.das`, `church_crown_arc.das`, `northern_price_arc.das`, `plague_cure_arc.das`, `empty_purse_arc.das`, `hungry_season_arc.das`, `guild_compact_arc.das`, `prophets_winter_arc.das`, `great_houses_arc.das`, `scaffolds_ledger_arc.das`, `star_chamber_arc.das`, `below_tapestry_arc.das`, `court_of_knives_arc.das`, `nephew_fog_arc.das`)
+**Language:** English (from `encounters_en.das`, `edric_opener.das`, `ashford.das`; story arcs in `arc_encounters_en.das` / `arc_encounters_ru.das` with **runtime prompt variants** in `arc_prompts.das` and choice/outcome tracking in `arc_effects.das` / `arc_state.das`)
+
+**Dynamic prompts:** Static arc strings in encounter files are fallbacks. At runtime, `resolve_arc_dialogue_node()` patches prompts via `resolve_arc_dynamic_prompt()` and finale beats via `try_build_arc_finale_node()`. Pool encounter #13 uses `resolve_pool_dialogue_node()` in `pool_prompts.das`.
 
 **Russian version:** [QUESTIONS_REFERENCE_RU.md](QUESTIONS_REFERENCE_RU.md)
+
+**Bilingual (EN + RU):** [QUESTIONS_REFERENCE_BILINGUAL.md](QUESTIONS_REFERENCE_BILINGUAL.md)
 
 **Stat order:** People, Church, Army, Treasury, Health, Loyalty, Nobility, Food, Succession
 
@@ -39,7 +43,7 @@ Mid-arc choices shape the priority table; the finale **reports** the result.
 - **The Hungry Season** — Days 42–119 (12 beats) — see [The Hungry Season](#the-hungry-season-persistent-story)
 - **The Guild Compact** — Days 128–222 (12 beats) — see [The Guild Compact](#the-guild-compact-persistent-story)
 - **The Northern Price** — Days 5–350 (16 beats) — see [The Northern Price](#the-northern-price-persistent-story)
-- **The Crown Forfeit & Tithe War** — Days 30, 35, 37, 40, 44, 48, 55, 61, 69, 77, 108 — see [The Crown Forfeit & Tithe War](#the-crown-forfeit--tithe-war-persistent-story)
+- **The Crown Forfeit & church tax War** — Days 30, 35, 37, 40, 44, 48, 55, 61, 69, 77, 108 — see [The Crown Forfeit & church tax War](#the-crown-forfeit--church tax-war-persistent-story)
 - **Grey Lung Cure Arc** — Days 25, 38, 45 (optional), 52, 70, 95, 130, 200, 340 — see [Grey Lung Cure Arc](#grey-lung-cure-arc-persistent-story)
 - **The Prophet's Winter** — Days 62, 95 (or 96), 140, 187 (was 185), 265, 325 — see [The Prophet's Winter](#the-prophets-winter-wildcard--cross-arc)
 - **The Great Houses** — Days 158–218 (16 beats) — see [The Great Houses](#the-great-houses-persistent-story)
@@ -48,7 +52,7 @@ Mid-arc choices shape the priority table; the finale **reports** the result.
 - **The Court of Knives** — Days 248–315 (10 beats) — see [The Court of Knives](#the-court-of-knives-persistent-story)
 - **The Nephew in the Fog** — Days 234–335 (10 beats) — see [The Nephew in the Fog](#the-nephew-in-the-fog-persistent-story)
 
-**Arc day priority (when days collide):** **Stat unlock conflict days (30, 90, 175, 261, 321)** override random pool and defer non-unlock arcs on those days → Church day 30 (unlock) → Household (until day 86) → **Below the Tapestry (87–127)** → Empty Purse (until day 65) → **Hungry Season (42–119)** → **Scaffold's Ledger (92–183)** — opens day **92** (not 90; People unlock conflict owns day 90) → Grey Lung plague days (**day 130:** Grey Lung only — Below the Tapestry finale is day **127**) → **Day 95:** Grey Lung resolution beats Prophet's Winter (Prophet defers to day 96) → Northern Price → Church tithe beats → **Guild Compact (128–222)** interleaves with Great Houses (158–218) on non-overlapping days → **Day 185:** Great Houses beats Prophet's Winter (Prophet defers to day 187) → Star Chamber (sparse) → Prophet's Winter (other beats) → **Loyalty unlock conflict day 261** (defers pool only) → **Nephew in the Fog (234–335)** interleaves Court of Knives (248–315) on non-overlapping days; Talen **257** (not 255), Knox **271** (not 268) → Court of Knives wraps Loyalty unlock (260); Ilana day **276** (Star Chamber owns 280) → **Succession unlock conflict day 321** → **Day 335:** Nephew Prophet coda (not Prophet arc beat) → Grey Lung day 340 → other. No days currently overlap.
+**Arc day priority (when days collide):** **Stat unlock conflict days (30, 90, 175, 261, 321)** override random pool and defer non-unlock arcs on those days → Church day 30 (unlock) → Household (until day 86) → **Below the Tapestry (87–127)** → Empty Purse (until day 65) → **Hungry Season (42–119)** → **Scaffold's Ledger (92–183)** — opens day **92** (not 90; People unlock conflict owns day 90) → Grey Lung plague days (**day 130:** Grey Lung only — Below the Tapestry finale is day **127**) → **Day 95:** Grey Lung resolution beats Prophet's Winter (Prophet defers to day 96) → Northern Price → Church church tax beats → **Guild Compact (128–222)** interleaves with Great Houses (158–218) on non-overlapping days → **Day 185:** Great Houses beats Prophet's Winter (Prophet defers to day 187) → Star Chamber (sparse) → Prophet's Winter (other beats) → **Loyalty unlock conflict day 261** (defers pool only) → **Nephew in the Fog (234–335)** interleaves Court of Knives (248–315) on non-overlapping days; Talen **257** (not 255), Knox **271** (not 268) → Court of Knives wraps Loyalty unlock (260); Ilana day **276** (Star Chamber owns 280) → **Succession unlock conflict day 321** → **Day 335:** Nephew Prophet coda (not Prophet arc beat) → Grey Lung day 340 → other. No days currently overlap.
 
 **Pools (day routing — implementation pending in `question_pools.das`):**
 
@@ -209,14 +213,14 @@ See [Pool coverage audit](#pool-coverage-audit) for 365-day sufficiency after st
 - **Next node:** 2
 
 **Choice 3:** The throne has no time for noble vanity
-- **Response:** Vanity keeps bloodlines alive. Dismiss me, and every house in Loria will hear that the usurper fears a woman with a ledger.
+- **Response:** Vanity keeps bloodlines alive. Dismiss me, and every house in Loria will hear that the king who took the throne fears a woman with a ledger.
 - **Effects:** Loyalty -8, Nobility -15, Succession -5
 
 #### Node 1
 
-**Prompt:** Freely? How refreshing. Most usurpers prefer flattery. So — the question every great house whispers in their halls: will you legitimise your reign through noble blood, or rule as a lone wolf until the realm tears you apart? My house can crown you in the eyes of the elite — or bury you beside the king you replaced.
+**Prompt:** Freely? How refreshing. Most kings who took the throne prefer flattery. So — the question every great house whispers in their halls: will you make lawful your reign through noble blood, or rule as a lone wolf until the realm tears you apart? My house can crown you in the eyes of the elite — or bury you beside the king you replaced.
 
-**Choice 1:** Grant Ashford a seat on the privy council
+**Choice 1:** Grant Ashford a seat on the king's close advisors
 - **Response:** A seat, not merely a title. My house will speak for you in halls where your name still tastes of treason.
 - **Effects:** Treasury -10, Loyalty +10, Nobility +18, Succession +8
 
@@ -234,9 +238,9 @@ See [Pool coverage audit](#pool-coverage-audit) for 365-day sufficiency after st
 
 #### Node 2
 
-**Prompt:** A sword rusts without gold to sharpen it. I did not come to trade threats — I came to learn whether you are worth the risk of an alliance. Will you legitimise your reign through noble blood, or rule as a lone wolf until the realm tears you apart?
+**Prompt:** A sword rusts without gold to sharpen it. I did not come to trade threats — I came to learn whether you are worth the risk of an alliance. Will you make lawful your reign through noble blood, or rule as a lone wolf until the realm tears you apart?
 
-**Choice 1:** Grant Ashford a seat on the privy council
+**Choice 1:** Grant Ashford a seat on the king's close advisors
 - **Response:** A seat, not merely a title. My house will speak for you in halls where your name still tastes of treason.
 - **Effects:** Treasury -10, Loyalty +10, Nobility +18, Succession +8
 
@@ -261,7 +265,7 @@ See [Pool coverage audit](#pool-coverage-audit) for 365-day sufficiency after st
 - **Effects:** Army +3, Treasury -5, Loyalty +12, Nobility +10, Succession +15
 
 **Choice 2:** That is a matter for the crown alone
-- **Response:** Alone is how usurpers end. I wish you better fortune than your predecessor, Your Grace.
+- **Response:** Alone is how kings who took the throne end. I wish you better fortune than your predecessor, Your Grace.
 - **Effects:** Loyalty -5, Nobility -8, Succession -10
 
 ---
@@ -415,7 +419,7 @@ Day N cutscene ends → if stat == Church → church_crown_arc beat 1
 ### Succession unlock — Day 321 — Who Inherits the Blade
 
 **Character:** Old Advisor Edric
-**Note:** Fires **day 321** (morning after day 320 Line of Succession cutscene). Replaces random pool. Three days before [Nephew unmasking day 322](#beat-8--day-322--unmasking). First encounter where **Succession** effects apply live. Distinct from [Nephew finale](#beat-9--day-328--legitimacy-finale).
+**Note:** Fires **day 321** (morning after day 320 Line of Succession cutscene). Replaces random pool. Three days before [Nephew unmasking day 322](#beat-8--day-322--unmasking). First encounter where **Succession** effects apply live. Distinct from [Nephew finale](#beat-9--day-328--lawful right to rule-finale).
 **Nodes:** 2 (start node: 0)
 
 #### Node 0
@@ -472,7 +476,7 @@ Day N cutscene ends → if stat == Church → church_crown_arc beat 1
 
 ## The Old King's Household (persistent story)
 
-Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and confessors still haunt the usurper's court. Each beat replaces the random pool encounter on its scheduled day. Characters reference prior choices in dialogue — implementation swaps prompt/response variants via `householdBeatFlags`, not live stat checks.
+Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and confessors still haunt the throne-stealer's court. Each beat replaces the random pool encounter on its scheduled day. Characters reference prior choices in dialogue — implementation swaps prompt/response variants via `householdBeatFlags`, not live stat checks.
 
 **Arc state (runtime):** `householdStance` (purge / integrate / ignore / selective), `householdTone` (steady / bold / merciful — from Edric node 0), `householdConsistency` (0–100, rises when choices match stance; falls when player zigzags), per-beat flags (`householdKeptGromm`, `householdPurgedGuards`, `householdCutClerks`, `householdShelteredConfessor`, `householdChurchDeal`, `householdSelenaBribe`, `householdVeteranPurge`), `householdOutcome` (none / clean_court / turned_household / haunted_palace / ledger_king / iron_crown)
 
@@ -516,7 +520,7 @@ Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and 
 
 **Prompt:** Your Majesty, I cooked for King Edwin the night before the coup — and I cook for you now. The kitchen staff whisper which crown they serve. I heard you told Edric you would not rule like the old king — so I ask before someone else asks for you: do I keep my place, or do I keep my head?
 
-**Prompt variant (`purge`):** Your Majesty, I cooked for Edwin the night the blades came. I heard you mean to root out his household — the scullions are already packing. I know which lords ate poisoned wine that never reached the table. Turn me out, and you lose that memory. Turn me in, and you lose my ovens.
+**Prompt variant (`purge`):** Your Majesty, I cooked for Edwin the night the blades came. I heard you mean to send away all from his household — the scullions are already packing. I know which lords ate poisoned wine that never reached the table. Turn me out, and you lose that memory. Turn me in, and you lose my ovens.
 
 **Prompt variant (`integrate`):** Your Majesty, Edric says you keep those who kneel. I kneel. I also know every passage behind the pantry and which guard still spits when your name is said. Keep me, and the kitchens stay yours. Dismiss me, and Edwin's cook feeds someone else by winter.
 
@@ -575,7 +579,7 @@ Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and 
 
 #### Node 0
 
-**Prompt:** Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. I heard you kept Gromm, and Varn reforged the guard. Yet warrants signed in a dead king's name still leave this room. Which forgery is yours: the seal, the clerk, or the silence?
+**Prompt:** Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. I heard you kept Gromm, and Varn reforged the guard. Yet warrants signed in a dead king's name still leave this room. Which fake seal is yours: the seal, the clerk, or the silence?
 
 **Prompt variant (`householdPurgedGuards` + Gromm dismissed):** Your Majesty, you purged the kitchens and the barracks but my copyists still draw coin as if Edwin breathes. I heard the bold talk on day one — finish what you began, or my archive makes you a liar.
 
@@ -608,7 +612,7 @@ Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and 
 
 **Prompt variant (`merciful` tone):** Your Majesty, I feed the poor at my gate. Lately I feed Edwin's dismissed clerks too. I heard you told Edric you would not rule like the old king — Aldo asks if that mercy extends to the men who heard his sins.
 
-**Prompt variant (`purge`):** Your Majesty, your purge reached my threshold. Aldo will not surrender his ledger of confessions. I heard you root out Edwin's people — will you root through God's closet as well?
+**Prompt variant (`purge`):** Your Majesty, your purge reached my threshold. Aldo will not surrender his ledger of confessions. I heard you send away all from Edwin's people — will you root through God's closet as well?
 
 **Choice 1:** Shelter Aldo — priests are not clerks
 - **Response:** Then he stays under my roof and your risk. Malrik will hear of it before sunset.
@@ -629,7 +633,7 @@ Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and 
 ### Beat 6 — Day 41 — _Merged into Church arc_
 
 **Character:** High Priest Malrik  
-**Note:** This beat no longer fires on day 41. Content merged into [Crown Forfeit & Tithe War — Beat 3 (day 37)](#beat-3--day-37--the-other-half-of-the-church). Household arc jumps from day 33 (Arvel) to day 49 (Selena).
+**Note:** This beat no longer fires on day 41. Content merged into [Crown Forfeit & church tax War — Beat 3 (day 37)](#beat-3--day-37--the-other-half-of-the-church). Household arc jumps from day 33 (Arvel) to day 49 (Selena).
 
 ---
 
@@ -674,7 +678,7 @@ Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and 
 
 **Prompt variant (`purge` consistent):** Your Majesty, you have been consistent — steel in the kitchen, steel in the guard, steel in the archive. I heard the court call you cruel. The companies call you clear. We still resist. Give me leave to finish what you began — or give me coin.
 
-**Prompt variant (`integrate` + `householdKeptGromm`):** Your Majesty, I heard mercy bought Gromm and oaths bought the guard. Veterans call it treason with better table manners. We want proof the usurper is still a soldier's king — and that soldier's king still pays.
+**Prompt variant (`integrate` + `householdKeptGromm`):** Your Majesty, I heard mercy bought Gromm and oaths bought the guard. Veterans call it treason with better table manners. We want proof the king who took the throne is still a soldier's king — and that soldier's king still pays.
 
 **Prompt variant (`emptyPurseCrisis` set):** Your Majesty, I heard Rudolf beg Borvin and Borvin beg heaven. The companies heard emptier purses. We will kneel when the crown kneels to arithmetic — or we will march.
 
@@ -707,7 +711,7 @@ Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and 
 
 **Prompt variant (`householdVeteranPurge`):** Your Majesty, Orm's purge sent thirty names to the lower gate. I heard consistency at last. My sword arm aches from turning them away. The realm expects a crown that finishes sentences — not only begins them at the threshold.
 
-**Choice 1:** Amnesty — open the door to loyalists you have held
+**Choice 1:** forgiveness — open the door to loyalists you have held
 - **Response:** The stair goes quiet. The whispers do not. You have chosen mercy twice — pray it rhymes.
 - **Effects:** Loyalty +12, Army -6, Succession -8
 
@@ -775,7 +779,7 @@ Multi-day story arc spanning days 1–86. Edwin's servants, guards, clerks, and 
 | Day | Character | Beat |
 |-----|-----------|------|
 | 87 | Maid Lissa | Who slept where on coup night |
-| 94 | Royal Jester Til | Mock usurper or mock court |
+| 94 | Royal Jester Til | Mock king who took the throne or mock court |
 | 98 | Cook Gromm | Kitchen hears everything |
 | 102 | Bodyguard Raena | Gossip vs silence at the door |
 | 112 | Maid Lissa | Edwin's chamber still used? |
@@ -832,7 +836,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 ---
 
-### Beat 2 — Day 94 — Mock the Usurper
+### Beat 2 — Day 94 — Mock the king who took the throne
 
 **Character:** Royal Jester Til
 **Note:** Between Hungry beats (93 Ruta, 100 Gromm). Pre–People unlock. Til tests whether court laughs at crown or court.
@@ -840,11 +844,11 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, I am Til — licensed fool, unlicensed mirror. The court wants laughter before the granaries empty. I can mock the usurper, mock the court that serves him, or mock neither and let tension rot. Malrik hates my mouth. The barracks love it. You hire the joke — choose the target.
+**Prompt:** Your Majesty, I am Til — licensed fool, unlicensed mirror. The court wants laughter before the granaries empty. I can mock the king who took the throne, mock the court that serves him, or mock neither and let tension rot. Malrik hates my mouth. The barracks love it. You hire the joke — choose the target.
 
 **Prompt variant (`tapestryLissaCoupNight`):** Your Majesty, I heard Lissa knows coup-night sheets. I can rhyme that — or bury it. Rhymes travel faster than maids.
 
-**Prompt variant (`churchArcPhase = active`):** Your Majesty, I heard Malrik's forfeit machine warms up. Jokes about heaven go viral. I charge extra for blasphemy.
+**Prompt variant (`churchArcPhase = active`):** Your Majesty, I heard Malrik's forfeit machine warms up. Jokes about heaven go viral. I charge extra for insult to the sacred.
 
 **Choice 1:** Mock the court — servants and soldiers first
 - **Response:** Then nobles blush and commons cheer. Dangerous comedy. Delicious comedy.
@@ -852,7 +856,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Trust:** +10
 - **Sets flag:** `tapestryTilMockCrown` (inverted — mocks court not crown)
 
-**Choice 2:** Mock the usurper — laugh at yourself
+**Choice 2:** Mock the king who took the throne — laugh at yourself
 - **Response:** Bold. Rare. The court relaxes because you do not flinch. They may forget to fear you.
 - **Effects:** Loyalty +5, Succession -4, Health +5
 - **Trust:** +6
@@ -873,7 +877,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, the kitchen hears vows the chapel does not. I heard Lissa's gossip, Til's rhymes, and whether Edwin's cook still feeds a usurper. Borvin counts grain while Ruta counts dust. Tell me whether the crown feeds the staff first, audits the staff, or pretends kitchens are not politics.
+**Prompt:** Your Majesty, the kitchen hears vows the chapel does not. I heard Lissa's gossip, Til's rhymes, and whether Edwin's cook still feeds a king who took the throne. Borvin counts grain while Ruta counts dust. Tell me whether the crown feeds the staff first, audits the staff, or pretends kitchens are not politics.
 
 **Prompt variant (`householdKeptGromm`):** Your Majesty, I heard you kept me. I remember Edwin's table. I serve yours — but the pots remember both.
 
@@ -949,8 +953,8 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Trust:** +6
 - **Sets stance:** `haunt` (respectful)
 
-**Choice 2:** Use the chamber openly — usurper owns night and day
-- **Response:** Bold insult to memory. The court calls it strength or sacrilege depending on who lost kin.
+**Choice 2:** Use the chamber openly — king who took the throne owns night and day
+- **Response:** Bold insult to memory. The court calls it strength or insult to the sacred depending on who lost kin.
 - **Effects:** Succession +8, Nobility -8, Loyalty -4
 - **Trust:** −5
 - **Sets flag:** `tapestryChamberUsed`
@@ -971,7 +975,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, the square wants bread — but it will take a joke first. I can roast the usurper before the hungry finale, roast Ashford before she rides, or roast Malrik and dare the Church to laugh. Public roast builds trust or builds mobs. Choose the victim — or cancel the show.
+**Prompt:** Your Majesty, the square wants bread — but it will take a joke first. I can roast the king who took the throne before the hungry finale, roast Ashford before she rides, or roast Malrik and dare the Church to laugh. Public roast builds trust or builds mobs. Choose the victim — or cancel the show.
 
 **Prompt variant (`famineSeverity` ≥ 50):** Your Majesty, severity outran jokes. Roast badly and they riot. Roast well and they forget hunger for an hour. Both are policy.
 
@@ -983,7 +987,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Trust:** +12
 - **Sets flag:** `tapestryTilPublicRoast`
 
-**Choice 2:** Roast the Church — bread before tithe
+**Choice 2:** Roast the Church — bread before church tax
 - **Response:** Malrik will call it treason. The market calls it overdue. I call it employment.
 - **Effects:** Church -12, People +8, Loyalty +4
 - **Trust:** +8
@@ -1037,7 +1041,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt (outcome `loyal_staff`):** Your Majesty, forty days since Lissa counted coup-night candles — and the stairs speak your name without spitting. I heard kitchens fed, doors guarded, jokes aimed at court not crown, Knox outbid. Loyal staff. Rare beneath a usurper. Guard it before Ashford measures the upper halls.
+**Prompt (outcome `loyal_staff`):** Your Majesty, forty days since Lissa counted coup-night candles — and the stairs speak your name without spitting. I heard kitchens fed, doors guarded, jokes aimed at court not crown, Knox outbid. Loyal staff. Rare beneath a king who took the throne. Guard it before Ashford measures the upper halls.
 
 **Prompt (outcome `coup_avoided`):** Your Majesty, I heard servants sell names and knives almost find your door. Knox lost the bid — or you hung the sellers. Palace coup narrowly avoided. The stairs remember how close it was.
 
@@ -1059,8 +1063,8 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 ## The Empty Purse (persistent story)
 
-**Defeat lane:** Army — *"An unpaid army does not guard a bankrupt usurper."*  
-**Span:** days **11–65**, **8 beats**. Runs parallel to [Household](#the-old-kings-household-persistent-story) and ends before its day-67 beat. Callbacks to Household (`householdKeptGromm`, `householdCutClerks`, `householdVeteranPurge`), [Church tithe](#the-crown-forfeit--tithe-war-persistent-story) (from day 30 onward), and [Northern](#the-northern-price-persistent-story) (Kara's steel).
+**Defeat lane:** Army — *"An unpaid army does not guard a bankrupt king who took the throne."*  
+**Span:** days **11–65**, **8 beats**. Runs parallel to [Household](#the-old-kings-household-persistent-story) and ends before its day-67 beat. Callbacks to Household (`householdKeptGromm`, `householdCutClerks`, `householdVeteranPurge`), [Church church tax](#the-crown-forfeit--church tax-war-persistent-story) (from day 30 onward), and [Northern](#the-northern-price-persistent-story) (Kara's steel).
 
 **Hidden stat (runtime, not shown in top bar):** `armyPayTrust` (−100…+100, starts at **0**)
 
@@ -1072,7 +1076,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 | **Loyal** | +5…+34 | Discipline holds |
 | **Devoted** | ≥ +35 | Coup veterans defend the throne |
 
-**Arc state:** `armyPayTrust`, `emptyPursePhase` (active / resolved), flags (`emptyPurseSaltLoan`, `emptyPurseFinnAmnesty`, `emptyPurseKaraCrown`, `emptyPurseOttoSworn`, `emptyPurseRaenaDoubled`, `emptyPurseCrisis`), `emptyPurseOutcome` (none / paid_crown / mercenary_throne / mutiny_avoided / sold_sword / ghost_army)
+**Arc state:** `armyPayTrust`, `emptyPursePhase` (active / resolved), flags (`emptyPurseSaltLoan`, `emptyPurseFinnforgiveness`, `emptyPurseKaraCrown`, `emptyPurseOttoSworn`, `emptyPurseRaenaDoubled`, `emptyPurseCrisis`), `emptyPurseOutcome` (none / paid_crown / mercenary_throne / mutiny_avoided / sold_sword / ghost_army)
 
 **Beat schedule (no overlap with other arcs):**
 
@@ -1091,11 +1095,11 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 ### Empty Purse — beat resolution rules
 
-**Day 65 outcome priority:** `armyPayTrust` ≥ 35 + `emptyPurseSaltLoan` paid → **paid_crown** · `emptyPurseKaraCrown` + trust ≤ 0 → **mercenary_throne** · trust ≤ −35 → **ghost_army** · `emptyPurseFinnAmnesty` + trust ≥ 0 → **mutiny_avoided** · `emptyPurseOttoSworn` + low pay → **sold_sword** · else **mutiny_avoided** (fallback).
+**Day 65 outcome priority:** `armyPayTrust` ≥ 35 + `emptyPurseSaltLoan` paid → **paid_crown** · `emptyPurseKaraCrown` + trust ≤ 0 → **mercenary_throne** · trust ≤ −35 → **ghost_army** · `emptyPurseFinnforgiveness` + trust ≥ 0 → **mutiny_avoided** · `emptyPurseOttoSworn` + low pay → **sold_sword** · else **mutiny_avoided** (fallback).
 
 **People stat before day 89:** Listed People effects on day 65+ only; substitute Loyalty before that.
 
-**Church day 30+:** Beats 36 and 47 variants reference tithe if `churchArcPhase = active`. [Church beat 9 (day 69)](#beat-9--day-69--crossed-swords-and-empty-purses) callbacks `emptyPurseCrisis`.
+**Church day 30+:** Beats 36 and 47 variants reference church tax if `churchArcPhase = active`. [Church beat 9 (day 69)](#beat-9--day-69--crossed-swords-and-empty-purses) callbacks `emptyPurseCrisis`.
 
 ---
 
@@ -1167,14 +1171,14 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, I deserted Edwin's third company the week before your coup — and I did not return for yours. Forty men hide in the southern hills because the paymaster forgot them twice. I heard you kept Gromm or purged him, paid Rudolf or preached. We ask simpler questions: amnesty, coin, or rope?
+**Prompt:** Your Majesty, I deserted Edwin's third company the week before your coup — and I did not return for yours. Forty men hide in the southern hills because the paymaster forgot them twice. I heard you kept Gromm or purged him, paid Rudolf or preached. We ask simpler questions: forgiveness, coin, or rope?
 
 **Prompt variant (`householdPurgedGuards`):** Your Majesty, I heard you purged the palace guard. Hillside men think you will purge us next. Offer coin or offer graves — middle paths fail with hungry deserters.
 
-**Choice 1:** Amnesty and enlistment — hills return to the banner
+**Choice 1:** forgiveness and enlistment — hills return to the banner
 - **Response:** Then we march for you until someone pays better. Today that is you.
 - **Effects:** Army +12, Treasury -10, Loyalty -3
-- **Sets flag:** `emptyPurseFinnAmnesty`
+- **Sets flag:** `emptyPurseFinnforgiveness`
 - **Trust:** +15
 
 **Choice 2:** Pay them off — gold to vanish
@@ -1197,7 +1201,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, three ledgers scream at once: Salt's coup debt, Rudolf's muster, and Edwin's ghost offices Osric still signs. I heard you paid soldiers, bargained with bankers, or fed them honor. Malrik's tithe has not yet arrived — but winter will. Which purse empties first: army, court, or crown reserves?
+**Prompt:** Your Majesty, three ledgers scream at once: Salt's coup debt, Rudolf's muster, and Edwin's ghost offices Osric still signs. I heard you paid soldiers, bargained with bankers, or fed them honor. Malrik's church tax has not yet arrived — but winter will. Which purse empties first: army, court, or crown reserves?
 
 **Prompt variant (`emptyPurseSaltLoan`):** Your Majesty, Salt's interest ate this week's receipts before the grain tax arrived. I heard you borrowed to quiet the barracks. The court eats scraps. The army still waits.
 
@@ -1222,7 +1226,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 ### Beat 5 — Day 36 — Companies Threaten March
 
 **Character:** General Rudolf
-**Note:** Day after Church beat 1; tithe may be active. Callback Finn amnesty and Borvin choices.
+**Note:** Day after Church beat 1; church tax may be active. Callback Finn forgiveness and Borvin choices.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
@@ -1231,7 +1235,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 **Prompt variant (`churchArcPhase = active` + `defy`):** Your Majesty, I heard you spat at Malrik while Borvin starved the barracks. My men think heaven and the treasury conspired against them. Fix one enemy at a time — starting with coin.
 
-**Prompt variant (`emptyPurseFinnAmnesty`):** Your Majesty, I heard you amnestied Finn's hills. Good steel — bad example. Veterans ask why deserters eat before loyalists.
+**Prompt variant (`emptyPurseFinnforgiveness`):** Your Majesty, I heard you amnestied Finn's hills. Good steel — bad example. Veterans ask why deserters eat before loyalists.
 
 **Choice 1:** Emergency pay from reserves — march cancelled
 - **Response:** Bought time. Not bought loyalty. Know the difference.
@@ -1243,7 +1247,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Effects:** Army +6, Loyalty -12, Church +3
 - **Trust:** −12
 
-**Choice 3:** Parade and promise after tithe negotiation
+**Choice 3:** Parade and promise after church tax negotiation
 - **Response:** Theatre. If Malrik takes your purse on Sunday, cancel the play with interest.
 - **Effects:** Army -4, Loyalty +6, Church +5
 - **Trust:** −5
@@ -1260,7 +1264,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 **Prompt:** Your Majesty, my company escorts grain — when grain pays. Rudolf wants a crown contract. Salt wants collateral. I heard your purse rattles emptier each week. Hire us on the throne's tab, let us sell to whoever pays today, or seize our wagons and pray unpaid men fight for free.
 
-**Prompt variant (`emptyPurseSaltLoan`):** Your Majesty, Salt whispered your debt before I reached the gate. Mercenaries price crowns by solvency. I heard you owe bankers and soldiers both. Who do I bill when the throne defaults?
+**Prompt variant (`emptyPurseSaltLoan`):** Your Majesty, Salt whispered your debt before I reached the gate. Mercenaries price crowns by ability to pay. I heard you owe bankers and soldiers both. Who do I bill when the throne defaults?
 
 **Choice 1:** Crown contract — Kara works for you alone this season
 - **Response:** Then my bolts point where you point — until your purse stops singing.
@@ -1322,7 +1326,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 **Prompt (outcome `mercenary_throne`):** Your Majesty, I heard Kara's coin at your door and crown honor in the counting house. The loyal companies watch mercenaries eat first. My men obey — for now — because you bought steel you did not breed. The realm calls it pragmatism. The yard calls it a warning.
 
-**Prompt (outcome `mutiny_avoided`):** Your Majesty, I heard hunger, amnesty, promises, and one march that did not happen. You did not buy devotion — you bought time. The barracks grumble but do not stack wagons. Call it survival. Soldiers do.
+**Prompt (outcome `mutiny_avoided`):** Your Majesty, I heard hunger, forgiveness, promises, and one march that did not happen. You did not buy devotion — you bought time. The barracks grumble but do not stack wagons. Call it survival. Soldiers do.
 
 **Prompt (outcome `sold_sword`):** Your Majesty, I heard Otto's silence and glory speeches from the throne. Honor without wages is a sermon, not an army. The knights serve because they must, not because they believe. The next creditor may outbid you with a whisper.
 
@@ -1345,7 +1349,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 ## The Hungry Season (persistent story)
 
 **Defeat lane:** Food — *"A realm that cannot eat will not kneel long."* Secondary pressure on **People** after day 89 unlock.  
-**Span:** days **42–119**, **12 beats** — **starts early** (twelve days after Church unlock), runs through Empty Purse tail, Church tithe war, Grey Lung, and ends before [Great Houses](#the-great-houses-persistent-story). Provincial hunger arrives **before** the Peasantry meter unlocks; commons anger banks as Loyalty until day 89, then People effects apply in full.
+**Span:** days **42–119**, **12 beats** — **starts early** (twelve days after Church unlock), runs through Empty Purse tail, Church church tax war, Grey Lung, and ends before [Great Houses](#the-great-houses-persistent-story). Provincial hunger arrives **before** the Peasantry meter unlocks; commons anger banks as Loyalty until day 89, then People effects apply in full.
 
 **Hidden stat (runtime, not shown in top bar):** `famineSeverity` (0–100, starts at **10** — coup winter baseline)
 
@@ -1385,19 +1389,19 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 **Day 119 outcome priority:** `famineSeverity` ≤ 30 + `hungryCrownPolicy = feed` → **bread_king** · `famineSeverity` ≥ 75 → **starving_crown** · `hungryChurchSoup` + Arvel path dominant → **church_kitchen** · `hungryFaraCartel` + Fara favored → **guild_republic** · `hungryYarekRiots` + severity ≥ 50 → **peasant_fury** · else **managed_famine**.
 
-**Cross-arc callbacks:** [Household](#the-old-kings-household-persistent-story) `householdKeptGromm`, [Church](#the-crown-forfeit--tithe-war-persistent-story) grain monopoly / fasting, [Northern](#beat-9--day-91--refugees-at-the-ford) day 91 refugees, [Grey Lung](#grey-lung-cure-arc-persistent-story) from beat 8 onward, [Empty Purse](#the-empty-purse-persistent-story) treasury starvation.
+**Cross-arc callbacks:** [Household](#the-old-kings-household-persistent-story) `householdKeptGromm`, [Church](#the-crown-forfeit--church tax-war-persistent-story) grain monopoly / fasting, [Northern](#beat-9--day-91--refugees-at-the-ford) day 91 refugees, [Grey Lung](#grey-lung-cure-arc-persistent-story) from beat 8 onward, [Empty Purse](#the-empty-purse-persistent-story) treasury starvation.
 
 ---
 
 ### Beat 1 — Day 42 — First Empty Granaries
 
 **Character:** Miller's Wife Ruta
-**Note:** Opens arc early — during Church tithe buildup, before People unlock. Callback [Church beat 6](#beat-6--day-48--church-buys-the-granaries) foreshadow if `churchArcPhase = active`.
+**Note:** Opens arc early — during Church church tax buildup, before People unlock. Callback [Church beat 6](#beat-6--day-48--church-buys-the-granaries) foreshadow if `churchArcPhase = active`.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, I am Ruta from the western mills. The granaries cough dust where they once coughed grain. I heard Malrik's tithe collectors reach the villages before your tax men. I did not ride here for poetry — I rode because hungry millers remember who stole the harvest, and they do not always mean the weather.
+**Prompt:** Your Majesty, I am Ruta from the western mills. The granaries cough dust where they once coughed grain. I heard Malrik's church tax collectors reach the villages before your tax men. I did not ride here for poetry — I rode because hungry millers remember who stole the harvest, and they do not always mean the weather.
 
 **Prompt variant (`churchArcStance = submit`):** Your Majesty, I heard you knelt for blessing while our bins emptied. God's name does not fill a child's bowl unless someone pays for the grain.
 
@@ -1495,7 +1499,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, I speak for nine villages that still call you usurper — and still ask you for bread. I heard Ruta from the mills and Arvel from the soup line. We do not want your soul. We want your granary keys. Grant provincial charters to store grain, or send soldiers to guard empty bins.
+**Prompt:** Your Majesty, I speak for nine villages that still call you the king who took the throne — and still ask you for bread. I heard Ruta from the mills and Arvel from the soup line. We do not want your soul. We want your granary keys. Grant provincial charters to store grain, or send soldiers to guard empty bins.
 
 **Prompt variant (`hungryGrommFeast`):** Your Majesty, I heard the court feasted while we tightened belts. Delegations are polite riots. Remember that.
 
@@ -1587,7 +1591,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, I sing for coins and causes. I heard mills empty, soup lines grow, miners strike, and merchants count. My new verse names the usurper — hungry or generous, depending what you fed the city this week. Sponsor the song, silence it, or let the market choose your reputation.
+**Prompt:** Your Majesty, I sing for coins and causes. I heard mills empty, soup lines grow, miners strike, and merchants count. My new verse names you — the king who took the throne — hungry or generous, depending what you fed the city this week. Sponsor the song, silence it, or let the market choose your reputation.
 
 **Prompt variant (`famineSeverity` ≥ 50):** Your Majesty, I heard children share one loaf in the western ward. My ballad will travel faster than your decrees.
 
@@ -1679,7 +1683,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, ninety-nine days since your blade and still the city asks whether the usurper starves them on purpose. I heard refugees, guilds, miners, and Malrik's fasts. My kitchens can stretch one more month — or confess we already serve the court before the commons. Tell the truth at table, or tell a better lie.
+**Prompt:** Your Majesty, ninety-nine days since your blade and still the city asks whether the king who took the throne starves them on purpose. I heard refugees, guilds, miners, and Malrik's fasts. My kitchens can stretch one more month — or confess we already serve the court before the commons. Tell the truth at table, or tell a better lie.
 
 **Prompt variant (`householdOutcome` imminent):** Your Majesty, Edric will ask who you became on day eighty-six. The city asks the same with spoons instead of scrolls.
 
@@ -1753,7 +1757,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 **Prompt (outcome `managed_famine`):** Your Majesty, you did what you could — no doctrine, only portions. Some fed, some angry, some singing in Elina's ballads. The year continues. Hunger does too, but slower than it might have.
 
 **Choice 1:** I have heard the provinces — dismiss the hunger court
-- **Response (outcome `bread_king`):** Then I write *bread* before *blade*. Rare for a usurper. Do not waste it.
+- **Response (outcome `bread_king`):** Then I write *bread* before *blade*. Rare for a king who took the throne. Do not waste it.
 - **Effects (outcome `bread_king`):** Food +8, People +10, Loyalty +8
 - **Response (outcome `starving_crown`):** Then I write *famine* and close the granary ledgers. Spring will judge you harsher than I will.
 - **Effects (outcome `starving_crown`):** Food -10, People -12, Loyalty -8
@@ -1777,13 +1781,13 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 | Tier | Range | Creditor tone |
 |------|-------|----------------|
-| **Hostile** | ≤ −35 | Embargo, run on treasury |
+| **Hostile** | ≤ −35 | trade ban, run on treasury |
 | **Wary** | −34…−5 | Harsh rates, public threats |
 | **Transactional** | −4…+4 | Normal spreads |
 | **Favored** | +5…+34 | Extensions, quiet support |
 | **Partner** | ≥ +35 | Crown-guild co-rule of credit |
 
-**Arc state:** `guildStanding`, `guildArcPhase` (active / resolved), `guildCrownStance` (pay / renegotiate / seize / default), flags (`guildFaraEmbargo`, `guildSaltLoan`, `guildNeriusCounterfeit`, `guildBorvinAudit`, `guildSelenaCredit`, `guildJointUltimatum`, `guildMintSeized`, `guildKnoxLeak`), `guildOutcome` (none / sound_treasury / debt_crown / merchant_throne / counterfeit_crisis / guild_republic / managed_debt)
+**Arc state:** `guildStanding`, `guildArcPhase` (active / resolved), `guildCrownStance` (pay / renegotiate / seize / default), flags (`guildFaratrade ban`, `guildSaltLoan`, `guildNeriusfake coin`, `guildBorvinAudit`, `guildSelenaCredit`, `guildJointfinal demand`, `guildMintSeized`, `guildKnoxLeak`), `guildOutcome` (none / sound_treasury / debt_crown / merchant_throne / fake coin_crisis / guild_republic / managed_debt)
 
 **Beat schedule (late days; no overlap with Great Houses, Grey Lung 130/200, Northern 145/172/196):**
 
@@ -1791,28 +1795,28 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 |-----|-----------|------|
 | 128 | Head of Guild Fara | Credit withheld |
 | 136 | Banker Dominic Salt | Coup investors return |
-| 144 | Master of the Mint Nerius | Counterfeit Edwin coin |
+| 144 | Master of the Mint Nerius | fake coin Edwin coin |
 | 152 | Treasurer Borvin | Two ledgers, one throne |
 | 160 | Merchant Selena | Trade credit frozen |
 | 169 | Old Advisor Edric | Before Ashford's price |
-| 177 | Fara & Salt | Joint ultimatum (2 nodes) |
+| 177 | Fara & Salt | Joint final demand (2 nodes) |
 | 184 | Master of the Mint Nerius | Mint seizure |
-| 192 | Treasurer Borvin | Default clock |
+| 192 | Treasurer Borvin | payment deadline |
 | 204 | Spy Knox | Ledger sold |
 | 214 | Chronicler Ilana | Debt chapter |
 | 222 | Old Advisor Edric | Verdict on the compact |
 
-**Possible endings (day 222):** Sound Treasury · Debt Crown · Merchant Throne · Counterfeit Crisis · Guild Republic · Managed Debt
+**Possible endings (day 222):** Sound Treasury · Debt Crown · Merchant Throne · fake coin Crisis · Guild Republic · Managed Debt
 
 ### Guild Compact — beat resolution rules
 
 **Day 177:** Two-node beat — Fara node 0, Salt node 1 always follows (like Ashford debut).
 
-**Day 222 outcome priority:** `guildStanding` ≥ 35 + stance `pay` → **sound_treasury** · `guildJointUltimatum` refused + standing ≤ −35 → **debt_crown** · `guildSaltLoan` + standing ≤ −20 → **merchant_throne** · `guildNeriusCounterfeit` unresolved → **counterfeit_crisis** · `guildFaraEmbargo` + Fara favored → **guild_republic** · else **managed_debt**.
+**Day 222 outcome priority:** `guildStanding` ≥ 35 + stance `pay` → **sound_treasury** · `guildJointfinal demand` refused + standing ≤ −35 → **debt_crown** · `guildSaltLoan` + standing ≤ −20 → **merchant_throne** · `guildNeriusfake coin` unresolved → **fake coin_crisis** · `guildFaratrade ban` + Fara favored → **guild_republic** · else **managed_debt**.
 
-**Cross-arc callbacks:** [Empty Purse](#the-empty-purse-persistent-story) `emptyPurseSaltLoan`, [Hungry Season](#the-hungry-season-persistent-story) `hungryFaraCartel`, [Church](#the-crown-forfeit--tithe-war-persistent-story) tithe pressure, [Great Houses](#the-great-houses-persistent-story) day 175 Ashford debut (beat 6 references), [Northern](#the-northern-price-persistent-story) war spending.
+**Cross-arc callbacks:** [Empty Purse](#the-empty-purse-persistent-story) `emptyPurseSaltLoan`, [Hungry Season](#the-hungry-season-persistent-story) `hungryFaraCartel`, [Church](#the-crown-forfeit--church tax-war-persistent-story) church tax pressure, [Great Houses](#the-great-houses-persistent-story) day 175 Ashford debut (beat 6 references), [Northern](#the-northern-price-persistent-story) war spending.
 
-**Ashford day 175:** Guild beat 6 (day 169) sets tone; beat 7 (day 177) fires two days after unlock — Ashford may appear in ultimatum variants if `housesAshfordCouncil`.
+**Ashford day 175:** Guild beat 6 (day 169) sets tone; beat 7 (day 177) fires two days after unlock — Ashford may appear in final demand variants if `housesAshfordCouncil`.
 
 ---
 
@@ -1824,7 +1828,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, the grain guild remembers compacts and betrayals. I heard you fed provinces, seized wagons, or let markets rot during the hungry months. Credit to the crown is frozen until regicides prove they can pay more than sermons. Reopen trade on guild terms, or watch caravans route around your capital.
+**Prompt:** Your Majesty, the grain guild remembers compacts and betrayals. I heard you fed provinces, seized wagons, or let markets rot during the hungry months. Credit to the crown is frozen until king-killers prove they can pay more than sermons. Reopen trade on guild terms, or watch caravans route around your capital.
 
 **Prompt variant (`hungryFaraCartel`):** Your Majesty, I heard we compacted bread in the famine. You owe goodwill — not gold. I am here to convert the first into the second.
 
@@ -1832,17 +1836,17 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Response:** Then my ledgers own your mornings until you pay. The treasury breathes — on my schedule.
 - **Effects:** Treasury +20, Succession -8, Loyalty -4
 - **Standing:** +10
-- **Sets flag:** `guildFaraEmbargo` (lifted)
+- **Sets flag:** `guildFaratrade ban` (lifted)
 - **Sets stance:** `renegotiate`
 
-**Choice 2:** Reject — crown mints promissory notes instead
+**Choice 2:** Reject — crown mints debt papers instead
 - **Response:** Paper is not coin. Merchants will learn that at your expense.
 - **Effects:** Treasury +8, Nobility -5, Loyalty -6
 - **Standing:** −15
-- **Sets flag:** `guildFaraEmbargo`
+- **Sets flag:** `guildFaratrade ban`
 
 **Choice 3:** Seize a guild house — terror as policy
-- **Response:** Then the guild calls you brigand — accurately. Embargo hardens. Enjoy solitude.
+- **Response:** Then the guild calls you brigand — accurately. The trade ban hardens. Enjoy solitude.
 - **Effects:** Treasury +15, Loyalty -12, Army +4
 - **Standing:** −30
 
@@ -1880,7 +1884,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 ---
 
-### Beat 3 — Day 144 — Counterfeit Edwin Coin
+### Beat 3 — Day 144 — fake coin Edwin Coin
 
 **Character:** Master of the Mint Nerius
 **Note:** Mid-era beat (day 144, after [Prophet day 140](#beat-3--day-140--the-absurd-miracle)). Edwin's ghost money undermines treasury.
@@ -1888,37 +1892,37 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, false crowns circulate — struck with King Edwin's face, spent with your usurper's blessing. I heard Osric's ghost seals and Salt's hungry loans. My mint can purge the forgeries, or your treasury can pretend they are tribute. Counterfeit is a tax on kings who cannot count.
+**Prompt:** Your Majesty, false crowns circulate — struck with King Edwin's face, spent with your throne-stealer's blessing. I heard Osric's ghost seals and Salt's hungry loans. My mint can purge the fake seals, or your treasury can pretend they are tribute. Fake coins are a tax on kings who cannot count.
 
-**Prompt variant (`householdCutClerks` or `guildFaraEmbargo`):** Your Majesty, I heard you cut clerks and angered guilds. Forgers thrive in confusion. That is not philosophy — it is arithmetic.
+**Prompt variant (`householdCutClerks` or `guildFaratrade ban`):** Your Majesty, I heard you cut clerks and angered guilds. Forgers thrive in confusion. That is not philosophy — it is arithmetic.
 
 **Choice 1:** Fund a mint purge — recall bad coin, issue new crown marks
 - **Response:** Expensive honesty. Markets stall, then trust returns — if you finish.
 - **Effects:** Treasury -18, Loyalty +8, Succession +6
 - **Standing:** +8
-- **Clears risk:** `guildNeriusCounterfeit` path
+- **Clears risk:** `guildNeriusfake coin` path
 
 **Choice 2:** Ignore — let false coin circulate
 - **Response:** Then prices lie and taxes lie with them. Borvin will scream. Thieves will cheer.
 - **Effects:** Treasury +10, Loyalty -8
-- **Sets flag:** `guildNeriusCounterfeit`
+- **Sets flag:** `guildNeriusfake coin`
 
 **Choice 3:** Blame Nerius — hang the mintmaster
-- **Response:** Convenient scapegoat. The forgeries continue without a neck to blame. You chose theatre.
+- **Response:** Convenient scapegoat. The fake seals continue without a neck to blame. You chose theatre.
 - **Effects:** Loyalty -6, Succession +4
-- **Sets flag:** `guildNeriusCounterfeit` (worse fallout)
+- **Sets flag:** `guildNeriusfake coin` (worse fallout)
 
 ---
 
 ### Beat 4 — Day 152 — Two Ledgers, One Throne
 
 **Character:** Treasurer Borvin
-**Note:** Church tithe vs guild debt vs army pay.
+**Note:** Church church tax vs guild debt vs army pay.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, Malrik's tithe, Salt's interest, and Fara's fees eat the same chest — and Rudolf still wants rations. I heard you purged forgeries or let them spread. Choose which creditor starves this month: heaven, merchants, or steel.
+**Prompt:** Your Majesty, Malrik's church tax, Salt's interest, and Fara's fees eat the same chest — and Rudolf still wants rations. I heard you purged fake seals or let them spread. Choose which creditor starves this month: heaven, merchants, or steel.
 
 **Prompt variant (`churchHolyLedger`):** Your Majesty, I heard you promised Malrik a shared ledger. He did not share. Neither did Salt.
 
@@ -1929,12 +1933,12 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Sets flag:** `guildBorvinAudit`
 
 **Choice 2:** Pay Church first — buy sermons over credit
-- **Response:** Then Fara tightens the embargo. Malrik smiles. Arithmetic weeps.
+- **Response:** Then Fara tightens the trade ban. Malrik smiles. Arithmetic weeps.
 - **Effects:** Church +10, Treasury -12, Loyalty -4
 - **Standing:** −12
 
 **Choice 3:** Pay army — creditors wait
-- **Response:** Soldiers eat. Merchants remember. A classic usurper's triangle.
+- **Response:** Soldiers eat. Merchants remember. A classic throne-stealer's triangle.
 - **Effects:** Army +8, Treasury -10, Loyalty +5
 - **Standing:** −8
 
@@ -1950,7 +1954,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 **Prompt:** Your Majesty, Fara froze crown credit and Salt called your notes — I heard both before my caravans left the yard. I move grain and gold, not loyalty. Extend me crown escorts and premium pay, or I sell your shortages to your enemies at markup.
 
-**Prompt variant (`guildFaraEmbargo` active):** Your Majesty, I heard the guild embargo holds. I am the embargo with wheels. Pay or walk.
+**Prompt variant (`guildFaratrade ban` active):** Your Majesty, I heard the guild trade ban holds. I am the trade ban with wheels. Pay or walk.
 
 **Choice 1:** Crown escorts and premium — buy routes back
 - **Response:** I will deliver. I will also tell Fara you paid retail for wholesale problems.
@@ -1973,16 +1977,16 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 ### Beat 6 — Day 169 — Before Ashford's Price
 
 **Character:** Old Advisor Edric
-**Note:** Six days before [Nobility unlock / Ashford](#lady-ashford-debut-nobility-unlock). Warns that noble levies require solvent treasury.
+**Note:** Six days before [Nobility unlock / Ashford](#lady-ashford-debut-nobility-unlock). Warns that noble levies require able to pay treasury.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, in six days Lady Ashford measures whether you are a ruler or a debtor in ermine. I heard Fara withhold credit, Salt compound interest, and Nerius find false coin. Great houses lend to kings who can pay — not to regicides who owe merchants more than bishops.
+**Prompt:** Your Majesty, in six days Lady Ashford measures whether you are a ruler or a debtor in ermine. I heard Fara withhold credit, Salt compound interest, and Nerius find false coin. Great houses lend to kings who can pay — not to king-killers who owe merchants more than bishops.
 
 **Prompt variant (`guildStanding` ≤ −20):** Your Majesty, creditors talk louder than heralds. Ashford will hear them before she hears you.
 
-**Choice 1:** Prepare solvency — pay one creditor publicly before she arrives
+**Choice 1:** Prepare ability to pay — pay one creditor publicly before she arrives
 - **Response:** Theatre with receipts. Expensive. Ashford respects expensive truths.
 - **Effects:** Treasury -15, Nobility +5, Loyalty +4
 - **Standing:** +12
@@ -2000,7 +2004,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 ---
 
-### Beat 7 — Day 177 — Joint Ultimatum
+### Beat 7 — Day 177 — Joint final demand
 
 **Character:** Head of Guild Fara (node 0) → Banker Dominic Salt (node 1)
 **Note:** **Two-node beat** — fires two days after Ashford debut. Great Houses [day 175](#beat-6--day-175--nobility-unlock-ashford-debut) colors variants.
@@ -2008,7 +2012,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0 — Fara
 
-**Prompt:** Your Majesty, Ashford offers legitimacy at a price. I offer liquidity at a sharper one. Sign the Guild Compact — crown tariffs fixed, private credit open, temple tithe capped by merchants not Malrik — or we call your notes due before sunset.
+**Prompt:** Your Majesty, Ashford offers your lawful rule at a price. I offer money in the treasury at a sharper one. Sign the Guild Compact — crown tariffs fixed, private credit open, church tax capped by merchants not Malrik — or we call your notes due before sunset.
 
 **Prompt variant (`housesAshfordCouncil`):** Your Majesty, I heard you seated Ashford. She sells bloodlines. I sell time. Buy at least one honestly.
 
@@ -2016,17 +2020,17 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Response:** Then we are partners until you try to break us. Read the ink twice.
 - **Effects:** Treasury +15, Church -8, Nobility -6, Succession -5
 - **Standing:** +20
-- **Sets flag:** `guildJointUltimatum` (accepted)
+- **Sets flag:** `guildJointfinal demand` (accepted)
 - **Next node:** 1
 
 **Choice 2:** Refuse — crown does not share sovereignty
 - **Response:** Then Salt finishes this conversation. I have done my courtesy.
 - **Effects:** Loyalty +5, Treasury -5
 - **Standing:** −15
-- **Sets flag:** `guildJointUltimatum` (refused)
+- **Sets flag:** `guildJointfinal demand` (refused)
 - **Next node:** 1
 
-**Choice 3:** Counter — crown caps tithe, not tariffs
+**Choice 3:** Counter — crown caps church tax, not tariffs
 - **Response:** Half a compact. Half a war. Salt will price the difference.
 - **Effects:** Church +5, Treasury -8, Succession +4
 - **Standing:** +5
@@ -2034,7 +2038,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 1 — Salt
 
-**Prompt:** Your Majesty, Fara spoke of compacts. I speak of clocks. Pay forty thousand crowns by week's end — coup principal, coup interest, coup insult — or I transfer your debts to northern buyers who prefer regicide stories to regicide reigns.
+**Prompt:** Your Majesty, Fara spoke of compacts. I speak of clocks. Pay forty thousand crowns by week's end — coup principal, coup interest, coup insult — or I transfer your debts to northern buyers who prefer killing a king stories to killing a king reigns.
 
 **Choice 1:** Pay — bleed the chest to buy the year
 - **Response:** Then you are poor and alive. A respectable combination.
@@ -2058,14 +2062,14 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 ### Beat 8 — Day 184 — Mint Seizure
 
 **Character:** Master of the Mint Nerius
-**Note:** Between Great Houses days 181 and 185. Counterfeit crisis branch.
+**Note:** Between Great Houses days 181 and 185. fake coin crisis branch.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
 **Prompt:** Your Majesty, false coin reached the army's pay chest — or would have, if Rudolf were less suspicious. I heard you defaulted on Salt or signed Fara's compact. My mint begs authority to seize every bad piece in the capital. Grant it, and trust returns slowly. Deny it, and trust never arrives.
 
-**Prompt variant (`guildNeriusCounterfeit`):** Your Majesty, I heard you let forgeries spread. Seizure is surgery. You are already bleeding.
+**Prompt variant (`guildNeriusfake coin`):** Your Majesty, I heard you let fake seals spread. Seizure is surgery. You are already bleeding.
 
 **Choice 1:** Grant seizure — martial law in the markets
 - **Response:** Then coin is honest at the cost of riots. Honesty is not free.
@@ -2085,7 +2089,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 ---
 
-### Beat 9 — Day 192 — Default Clock
+### Beat 9 — Day 192 — payment deadline
 
 **Character:** Treasurer Borvin
 **Note:** Four days before Northern [day 196](#beat-13--day-196--mobilize-or-bluff) mobilization — war costs vs default.
@@ -2093,21 +2097,21 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, the default clock strikes — Salt's agents camp at the lower gate, Fara's clerks audit your cellars, and Rudolf asks for war coin you do not have. I heard you signed, refused, or bluffed. Pay one final consolidated sum, declare open insolvency, or sell Edwin's crown jewels to merchants who will display them in shop windows.
+**Prompt:** Your Majesty, the payment deadline strikes — Salt's agents camp at the lower gate, Fara's clerks audit your cellars, and Rudolf asks for war coin you do not have. I heard you signed, refused, or bluffed. Pay one final big sum, say you have no money left, or sell Edwin's crown jewels to merchants who will display them in shop windows.
 
-**Choice 1:** Consolidated payment — one chest, all creditors pacified
+**Choice 1:** Pay one big sum — one chest, all creditors pacified
 - **Response:** Expensive silence. The rarest music in finance.
 - **Effects:** Treasury -35, Loyalty +8, Succession +6
 - **Standing:** +25
 - **Sets stance:** `pay`
 
-**Choice 2:** Open insolvency — crown admits bankruptcy
+**Choice 2:** Admit we have no money — crown admits bankruptcy
 - **Response:** Honest catastrophe. Creditors take pieces. You keep the chair — maybe.
 - **Effects:** Treasury +10, Nobility -15, Loyalty -12, Succession -10
 - **Standing:** −40
 - **Influences finale priority:** `debt_crown`
 
-**Choice 3:** Sell crown jewels — humiliation with liquidity
+**Choice 3:** Sell crown jewels — humiliation with money in the treasury
 - **Response:** Then the realm sees your mother's rubies in a guild window. You eat nonetheless.
 - **Effects:** Treasury +25, Loyalty -10, Nobility -12
 - **Standing:** −5
@@ -2122,7 +2126,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, I sold a copy of Borvin's true ledger — not the court version — to whoever paid highest this week. Fara, Salt, Ingvar, and Ashford each hold pages you wished private. I can buy pages back, sell you forgeries instead, or vanish. Your treasury's shame is now a commodity.
+**Prompt:** Your Majesty, I sold a copy of Borvin's true ledger — not the court version — to whoever paid highest this week. Fara, Salt, Ingvar, and Ashford each hold pages you wished private. I can buy pages back, sell you fake seals instead, or vanish. Your treasury's shame is now a commodity.
 
 **Choice 1:** Buy the ledger back — pay Knox and pray
 - **Response:** Then you rent silence. I will sell again if the price improves.
@@ -2130,7 +2134,7 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 - **Standing:** +5
 - **Sets flag:** `guildKnoxLeak` (contained)
 
-**Choice 2:** Feed forgeries — false numbers to all buyers
+**Choice 2:** Feed fake seals — false numbers to all buyers
 - **Response:** Clever until two liars compare notes. Still — buy time.
 - **Effects:** Loyalty +4, Army +3
 - **Standing:** +8
@@ -2150,9 +2154,9 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, I write the second draft — not who bowed, but who owns your mornings. I heard Fara's compact, Salt's clock, Nerius's false coin, Selena's premiums, and Knox's stolen numbers. Title this chapter *Solvent King*, *Debt Crown*, or *The Merchant's Throne* — the realm copies my verbs into law.
+**Prompt:** Your Majesty, I write the second draft — not who bowed, but who owns your mornings. I heard Fara's compact, Salt's clock, Nerius's false coin, Selena's premiums, and Knox's stolen numbers. Title this chapter *King Who Can Pay*, *Debt Crown*, or *The Merchant's Throne* — the realm copies my verbs into law.
 
-**Choice 1:** *Solvent King* — claim victory honestly
+**Choice 1:** *King Who Can Pay* — claim victory honestly
 - **Response:** Flattering if true. Dangerous if not. I will verify before I print.
 - **Effects:** Loyalty +6, Nobility +4
 - **Standing:** +5
@@ -2177,27 +2181,27 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 #### Node 0
 
-**Prompt (outcome `sound_treasury`):** Your Majesty, ninety-four days since Fara froze your credit — and the counting houses speak your name without spitting. I heard Salt paid, forgeries purged, Borvin's ledgers reconciled. You bought time with gold. The oldest miracle. The crown owns its coffers again — for now.
+**Prompt (outcome `sound_treasury`):** Your Majesty, ninety-four days since Fara froze your credit — and the counting houses speak your name without spitting. I heard Salt paid, fake seals purged, Borvin's ledgers matched. You bought time with gold. The oldest miracle. The crown owns its coffers again — for now.
 
-**Prompt (outcome `debt_crown`):** Your Majesty, I heard open insolvency, refused ultimatums, and creditors camping at the lower gate. The realm does not sue its king in court — it sues him in whispers, embargoes, and nephews. You belong to tomorrow's ledgers. You keep today's chair — barely.
+**Prompt (outcome `debt_crown`):** Your Majesty, I heard you have no money left, refused final demands, and creditors camping at the lower gate. The realm does not sue its king in court — it sues him in whispers, trade bans, and nephews. You belong to tomorrow's ledgers. You keep today's chair — barely.
 
 **Prompt (outcome `merchant_throne`):** Your Majesty, I heard Salt's interest outlive your pride and Fara's smile outlive your policy. The merchants do not kneel — they invoice. You reign as partner-king or debtor-king. The compact calls it commerce. Ashford calls it humiliation.
 
-**Prompt (outcome `counterfeit_crisis`):** Your Majesty, I heard false Edwin coin spread while the mintmaster begged or hung. Prices lie. Taxes lie with them. Trust does not return because you decree it. The treasury has a wound that gold alone cannot stitch.
+**Prompt (outcome `fake coin_crisis`):** Your Majesty, I heard false Edwin coin spread while the mintmaster begged or hung. Prices lie. Taxes lie with them. Trust does not return because you decree it. The treasury has a wound that gold alone cannot stitch.
 
-**Prompt (outcome `guild_republic`):** Your Majesty, I heard Fara's embargo lift on guild terms and Salt's leash shorten together. You do not rule the markets — you share breath with them. Ashford sneers. Fara smiles. Both matter.
+**Prompt (outcome `guild_republic`):** Your Majesty, I heard Fara's trade ban lift on guild terms and Salt's leash shorten together. You do not rule the markets — you share breath with them. Ashford sneers. Fara smiles. Both matter.
 
 **Prompt (outcome `managed_debt`):** Your Majesty, no doctrine — only extensions, bluffs, and Knox's sold pages. The merchant's peace. Expensive. Familiar. You remain. That is also policy.
 
 **Choice 1:** I have heard the creditors — dismiss the counting court
-- **Response (outcome `sound_treasury`):** Then I write *solvent* before *loyal*. Winter has other invoices — pay them too.
+- **Response (outcome `sound_treasury`):** Then I write *able to pay* before *loyal*. Winter has other invoices — pay them too.
 - **Effects (outcome `sound_treasury`):** Treasury +5, Loyalty +8, Succession +6
 - **Response (outcome `debt_crown`):** Then I write *bankrupt crown*. Creditors own tomorrow.
 - **Effects (outcome `debt_crown`):** Treasury -10, Loyalty -10, Succession -8
 - **Response (outcome `merchant_throne`):** Then I write *partner-king*. The throne breathes on merchant terms.
 - **Effects (outcome `merchant_throne`):** Treasury +10, Nobility -8, Loyalty -4
-- **Response (outcome `counterfeit_crisis`):** Then I write *false coin*. Fix the mint or lose the realm's arithmetic.
-- **Effects (outcome `counterfeit_crisis`):** Treasury -8, Loyalty -12, Succession -6
+- **Response (outcome `fake coin_crisis`):** Then I write *false coin*. Fix the mint or lose the realm's arithmetic.
+- **Effects (outcome `fake coin_crisis`):** Treasury -8, Loyalty -12, Succession -6
 - **Response (outcome `guild_republic`):** Then I write *compact*. You share the throne's breath with Fara's ledgers.
 - **Effects (outcome `guild_republic`):** Treasury +10, Nobility -8, Loyalty -4
 - **Response (outcome `managed_debt`):** Then I write *extensions*. Familiar music. Expensive rhythm.
@@ -2205,11 +2209,11 @@ Every scheduled day shows one Tapestry beat while `tapestryArcPhase = active`. D
 
 ---
 
-## The Crown Forfeit & Tithe War (persistent story)
+## The Crown Forfeit & church tax War (persistent story)
 
-Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing* — crown forfeit, interdict, deposition) + **Proposition B** (tithe war starves treasury and army while Malrik buys the mob with grain and rites). Spans days 30–108. Replaces pool encounter **#80** on day 30. Fires after Church stat-unlock cutscene.
+Merged arc: **Proposition A** (Church can preach you king, king who took the throne, or *nothing* — crown forfeit, interdict, deposition) + **Proposition B** (church tax war starves treasury and army while Malrik buys the mob with grain and rites). Spans days 30–108. Replaces pool encounter **#80** on day 30. Fires after Church stat-unlock cutscene.
 
-**Arc state (runtime):** `churchArcStance` (submit / defy / bargain / schism), `churchForfeitPressure` (0–100), `churchTithePressure` (0–100), flags (`churchCapTithe`, `churchGrainMonopoly`, `churchFastingDecree`, `churchPilgrimCrisis`, `churchArmyFedByAltar`, `churchInterdictDeclared`, `churchHolyLedger`, `churchCyrusCooperated`), `churchOutcome` (none / anointed_usurper / secular_crown / schism_king / puppet_throne / forfeit_survived)
+**Arc state (runtime):** `churchArcStance` (submit / defy / bargain / church split), `churchForfeitPressure` (0–100), `churchchurch taxPressure` (0–100), flags (`churchCapchurch tax`, `churchGrainMonopoly`, `churchFastingDecree`, `churchPilgrimCrisis`, `churchArmyFedByAltar`, `churchInterdictDeclared`, `churchHolyLedger`, `churchCyrusCooperated`), `churchOutcome` (none / blessed by the church_king who took the throne / secular_crown / church split_king / puppet_throne / forfeit_survived)
 
 **Cross-reference rule:** Beats reference prior church and household flags. Malrik callbacks use *"I heard you…"* keyed to `churchArcStance` and `householdShelteredConfessor` / `householdChurchDeal`.
 
@@ -2229,11 +2233,11 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 | 77 | High Priest Malrik | The interdict and the ledger |
 | 108 | Malrik or Arvel | The conclave |
 
-**Possible endings:** Anointed Usurper · Secular Crown · Schism King · Puppet Throne · Forfeit Survived
+**Possible endings:** king blessed by the church · Secular Crown · church split King · Puppet Throne · Forfeit Survived
 
 ### Church arc — beat resolution rules
 
-**Day 108 outcome priority:** `churchArcStance = schism` → **schism_king** · `churchInterdictDeclared` + defied + army flag → **secular_crown** · `churchArcStance = submit` + pressure &lt; 50 → **anointed_usurper** · `churchArcStance = bargain` → **puppet_throne** · forfeitPressure ≥ 80 but still reigning → **forfeit_survived** · else **puppet_throne**.
+**Day 108 outcome priority:** `churchArcStance = church split` → **church split_king** · `churchInterdictDeclared` + defied + army flag → **secular_crown** · `churchArcStance = submit` + pressure &lt; 50 → **blessed by the church_king who took the throne** · `churchArcStance = bargain` → **puppet_throne** · forfeitPressure ≥ 80 but still reigning → **forfeit_survived** · else **puppet_throne**.
 
 **Church stat:** Unlocks day 30 on beat 1 — effects apply from this arc onward.
 
@@ -2249,7 +2253,7 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 
 #### Node 0
 
-**Prompt:** Your Majesty, the people know your crown, but do not know whether it is blessed. Today the Church must decide whether to name you king or usurper. I did not come for your soul — I came for your name in the square.
+**Prompt:** Your Majesty, the people know your crown, but do not know whether it is blessed. Today the Church must decide whether to name you king or one who took the throne. I did not come for your soul — I came for your name in the square.
 
 **Choice 1:** Ask the Church for a blessing — humility before heaven
 - **Response:** Humility is a fitting mask for one who reached the throne through blood. The faithful will hear it.
@@ -2269,51 +2273,51 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 - **Sets stance:** `bargain`
 - **Next node:** 1
 
-**Choice 4:** Name the schism — I will not kneel to one priest's voice
+**Choice 4:** Name the church split — I will not kneel to one priest's voice
 - **Response:** Then you align yourself with Arvel's muttering monks and against my choir. Dangerous. Popular, perhaps, among the hungry.
 - **Effects:** Church -8, Loyalty +5
-- **Sets stance:** `schism`
+- **Sets stance:** `church split`
 - **Next node:** 1
 
 #### Node 1
 
-**Prompt:** Your Majesty, blessing is not a gift — it is a leash. I can preach you king and make the mob kneel. I can preach you usurper and make them sharpen knives. Or I can preach silence — and let every lord decide whether you rule tomorrow. I heard you chose your tone on the threshold. Now choose what the Church buys with it.
+**Prompt:** Your Majesty, blessing is not a gift — it is a leash. I can preach you king and make the mob kneel. I can preach you king who took the throne and make them sharpen knives. Or I can preach silence — and let every lord decide whether you rule tomorrow. I heard you chose your tone on the threshold. Now choose what the Church buys with it.
 
-**Prompt variant (`submit`):** Your Majesty, you asked for blessing. Then hear the price: tithe flows to God's house before yours, and my scribes copy your decrees only after my seal. I heard humility from your lips. The realm will hear ownership from mine.
+**Prompt variant (`submit`):** Your Majesty, you asked for blessing. Then hear the price: church tax flows to God's house before yours, and my scribes copy your decrees only after my seal. I heard humility from your lips. The realm will hear ownership from mine.
 
 **Prompt variant (`defy`):** Your Majesty, you demanded recognition as if heaven were a barracks. I heard steel in your voice. Steel does not consecrate. My scribes already draft a second sermon — for the day your guards cross themselves and step aside.
 
-**Choice 1:** Accept Church custody of legitimacy — the altar crowns the throne
-- **Response:** Then kneel in the square when I bid it. The usurper becomes anointed — or becomes a lesson.
+**Choice 1:** Accept Church custody of your rule — the altar crowns the throne
+- **Response:** Then kneel in the square when I bid it. The king who took the throne becomes blessed by the church — or becomes a lesson.
 - **Effects:** Church +12, Succession +5, Army -3
-- **Pressure:** forfeit +15, tithe +10
+- **Pressure:** forfeit +15, church tax +10
 
 **Choice 2:** Refuse — the crown recognizes itself
-- **Response:** Then prepare for a sermon that names you regicide. I heard defiance. The faithful heard a challenge.
+- **Response:** Then prepare for a sermon that names you killing a king. I heard defiance. The faithful heard a challenge.
 - **Effects:** Church -10, Army +5, Loyalty -6
 - **Pressure:** forfeit +25
 
-**Choice 3:** Shared ledger — tax and tithe negotiated, not decreed
+**Choice 3:** Shared ledger — tax and church tax negotiated, not decreed
 - **Response:** A merchant's peace. Borvin will hate it. I will tolerate it — until I do not.
 - **Effects:** Church +5, Treasury -8, Loyalty +2
 - **Sets flag:** `churchHolyLedger`
-- **Pressure:** forfeit +10, tithe +15
+- **Pressure:** forfeit +10, church tax +15
 
 ---
 
 ### Beat 2 — Day 35 — The Holy Inquiry
 
 **Character:** Inquisitor Cyrus
-**Note:** Fires five days after Malrik's verdict. Hunts schism, shelter, and forfeit resistance before Arvel's day-37 beat. Callback day 30 stance and Household `householdShelteredConfessor`.
+**Note:** Fires five days after Malrik's verdict. Hunts church split, shelter, and forfeit resistance before Arvel's day-37 beat. Callback day 30 stance and Household `householdShelteredConfessor`.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, Malrik names you king or usurper in the square. I name you suspect in God's ledger. I heard you knelt, defied, or bargained on day thirty — and I heard Edwin's confessor still breathes in Arvel's cloister if rumour serves. My commission is inquiry, not sermon. Surrender names, surrender Aldo, or surrender patience.
+**Prompt:** Your Majesty, Malrik names you king or one who took the throne in the square. I name you suspect in God's ledger. I heard you knelt, defied, or bargained on day thirty — and I heard Edwin's confessor still breathes in Arvel's cloister if rumour serves. My commission is inquiry, not sermon. Surrender names, surrender Aldo, or surrender patience.
 
 **Prompt variant (`defy` + `householdShelteredConfessor`):** Your Majesty, I heard you defied the altar and sheltered a priest who heard Edwin's sins. That is two treasons by Malrik's count. By mine, it is one investigation with excellent witnesses.
 
-**Prompt variant (`schism` stance):** Your Majesty, I heard you named schism before my boots crossed your threshold. Arvel's monks smile. I do not. Inquiry feeds on smiles.
+**Prompt variant (`church split` stance):** Your Majesty, I heard you named church split before my boots crossed your threshold. Arvel's monks smile. I do not. Inquiry feeds on smiles.
 
 **Choice 1:** Cooperate — feed Cyrus loyalist names, not Aldo
 - **Response:** Useful. Malrik will call it crown justice. Arvel will call it cowardice. Both may be right.
@@ -2321,7 +2325,7 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 - **Sets flag:** `churchCyrusCooperated`
 
 **Choice 2:** Refuse inquiry — the crown is not a confessional
-- **Response:** Then I write *obstruction* beside *usurper* and sleep well. You may not.
+- **Response:** Then I write *obstruction* beside *king who took the throne* and sleep well. You may not.
 - **Effects:** Church -12, Army +5, Loyalty +4
 - **Pressure:** forfeit +10
 
@@ -2335,40 +2339,40 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 ### Beat 3 — Day 37 — The Other Half of the Church
 
 **Character:** Monk Arvel
-**Note:** Intro schism from intro cutscene. Absorbs former Household day-41 Malrik callbacks when `householdShelteredConfessor` or `householdChurchDeal` set. Follows [Inquisitor Cyrus day 35](#beat-2--day-35--the-holy-inquiry).
+**Note:** Intro church split from intro cutscene. Absorbs former Household day-41 Malrik callbacks when `householdShelteredConfessor` or `householdChurchDeal` set. Follows [Inquisitor Cyrus day 35](#beat-2--day-35--the-holy-inquiry).
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
 **Prompt:** Your Majesty, half the Church says the calamities were God's punishment. The other half says punishment sat on Edwin's throne long before your blade. I heard you chose a sermon on day thirty — kneel, defy, or bargain. Brother Malrik speaks for the altar. I speak for the poor who listen to both.
 
-**Prompt variant (`churchCyrusCooperated`):** Your Majesty, I heard you fed Cyrus names while my brothers starved. Malrik calls that kingship. I call it appetite. Choose whether schism feeds the poor or only the inquisitor.
+**Prompt variant (`churchCyrusCooperated`):** Your Majesty, I heard you fed Cyrus names while my brothers starved. Malrik calls that kingship. I call it appetite. Choose whether church split feeds the poor or only the inquisitor.
 
 **Prompt variant (`householdShelteredConfessor`):** Your Majesty, I sheltered Edwin's confessor while Malrik drafts forfeit in his chapter house. I heard you kept Aldo under my roof — Malrik calls it treason in God's closet. The faithful heard mercy. Which sermon wins the lower wards?
 ### Beat 4 — Day 40 — Two Kings' Tax
 
 **Character:** Treasurer Borvin
-**Note:** Tithe War beat. Callback day 30 stance and Household `householdCutClerks`.
+**Note:** church tax War beat. Callback day 30 stance and Household `householdCutClerks`.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, temple tithe reached the treasury's throat this week — more coin to Malrik's house than to yours. I heard you opened day thirty with blessings or threats. The faithful pay God first now. If I cut clerks, he calls it sacrilege. If I pay soldiers, the altar calls it theft. Which king goes hungry — you or heaven?
+**Prompt:** Your Majesty, church tax reached the treasury's throat this week — more coin to Malrik's house than to yours. I heard you opened day thirty with blessings or threats. The faithful pay God first now. If I cut clerks, he calls it insult to the sacred. If I pay soldiers, the altar calls it theft. Which king goes hungry — you or heaven?
 
-**Prompt variant (`defy` + `householdCutClerks`):** Your Majesty, you purged Edwin's clerks and spat at Malrik in the same moon. I heard consistency. The tithe collectors heard a target. They are faster than your tax men.
+**Prompt variant (`defy` + `householdCutClerks`):** Your Majesty, you purged Edwin's clerks and spat at Malrik in the same moon. I heard consistency. The church tax collectors heard a target. They are faster than your tax men.
 
 **Prompt variant (`churchHolyLedger`):** Your Majesty, you promised a shared ledger on day thirty. Malrik's collectors did not read your contract. I heard negotiation. They heard suggestion.
 
-**Choice 1:** Cap the tithe — crown law limits Church collection
+**Choice 1:** Cap the church tax — crown law limits Church collection
 - **Response:** The altar will hiss. The treasury will breathe. Malrik will call it persecution by sunset.
 - **Effects:** Church -18, Treasury +15, Loyalty -5
-- **Sets flag:** `churchCapTithe`
-- **Pressure:** forfeit +15, tithe -20
+- **Sets flag:** `churchCapchurch tax`
+- **Pressure:** forfeit +15, church tax -20
 
-**Choice 2:** Pay the tithe from treasury — buy peace with gold
+**Choice 2:** Pay the church tax from treasury — buy peace with gold
 - **Response:** Expensive holiness. Soldiers will ask why God eats before they do.
 - **Effects:** Treasury -20, Church +10, Army -6
-- **Pressure:** tithe +20
+- **Pressure:** church tax +20
 
 **Choice 3:** Audit both — expose who steals in God's name
 - **Response:** Then we follow ink and incense. Names will surface. None will thank you.
@@ -2384,13 +2388,13 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 
 #### Node 0
 
-**Prompt:** Your Majesty, I served three kings and buried two. Malrik does not need a blade to end you — he has a ledger, a pulpit, and a word: *forfeit*. I heard you capped the tithe — or fed it. His scribes copy your name with a strike through it when forfeit is preached. Interdict next: no rites, no legitimacy, no guards who fear hell. Do you understand the machine you argued with on day thirty?
+**Prompt:** Your Majesty, I served three kings and buried two. Malrik does not need a blade to end you — he has a ledger, a pulpit, and a word: *forfeit*. I heard you capped the church tax — or fed it. His scribes copy your name with a strike through it when forfeit is preached. Interdict next: no rites, no lawful rule, no guards who fear hell. Do you understand the machine you argued with on day thirty?
 
 **Prompt variant (`submit`):** Your Majesty, you knelt for blessing. I heard humility. Malrik heard leash. Forfeit is how he shortens it when you tug.
 
-**Prompt variant (`churchCapTithe`):** Your Majesty, I heard you capped God's share. Malrik will not answer with arithmetic. He answers with pulpits.
+**Prompt variant (`churchCapchurch tax`):** Your Majesty, I heard you capped God's share. Malrik will not answer with arithmetic. He answers with pulpits.
 
-**Choice 1:** Prepare secular law — crown legitimacy without sacrament
+**Choice 1:** Prepare secular law — crown lawful right to rule without sacrament
 - **Response:** Bold. The faithful call it heresy. Soldiers may call it clarity. Write it before Sunday.
 - **Effects:** Church -8, Army +6, Succession +5
 
@@ -2407,16 +2411,16 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 ### Beat 6 — Day 48 — Church Buys the Granaries
 
 **Character:** Merchant Selena
-**Note:** Tithe War beat — Church outbids crown for grain. Grey Lung optional day 45 may have fired.
+**Note:** church tax War beat — Church outbids crown for grain. Grey Lung optional day 45 may have fired.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, Malrik's tithe buys grain at prices my caravans cannot match. I heard you fought him in ledgers on day forty — he answered in bread. Temples feed the hungry and preach who saved them. Your crown feeds soldiers and preaches who paid them. Which sermon fills the belly faster?
+**Prompt:** Your Majesty, Malrik's church tax buys grain at prices my caravans cannot match. I heard you fought him in ledgers on day forty — he answered in bread. Temples feed the hungry and preach who saved them. Your crown feeds soldiers and preaches who paid them. Which sermon fills the belly faster?
 
 **Prompt variant (plague arc active):** Your Majesty, Grey Lung makes every granary a fortress. Malrik sells blessed grain from temple stores. I heard you fund physic in the wards — he funds prayer in the lines. The sick thank heaven before they thank you.
 
-**Prompt variant (`churchCapTithe`):** Your Majesty, I heard you capped tithe. Malrik capped nothing — he spends temple reserves on grain and calls it charity. The mob calls it love.
+**Prompt variant (`churchCapchurch tax`):** Your Majesty, I heard you capped church tax. Malrik capped nothing — he spends temple reserves on grain and calls it charity. The mob calls it love.
 
 **Choice 1:** Outbid the Church — crown grain at temple steps
 - **Response:** Hungry praise is expensive. Worth it, until the next empty purse.
@@ -2437,12 +2441,12 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 ### Beat 7 — Day 55 — The Fasting Decree
 
 **Character:** Sister Velda
-**Note:** Tithe War beat — Malrik declares meat unclean / fasting. Velda runs hospital sisters who feed the sick while the realm fasts. Callback Household `householdKeptGromm` (Gromm no longer speaks in this arc) and church stance.
+**Note:** church tax War beat — Malrik declares meat unclean / fasting. Velda runs hospital sisters who feed the sick while the realm fasts. Callback Household `householdKeptGromm` (Gromm no longer speaks in this arc) and church stance.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, Malrik named meat unclean this week — penance for a regicide's reign. My sisters still boil broth for Grey Lung wards while the faithful fast in the square. I heard you purged Edwin's kitchens or kept them; either way, the court must eat and the sick must drink. Soldiers ask why God hates their supper. I ask why heaven starves hospitals to feed sermons.
+**Prompt:** Your Majesty, Malrik named meat unclean this week — penance for a killing a king's reign. My sisters still boil broth for Grey Lung wards while the faithful fast in the square. I heard you purged Edwin's kitchens or kept them; either way, the court must eat and the sick must drink. Soldiers ask why God hates their supper. I ask why heaven starves hospitals to feed sermons.
 
 **Prompt variant (`householdKeptGromm`):** Your Majesty, Gromm still feeds your court because you kept him when others purged Edwin's ghosts. My wards feed the poor because I kept my vows. Malrik hears corruption on both pots. Choose whether mercy stops at the palace door.
 
@@ -2473,7 +2477,7 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 
 **Prompt:** Your Majesty, three thousand pilgrims camp at the lower gate — Malrik's doing, though he swears innocence. They chant forfeit or blessing, whichever comes first. I heard you defied fasting in the yards or knelt at table — they heard both from spies. My guards will not disperse a holy crowd without your word on blood.
 
-**Prompt variant (`defy` consistent):** Your Majesty, I heard you chose steel over scripture on day thirty, capped tithe, and fed soldiers while the faithful fasted. The pilgrims are your sermon made flesh. They want your crown or your confession.
+**Prompt variant (`defy` consistent):** Your Majesty, I heard you chose steel over scripture on day thirty, capped church tax, and fed soldiers while the faithful fasted. The pilgrims are your sermon made flesh. They want your crown or your confession.
 
 **Prompt variant (`submit`):** Your Majesty, I heard you knelt for blessing. They want you to kneel again — publicly, permanently. Malrik says once is theatre. Three times is doctrine.
 
@@ -2495,12 +2499,12 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 ### Beat 9 — Day 69 — Crossed Swords and Empty Purses
 
 **Character:** General Rudolf
-**Note:** Merged A+B — army unpaid (tithe war + [Empty Purse](#the-empty-purse-persistent-story)) + soldiers cross themselves (forfeit). Callback pilgrims, Borvin, `emptyPurseCrisis`.
+**Note:** Merged A+B — army unpaid (church tax war + [Empty Purse](#the-empty-purse-persistent-story)) + soldiers cross themselves (forfeit). Callback pilgrims, Borvin, `emptyPurseCrisis`.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, two companies crossed themselves instead of marching when I ordered dispersal at the gate. I heard pilgrims camped because you would not or could not clear them. Borvin says tithe ate their pay. Malrik says heaven outranks you. I heard Salt's coup debt and Kara's wagons in the same breath. Tell me whether I discipline soldiers, pay them, or let the Church feed their families and steal their oaths.
+**Prompt:** Your Majesty, two companies crossed themselves instead of marching when I ordered dispersal at the gate. I heard pilgrims camped because you would not or could not clear them. Borvin says church tax ate their pay. Malrik says heaven outranks you. I heard Salt's coup debt and Kara's wagons in the same breath. Tell me whether I discipline soldiers, pay them, or let the Church feed their families and steal their oaths.
 
 **Prompt variant (`emptyPurseCrisis` or `emptyPurseOutcome = ghost_army`):** Your Majesty, I heard you told the army honor feeds barracks. They believed you until the third empty muster. Crossed themselves? They crossed you first.
 
@@ -2526,22 +2530,22 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 ### Beat 10 — Day 77 — The Interdict and the Ledger
 
 **Character:** High Priest Malrik
-**Note:** Climax — interdict (no rites) plus tithe ultimatum. Callback entire arc.
+**Note:** Climax — interdict (no rites) plus church tax final demand. Callback entire arc.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, I heard you capped my tithe, seized my grain, fed sinners in barracks, and let pilgrims name you forfeit at the gate. I do not need a blade. I suspend sacraments in the capital — no baptisms, no last rites, no quiet conscience for your guards. Either you submit the crown to God's ledger, or you rule a city that fears hell more than you.
+**Prompt:** Your Majesty, I heard you capped my church tax, seized my grain, fed sinners in barracks, and let pilgrims name you forfeit at the gate. I do not need a blade. I suspend sacraments in the capital — no baptisms, no last rites, no quiet conscience for your guards. Either you submit the crown to God's ledger, or you rule a city that fears hell more than you.
 
 **Prompt variant (`churchHolyLedger` + `bargain`):** Your Majesty, you promised shared ledger and shared power. I heard a merchant's offer. I answer with interdict — heaven does not haggle on its knees.
 
-**Prompt variant (`schism` confirmed):** Your Majesty, Arvel's monks preach against me while you fund both sides. I heard you split the Church. I will unsplit the capital — one sermon, one king, and it will not be you unless you kneel.
+**Prompt variant (`church split` confirmed):** Your Majesty, Arvel's monks preach against me while you fund both sides. I heard you split the Church. I will unsplit the capital — one sermon, one king, and it will not be you unless you kneel.
 
-**Choice 1:** Kneel — accept anointed legitimacy on Church terms
+**Choice 1:** Kneel — accept blessed by the church lawful right to rule on Church terms
 - **Response:** Then forfeit dies in the square and lives in the chapter house. You survive. You serve.
 - **Effects:** Church +20, Succession +10, Army -8, Loyalty +5
 - **Sets flag:** `churchInterdictDeclared` (lifted)
-- **Influences finale priority:** `anointed_usurper` / `puppet_throne`
+- **Influences finale priority:** `blessed by the church_king who took the throne` / `puppet_throne`
 
 **Choice 2:** Defy the interdict — secular crown, secular law
 - **Response:** Then every pulpit names you cursed. I heard steel in your voice on day thirty. Steel must finish what it began.
@@ -2549,44 +2553,44 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 - **Sets flag:** `churchInterdictDeclared` (active)
 - **Pressure:** forfeit +30
 
-**Choice 3:** Counter with Arvel — schism rites in the open, defy Malrik's monopoly
+**Choice 3:** Counter with Arvel — church split rites in the open, defy Malrik's monopoly
 - **Response:** Two churches, one bleeding city. You chose the fracture. May it not fracture you.
 - **Effects:** Church -5, Loyalty +10, Food -10
-- **Influences finale priority:** `schism_king`
+- **Influences finale priority:** `church split_king`
 
 ---
 
 ### Beat 11 — Day 108 — The Conclave
 
 **Character:** High Priest Malrik or Monk Arvel
-**Note:** Finale. **On load:** run [day 108 outcome priority](#church-arc--beat-resolution-rules) → `churchOutcome`, `churchArcPhase = resolved`. **Malrik** speaks unless `churchArcStance = schism` (then **Arvel**). Speaker **reports** the conclave's verdict — player does not pick the ending.
+**Note:** Finale. **On load:** run [day 108 outcome priority](#church-arc--beat-resolution-rules) → `churchOutcome`, `churchArcPhase = resolved`. **Malrik** speaks unless `churchArcStance = church split` (then **Arvel**). Speaker **reports** the conclave's verdict — player does not pick the ending.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0 — Malrik (default)
 
-**Prompt (outcome `anointed_usurper`):** Your Majesty, the conclave met without you — and heaven voted pragmatic. I heard you knelt, bargained, or bent before interdict became pyre. Forfeit dies in the square and lives in the chapter house. You leave anointed. You leave leashed. The mob kneels. Rudolf grimaces. You breathe.
+**Prompt (outcome `blessed by the church_king who took the throne`):** Your Majesty, the conclave met without you — and heaven voted pragmatic. I heard you knelt, bargained, or bent before interdict became pyre. Forfeit dies in the square and lives in the chapter house. You leave blessed by the church. You leave leashed. The mob kneels. Rudolf grimaces. You breathe.
 
 **Prompt (outcome `secular_crown`):** Your Majesty, I heard steel in God's chapter house — or steel in your voice since day thirty. Interdict could not bury you. Sacrament could not buy you. The conclave names you secular king: cursed in chapel, obeyed in barracks. Scripture lost. You did not.
 
-**Prompt (outcome `schism_king`):** Your Majesty, two churches, one bleeding city. I heard you chose Arvel's gate over my altar — or fractured us until neither sermon owned the capital. History will call it heresy or liberation. Rarely both. You rule a schism you fed.
+**Prompt (outcome `church split_king`):** Your Majesty, two churches, one bleeding city. I heard you chose Arvel's gate over my altar — or fractured us until neither sermon owned the capital. History will call it heresy or liberation. Rarely both. You rule a church split you fed.
 
-**Prompt (outcome `puppet_throne`):** Your Majesty, I heard shared ledger promises and tithe-throne arithmetic. You are puppet and partner both. The treasury will learn the difference slowly. Heaven keeps a hand on your collar. You keep the chair. Common arrangement. Uncommon honesty.
+**Prompt (outcome `puppet_throne`):** Your Majesty, I heard shared ledger promises and church tax-throne arithmetic. You are puppet and partner both. The treasury will learn the difference slowly. Heaven keeps a hand on your collar. You keep the chair. Common arrangement. Uncommon honesty.
 
-**Prompt (outcome `forfeit_survived`):** Your Majesty, forfeit was proclaimed — and you still sit. Unprecedented. Exhausting. I heard pressure break against your stubborn pulse. Every chapel names you usurper. The throne does not care for names. Neither, apparently, do you.
+**Prompt (outcome `forfeit_survived`):** Your Majesty, forfeit was proclaimed — and you still sit. Unprecedented. Exhausting. I heard pressure break against your stubborn pulse. Every chapel names you king who took the throne. The throne does not care for names. Neither, apparently, do you.
 
 **Choice 1:** I have heard the conclave — dismiss the chapter
-- **Response (outcome `anointed_usurper`):** Then kneel when I ask. Heaven owns part of your mornings now.
-- **Effects (outcome `anointed_usurper`):** Church +15, Succession +12, Loyalty +8, Army -5
+- **Response (outcome `blessed by the church_king who took the throne`):** Then kneel when I ask. Heaven owns part of your mornings now.
+- **Effects (outcome `blessed by the church_king who took the throne`):** Church +15, Succession +12, Loyalty +8, Army -5
 - **Response (outcome `secular_crown`):** Then rule without my blessing. Steel finishes what scripture could not.
 - **Effects (outcome `secular_crown`):** Army +15, Church -25, Loyalty -12
 - **Response (outcome `puppet_throne`):** Then share the ledger. I will collect my half on schedule.
 - **Effects (outcome `puppet_throne`):** Church +10, Treasury -15, Succession +5
-- **Response (outcome `forfeit_survived`):** Then endure the name *usurper*. Chairs outlast sermons.
+- **Response (outcome `forfeit_survived`):** Then endure the name *king who took the throne*. Chairs outlast sermons.
 - **Effects (outcome `forfeit_survived`):** Church -15, Army +10, Loyalty -10, Succession -8
 
-#### Node 0 — Arvel (`churchArcStance = schism` → outcome `schism_king`)
+#### Node 0 — Arvel (`churchArcStance = church split` → outcome `church split_king`)
 
-**Prompt:** Your Majesty, Malrik's conclave met to name you forfeit. My brothers met to name you possible. I heard you chose schism when others chose kneeling. The capital has two sermons and one throne. Reform, bread, and a king who does not buy heaven — that is what the streets will remember.
+**Prompt:** Your Majesty, Malrik's conclave met to name you forfeit. My brothers met to name you possible. I heard you chose church split when others chose kneeling. The capital has two sermons and one throne. Reform, bread, and a king who does not buy heaven — that is what the streets will remember.
 
 **Choice 1:** I have heard the brethren — dismiss the gate
 - **Response:** Then Estedor has two faiths. May neither fracture you before spring.
@@ -2596,13 +2600,13 @@ Merged arc: **Proposition A** (Church can preach you king, usurper, or *nothing*
 
 ## The Northern Price (persistent story)
 
-Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the northern princes test the usurper before Church even unlocks (day 30) and keep testing through Nobility (175), Loyalty (260), and Succession (320). Each beat replaces the random pool encounter on its day.
+Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the northern princes test the king who took the throne before Church even unlocks (day 30) and keep testing through Nobility (175), Loyalty (260), and Succession (320). Each beat replaces the random pool encounter on its day.
 
 **Hidden stat (runtime, not shown in top bar):** `northernTrust` (−100…+100, starts at **0**)
 
 | Tier | Range | Ingvar's tone |
 |------|-------|----------------|
-| **Hostile** | ≤ −35 | Threats, embargoes, war talk |
+| **Hostile** | ≤ −35 | Threats, trade bans, war talk |
 | **Wary** | −34…−5 | Cold courtesy, leverage |
 | **Neutral** | −4…+4 | Transactional |
 | **Cordial** | +5…+34 | Partnership offers |
@@ -2610,14 +2614,14 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 **Arc state:** `northernTrust`, `northernWarStage` (none / tension / skirmish / mobilized / truce / war / vassal), flags (`northernTributePaid`, `northernAllianceSigned`, `northernWarDeclared`, `northernRefugeesAccepted`, `northernRefugeesTurnedBack`, `northernAshfordLinked`), `northernOutcome` (none / cold_peace / tributary / ally / victor / broken / vassal)
 
-**Cross-reference rule:** Beats use `northernTrust` tier for prompt/response variants. Static beats also set **Trust ±** on listed choices. Callbacks: *"I heard you…"* from prior northern flags and other arcs (Church schism, Grey Lung, Household).
+**Cross-reference rule:** Beats use `northernTrust` tier for prompt/response variants. Static beats also set **Trust ±** on listed choices. Callbacks: *"I heard you…"* from prior northern flags and other arcs (Church church split, Grey Lung, Household).
 
 **Beat schedule (no overlap with other arcs):**
 
 | Day | Character | Beat | Era |
 |-----|-----------|------|-----|
 | 5 | Ambassador Ingvar | First envoy | Pre-Church |
-| 12 | Ambassador Ingvar | The regicide's receipt | Pre-Church |
+| 12 | Ambassador Ingvar | The killing a king's receipt | Pre-Church |
 | 20 | General Rudolf | Smoke on the border | Pre-Church |
 | 27 | Ambassador Ingvar | Before the Faith | Pre-Church (3 days before unlock) |
 | 46 | Treasurer Borvin | The war chest | Church era |
@@ -2625,7 +2629,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 | 66 | Ambassador Ingvar | Alliance charter | Church era |
 | 78 | General Rudolf | Skirmish at Grey Pass | Church era |
 | 91 | Ambassador Ingvar | Refugees at the ford | People era (unlock day 89) |
-| 122 | Ambassador Ingvar | Mid-year ultimatum | People era |
+| 122 | Ambassador Ingvar | Mid-year final demand | People era |
 | 145 | Mercenary Kara | Guns on the northern road | People era |
 | 172 | Old Advisor Edric | Houses measure your wars | Pre-Nobility (Ashford day 175) |
 | 196 | General Rudolf | Mobilize or bluff | Nobility era |
@@ -2633,13 +2637,13 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 | 278 | Spy Knox | Leaks to the north | Loyalty era |
 | 350 | Ambassador Ingvar | The year's ledger | Late era (Succession unlocked) |
 
-**Possible endings (day 350):** Cold Peace · Tributary Crown · Northern Ally · Victorious Usurper · Broken Realm · Vassal Throne
+**Possible endings (day 350):** Cold Peace · Tributary Crown · Northern Ally · Victorious king who took the throne · Broken Realm · Vassal Throne
 
 ### Northern Price — beat resolution rules
 
 **Prompt variant priority:** `northernWarStage` crisis overrides tier → else `northernTrust` tier → else default. **Grey Lung day 130** (Ingvar formula beat) is a separate plague-arc encounter if both fire; northern arc uses day 122/145, not 130.
 
-**Day 350 outcome:** `northernTrust` ≥ 35 + alliance → **ally** · war declared + army high → **victor** or **broken** · tribute paid repeatedly → **tributary** · trust ≤ −35 + war → **broken** · trust neutral + truce → **cold_peace** · submit on day 122 ultimatum → **vassal**.
+**Day 350 outcome:** `northernTrust` ≥ 35 + alliance → **ally** · war declared + army high → **victor** or **broken** · tribute paid repeatedly → **tributary** · trust ≤ −35 + war → **broken** · trust neutral + truce → **cold_peace** · submit on day 122 final demand → **vassal**.
 
 **People / Nobility / Loyalty / Succession:** Effects on locked stats bank until unlock day or apply as Loyalty substitute per beat **Note**.
 
@@ -2653,7 +2657,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt:** Your Majesty, I am Ambassador Ingvar of the northern princes. They have not decided whether you are a king, a regicide, or a temporary inconvenience. I am here to learn which before their banners learn it for them.
+**Prompt:** Your Majesty, I am Ambassador Ingvar of the northern princes. They have not decided whether you are a king, a killing a king, or a temporary inconvenience. I am here to learn which before their banners learn it for them.
 
 **Choice 1:** Receive him as an equal envoy — the north has our respect
 - **Response:** Then they will call you prudent. For a week. After that they price respect in coin and corpses.
@@ -2672,19 +2676,21 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 ---
 
-### Beat 2 — Day 12 — The Regicide's Receipt
+### Beat 2 — Day 12 — The killing a king's Receipt
 
 **Character:** Ambassador Ingvar
-**Note:** Variant by `northernTrust` tier from beat 1.
+**Note:** Ingvar was present on day 5 — use **direct witness** phrasing (*You treated me…* / *You called the north vultures…*), never *I heard X or Y*. Implemented in `build_northern_receipt_prompt()` (`arc_prompts.das`) from `northernEnvoyChoice` + `northernTrust` tier set in `apply_northern_beat_choice()` (`arc_effects.das`).
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? I heard you received me on day five with courtesy — or with spit. They want the same answer in writing before they recognize your seal.
+**Prompt (default — no day-5 data):** Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? They want the same answer in writing before they recognize your seal.
 
-**Prompt variant (Hostile):** Your Majesty, I heard you called the north vultures before your crown was warm. The princes do not send recognition — they send a list of exiles they already shelter. Pay attention to the names.
+**Prompt variant (choice 1 insult / Hostile):** Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? You called the north vultures before your crown was warm. They do not send recognition — they send a list of exiles they already shelter. Pay attention to the names.
 
-**Prompt variant (Cordial / Allied):** Your Majesty, I heard you treated an envoy as an equal. Unusual for a usurper. The princes offer a provisional letter — not friendship, but a door left unbarred.
+**Prompt variant (choice 0 equal envoy / Cordial):** Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? You treated me as an equal envoy on day five. Unusual for a king who took the throne. They want the same answer in writing before they recognize your seal.
+
+**Prompt variant (choice 2 feast / delay):** Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? You fed me wine on day five and bought time. They will price that habit in coin, not alliances — but they still want your answer in writing.
 
 **Choice 1:** Send recognition papers — ask the north to name you king
 - **Response:** Then you ask wolves to bless the lamb. Brave. They will answer with conditions, not hymns.
@@ -2737,12 +2743,12 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 ### Beat 4 — Day 27 — Before the Faith
 
 **Character:** Ambassador Ingvar
-**Note:** Three days before Church unlock (day 30). Malrik will soon compete for legitimacy — Ingvar offers secular alternative.
+**Note:** Three days before Church unlock (day 30). Malrik will soon compete for lawful right to rule — Ingvar offers secular alternative.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, in three days your priests will ask whether heaven blesses regicide. I heard Rudolf reinforced the pass — or raided it. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal. God can wait. Politics cannot.
+**Prompt:** Your Majesty, in three days your priests will ask whether heaven blesses killing a king. I heard Rudolf reinforced the pass — or raided it. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal. God can wait. Politics cannot.
 
 **Prompt variant (Wary):** Your Majesty, I heard you hold the border with stone, not gifts. Fair. The princes raise tribute instead of banners — for now. Pay, or let Malrik become your only friend.
 
@@ -2767,16 +2773,16 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 ### Beat 5 — Day 46 — The War Chest
 
 **Character:** Treasurer Borvin
-**Note:** Church tithe war may be active. Northern trust affects whether princes offer loan or embargo.
+**Note:** Church church tax war may be active. Northern trust affects whether princes offer loan or trade ban.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, Ingvar's treaty still smells of your day-twenty-seven choice — tribute paid, border held, or insult banked. The princes offer a loan for forts on the Grey Pass, or an embargo if we arm further. I heard Malrik eats our tithe. The north eats our trade. Which wolf do we feed?
+**Prompt:** Your Majesty, Ingvar's treaty still smells of your day-twenty-seven choice — tribute paid, border held, or insult banked. The princes offer a loan for forts on the Grey Pass, or a trade ban if we arm further. I heard Malrik eats our church tax. The north eats our trade. Which wolf do we feed?
 
 **Prompt variant (Allied trust):** Your Majesty, I heard the north calls you pragmatic. They offer gold at shameful interest — better than Rudolf's mutiny. Take the loan, build the wall, owe a friend.
 
-**Prompt variant (Hostile):** Your Majesty, I heard the princes embargo grain on the northern road. Arm the pass and we starve. Disarm and we kneel. Choose your favorite humiliation.
+**Prompt variant (Hostile):** Your Majesty, I heard the princes ban grain trade on the northern road. Arm the pass and we starve. Disarm and we kneel. Choose your favorite humiliation.
 
 **Choice 1:** Take the northern loan — owe the princes
 - **Response:** Gold in the chest, rope around the crown. Standard diplomacy.
@@ -2828,7 +2834,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 ### Beat 7 — Day 66 — Alliance Charter
 
 **Character:** Ambassador Ingvar
-**Note:** Major trust branch. High trust = alliance offer; low = ultimatum.
+**Note:** Major trust branch. High trust = alliance offer; low = final demand.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0 — Cordial / Allied trust
@@ -2847,13 +2853,13 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 - **Trust:** +10
 
 **Choice 3:** Refuse — Estedor stands alone
-- **Response:** Alone is how usurpers often end. You chose it with eyes open.
+- **Response:** Alone is how kings who took the throne often end. You chose it with eyes open.
 - **Effects:** Army +5, Loyalty -4
 - **Trust:** −20
 
 #### Node 0 — Hostile / Wary trust
 
-**Prompt:** Your Majesty, I heard you hung my scribes or starved my merchants. The princes do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you regicide in every hall from here to the sea.
+**Prompt:** Your Majesty, I heard you hung my scribes or starved my merchants. The princes do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you killing a king in every hall from here to the sea.
 
 **Choice 1:** Accept terms — buy survival
 - **Response:** Then you are tributary, not king. Cheaper than graves — for now.
@@ -2882,12 +2888,12 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt:** Your Majesty, blood at the Grey Pass — our men or theirs, depending who lies. I heard you signed Ingvar's charter — or spat on his terms. The north tests whether the usurper's army is real. Do I hold, pursue, or sue for parley while the snow still owns the heights?
+**Prompt:** Your Majesty, blood at the Grey Pass — our men or theirs, depending who lies. I heard you signed Ingvar's charter — or spat on his terms. The north tests whether the throne-stealer's army is real. Do I hold, pursue, or sue for parley while the snow still owns the heights?
 
 **Prompt variant (`northernAllianceSigned`):** Your Majesty, I heard you allied with the princes. These skirmishers may be rogue companies — or a test. Hold fire until Ingvar answers, or answer with steel and lose a friend.
 
 **Choice 1:** Pursue into the pass — strike before spring
-- **Response:** Victory wins songs. Defeat wins northern sermons about regicide's price.
+- **Response:** Victory wins songs. Defeat wins northern sermons about killing a king's price.
 - **Effects:** Army -8, Treasury -12, Loyalty +5
 - **Trust:** −20
 - **Sets flag:** `northernWarDeclared`
@@ -2912,7 +2918,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt:** Your Majesty, two thousand northern refugees crowd the ford — famine in the princes' hills, or a leash to embarrass you. I heard you allied with us — or declared us enemies. The commons already watch whether the usurper feeds strangers while Edwin's widows beg. Malrik offers baptisms. I offer politics.
+**Prompt:** Your Majesty, two thousand northern refugees crowd the ford — famine in the princes' hills, or a leash to embarrass you. I heard you allied with us — or declared us enemies. The commons already watch whether the king who took the throne feeds strangers while Edwin's widows beg. Malrik offers baptisms. I offer politics.
 
 **Prompt variant (Allied):** Your Majesty, I heard our charter holds. These are my people, not your enemies. Shelter them and the princes remember. Turn them away and I remember.
 
@@ -2935,7 +2941,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 ---
 
-### Beat 10 — Day 122 — Mid-Year Ultimatum
+### Beat 10 — Day 122 — Mid-Year final demand
 
 **Character:** Ambassador Ingvar
 **Note:** Major branch on `northernTrust`. Grey Lung may be active — variant references physic trade.
@@ -2990,7 +2996,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt:** Your Majesty, I heard Ingvar's ultimatum on day one-twenty-two — alliance, retreat, or war. Northern buyers want crossbows. Rudolf wants them first. I sell to whoever pays and remembers — I heard your purse on day forty-seven. Do you seize my caravan, match their price, or let steel flow north and hope it points away from you?
+**Prompt:** Your Majesty, I heard Ingvar's final demand on day one-twenty-two — alliance, retreat, or war. Northern buyers want crossbows. Rudolf wants them first. I sell to whoever pays and remembers — I heard your purse on day forty-seven. Do you seize my caravan, match their price, or let steel flow north and hope it points away from you?
 
 **Prompt variant (Allied):** Your Majesty, I heard the charter holds. Sell to the north and you arm friends. Sell only to Rudolf and you arm suspicion. I profit either way. You choose which risk is yours.
 
@@ -3132,17 +3138,17 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt (outcome `ally`):** Your Majesty, three hundred and fifty days since a blade gave you a crown the north did not grant. I heard tribute refused, charter signed, refugees housed, maps guarded. The princes end the year calling you ally — not friend, not vassal, but the usurper worth binding. Your heirs and ours will argue together. Better than arguing alone.
+**Prompt (outcome `ally`):** Your Majesty, three hundred and fifty days since a blade gave you a crown the north did not grant. I heard tribute refused, charter signed, refugees housed, maps guarded. The princes end the year calling you ally — not friend, not vassal, but the king who took the throne worth binding. Your heirs and ours will argue together. Better than arguing alone.
 
 **Prompt (outcome `cold_peace`):** Your Majesty, I heard every choice — trade where oaths failed, courtesy where war tempted. The princes offer no alliance and no war. Estedor ends the year independent and watched. Partners who do not trust partners. Common in thrones.
 
-**Prompt (outcome `tributary`):** Your Majesty, I heard coin crossing the pass more often than steel. Tribute bought seasons. The princes call you solvent, not sovereign. You keep the throne as a rented chair. Humiliating. Durable, sometimes.
+**Prompt (outcome `tributary`):** Your Majesty, I heard coin crossing the pass more often than steel. Tribute bought seasons. The princes call you able to pay, not sovereign. You keep the throne as a rented chair. Humiliating. Durable, sometimes.
 
 **Prompt (outcome `victor`):** Your Majesty, I heard mobilization, raids, and timing over honor. You chose steel when winter closed. The pass is yours — for now. Rudolf approves. I mourn. War returns as habit if you sleep.
 
 **Prompt (outcome `broken`):** Your Majesty, I heard lies, hangings, bankrupt maps, and spring avoided once too often. The princes offer no friendship. The realm is cracked — by war, by abdication of quarrel, or by trust spent. You end the year smaller than you began it.
 
-**Prompt (outcome `vassal`):** Your Majesty, I heard the ultimatum on day one-twenty-two and your signature after. The pass is theirs. The regent's name travels south in ledgers. You keep a chair with a northern leash. Call it peace. Call it what you will.
+**Prompt (outcome `vassal`):** Your Majesty, I heard the final demand on day one-twenty-two and your signature after. The pass is theirs. The regent's name travels south in ledgers. You keep a chair with a northern leash. Call it peace. Call it what you will.
 
 **Choice 1:** I have heard the princes — dismiss the envoy
 - **Response (outcome `ally`):** Then may your heirs argue with mine in ledgers, not pass graves.
@@ -3169,7 +3175,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 | House | Speaker | Wants | Hates |
 |-------|---------|-------|-------|
-| **Ashford** | Lady Ashford | Privy council, nephew silenced, eastern supremacy | Dell-Crow compact, Raymond's mob |
+| **Ashford** | Lady Ashford | king's close advisors, nephew silenced, eastern supremacy | Dell-Crow compact, Raymond's mob |
 | **Vayne** | Lord Kaspar Vayne | Eastern second seat, war levies | Ashford monopoly, Dell's forged dowry |
 | **Dell** | Countess Marianna Dell | Marriage alliance, treasury access | Crow's higher bid, Ashford condescension |
 | **Crow** | Baroness Yvette Crow | Outbid Dell, joint regency | Dell's "legitimate" claim, Kaspar's spies |
@@ -3192,7 +3198,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 | 168 | Lord Raymond the Landless | No land, much anger |
 | 174 | Old Advisor Edric | Before the march |
 | 175 | Lady Ashford | Nobility unlock (Ashford debut) |
-| 178 | Lord Kaspar Vayne | Forgery accusation |
+| 178 | Lord Kaspar Vayne | fake seal accusation |
 | 181 | Duke the Goose | The absurd claimant |
 | 185 | Lady Ashford | Council fracture |
 | 188 | Countess Dell & Baroness Crow | Feast of insults |
@@ -3230,7 +3236,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 **Prompt variant (`northernAllianceSigned`):** Your Majesty, I heard you allied with northern princes before you seated a single great house. Ashford will call that foreign policy. I call it leverage — if you seat me before she arrives.
 
 **Choice 1:** Promise Kaspar equal standing with Ashford
-- **Response:** Then I will remember you when she tries to own the privy council. Eastern levies may follow — if coin follows first.
+- **Response:** Then I will remember you when she tries to own the king's close advisors. Eastern levies may follow — if coin follows first.
 - **Effects:** Nobility +5, Succession +4, Treasury -5
 - **Favor (Kaspar):** +20
 - **Favor (Ashford):** −10
@@ -3286,7 +3292,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt:** Your Majesty, I heard Dell offered you marriage and arithmetic. I offer more arithmetic. Double the dowry, half the sermons, and no Ashford on the privy council. Marry Crow, and the southern roads fund your throne. Marry Dell, and you marry her debt.
+**Prompt:** Your Majesty, I heard Dell offered you marriage and arithmetic. I offer more arithmetic. Double the dowry, half the sermons, and no Ashford on the king's close advisors. Marry Crow, and the southern roads fund your throne. Marry Dell, and you marry her debt.
 
 **Prompt variant (`housesDellOffer`):** Your Majesty, I heard you entertained Dell's bed. I am here to entertain your ambition. She counts sheep. I count regiments.
 
@@ -3379,7 +3385,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 | Debut choice | Arc flag / favor |
 |--------------|------------------|
-| Grant privy council | `housesAshfordCouncil`, Ashford +25, Kaspar −15 |
+| Grant king's close advisors | `housesAshfordCouncil`, Ashford +25, Kaspar −15 |
 | Marriage alliance | `housesAshfordMarriage`, Ashford +20, Dell −20, Crow −20 |
 | Bow or be broken | `housesAshfordHostile`, Ashford −30, Raymond +10 |
 | Need time | no flag, all favors −5 |
@@ -3388,7 +3394,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 ---
 
-### Beat 7 — Day 178 — Forgery Accusation
+### Beat 7 — Day 178 — fake seal Accusation
 
 **Character:** Lord Kaspar Vayne
 **Note:** Kaspar accuses Dell; internal east/south feud. Skip if `housesAliveKaspar = false`.
@@ -3396,9 +3402,9 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt:** Your Majesty, Countess Dell's dowry receipts are eastern forgeries — or Ashford forgeries meant to look like mine. I heard you promised someone marriage, someone balance, someone terror. I accuse Dell before she accuses me. Do you judge, defer, or let us duel without you?
+**Prompt:** Your Majesty, Countess Dell's dowry receipts are eastern fake seals — or Ashford fake seals meant to look like mine. I heard you promised someone marriage, someone balance, someone terror. I accuse Dell before she accuses me. Do you judge, defer, or let us duel without you?
 
-**Prompt variant (`housesAshfordCouncil`):** Your Majesty, I heard you seated Ashford. She smiles while Dell forges eastern seals. Seat me on the council you promised, or watch forgery become policy.
+**Prompt variant (`housesAshfordCouncil`):** Your Majesty, I heard you seated Ashford. She smiles while Dell forges eastern seals. Seat me on the council you promised, or watch fake seal become policy.
 
 **Choice 1:** Side with Kaspar — seize Dell's ledgers for audit
 - **Response:** Then Dell screams theft. Crow will whisper alliance. Ashford will call it weak kingship. Enjoy the noise.
@@ -3456,7 +3462,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt:** Your Majesty, your privy council is a cage of eastern tigers — and one goose outside the bars. I heard Kaspar accuse Dell, Crow outbid Dell, and Raymond gather landless steel. I will not share a council with Kaspar unless you mean to split the east. Choose who sits, who stands, who leaves in chains.
+**Prompt:** Your Majesty, your king's close advisors is a cage of eastern tigers — and one goose outside the bars. I heard Kaspar accuse Dell, Crow outbid Dell, and Raymond gather landless steel. I will not share a council with Kaspar unless you mean to split the east. Choose who sits, who stands, who leaves in chains.
 
 **Prompt variant (`housesDellCrowCompact`):** Your Majesty, I heard Dell and Crow share terms. I call that a southern noose around my house. Cut it, or wear it.
 
@@ -3524,7 +3530,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 **Prompt:** Your Majesty, three hundred men without fields camp on Ashford's border — or Dell's — or yours, depending who you angered least. I heard great houses feud while commons starve. I march tomorrow unless you grant titles now, hang a lord for sport, or send Ashford's knights to stop me.
 
-**Prompt variant (`housesRaymondPromised`):** Your Majesty, I heard you promised crown lands. Promises without deeds are how usurpers end. March with me or against me.
+**Prompt variant (`housesRaymondPromised`):** Your Majesty, I heard you promised crown lands. Promises without deeds are how kings who took the throne end. March with me or against me.
 
 **Choice 1:** Hang a small lord's title — give Raymond seized loyalist estates
 - **Response:** Then nobility screams. Raymond kneels — today. You have bought a dangerous friend.
@@ -3655,7 +3661,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 #### Node 0
 
-**Prompt (outcome `ashford_ascendant`):** Your Majesty, sixty days since the great houses stopped watching and started cutting — and Lady Ashford stands above the rest. I heard {housesDeadCount} names ended. Ashford lives. Rivals do not. The privy council will be eastern, narrow, and grateful to steel. You built government by whichever hawk remained.
+**Prompt (outcome `ashford_ascendant`):** Your Majesty, sixty days since the great houses stopped watching and started cutting — and Lady Ashford stands above the rest. I heard {housesDeadCount} names ended. Ashford lives. Rivals do not. The king's close advisors will be eastern, narrow, and grateful to steel. You built government by whichever hawk remained.
 
 **Prompt (outcome `crow_dell_compact`):** Your Majesty, Ashford fell — or sleeps — and Dell and Crow share a compact the court calls indecent and efficient. I heard {housesDeadCount} graves. Marriage ledgers outlived blood feuds. You rule a shortened parliament bound by dowry and spite.
 
@@ -3686,7 +3692,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 ## The Scaffold's Ledger (persistent story)
 
 **Defeat lanes:** Loyalty / Succession — *"A crown that cannot judge cannot command."*  
-**Span:** days **92–183**, **9 beats** — opens day **92** (People unlock conflict owns day 90; Northern refugees day 91). Runs after [Household](#the-old-kings-household-persistent-story) day 86, through [Hungry Season](#the-hungry-season-persistent-story), [Grey Lung](#grey-lung-cure-arc-persistent-story), and ends before [Guild Compact](#the-guild-compact-persistent-story) day 184. **Executioner Morwen** owns the scaffold; **Talen** tests whether justice has a price. Callbacks [Church](#the-crown-forfeit--tithe-war-persistent-story) heretics, [Great Houses](#the-great-houses-persistent-story) trial (day 201 echoes this arc).
+**Span:** days **92–183**, **9 beats** — opens day **92** (People unlock conflict owns day 90; Northern refugees day 91). Runs after [Household](#the-old-kings-household-persistent-story) day 86, through [Hungry Season](#the-hungry-season-persistent-story), [Grey Lung](#grey-lung-cure-arc-persistent-story), and ends before [Guild Compact](#the-guild-compact-persistent-story) day 184. **Executioner Morwen** owns the scaffold; **Talen** tests whether justice has a price. Callbacks [Church](#the-crown-forfeit--church tax-war-persistent-story) heretics, [Great Houses](#the-great-houses-persistent-story) trial (day 201 echoes this arc).
 
 **Hidden stat (runtime, not shown in top bar):** `scaffoldMercy` (−100…+100, starts at **0**)
 
@@ -3698,7 +3704,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 | **Merciful** | +5…+34 | Amnesties; empty cells |
 | **Empty rope** | ≥ +35 | Morwen idle; crown forgives |
 
-**Arc state:** `scaffoldMercy`, `scaffoldArcPhase` (active / resolved), `scaffoldCrownStance` (terror / law / mercy / bargain), flags (`scaffoldCellsFull`, `scaffoldChurchHeretic`, `scaffoldRiotHangings`, `scaffoldWardMadness`, `scaffoldHousesEcho`, `scaffoldTalenBribe`, `scaffoldMassAmnesty`, `scaffoldAshfordBlock`), `scaffoldOutcome` (none / bloody_peace / mercy_crown / morwens_republic / selective_justice)
+**Arc state:** `scaffoldMercy`, `scaffoldArcPhase` (active / resolved), `scaffoldCrownStance` (terror / law / mercy / bargain), flags (`scaffoldCellsFull`, `scaffoldChurchHeretic`, `scaffoldRiotHangings`, `scaffoldWardMadness`, `scaffoldHousesEcho`, `scaffoldTalenBribe`, `scaffoldMassforgiveness`, `scaffoldAshfordBlock`), `scaffoldOutcome` (none / bloody_peace / mercy_crown / morwens_republic / selective_justice)
 
 **Beat schedule (no overlap with Hungry 93/100/106/119, Grey Lung 130, Northern 91/122/145/172, Great Houses 158–218, Guild 184+):**
 
@@ -3711,7 +3717,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 | 148 | Executioner Morwen | Echo before the houses |
 | 154 | Executioner Morwen | Who swings before Ashford |
 | 165 | Talen | Bribe the executioner |
-| 179 | Executioner Morwen | Mass amnesty or mass hanging |
+| 179 | Executioner Morwen | Mass forgiveness or mass hanging |
 | 183 | Old Advisor Edric | Verdict on mercy (finale) |
 
 **Possible endings (day 183):** Bloody Peace · Mercy Crown · Morwen's Republic · Selective Justice
@@ -3720,7 +3726,7 @@ Foreign-war arc spanning **day 5 to day 350**. Ambassador Ingvar and the norther
 
 Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. Day **92** sets `scaffoldArcPhase = active`. Day 183 finale: compute `scaffoldOutcome` from priority on load, then show [notification beat](#beat-9--day-183--verdict-on-mercy).
 
-**Day 183 outcome priority:** `scaffoldMercy` ≤ −35 + `scaffoldRiotHangings` or `scaffoldChurchHeretic` → **bloody_peace** · `scaffoldMercy` ≥ +35 + `scaffoldMassAmnesty` → **mercy_crown** · `scaffoldTalenBribe` + `scaffoldCrownStance = bargain` + mercy ≤ 0 → **morwens_republic** · `scaffoldCrownStance = law` + mercy between −10 and +25 → **selective_justice** · else **selective_justice** (fallback).
+**Day 183 outcome priority:** `scaffoldMercy` ≤ −35 + `scaffoldRiotHangings` or `scaffoldChurchHeretic` → **bloody_peace** · `scaffoldMercy` ≥ +35 + `scaffoldMassforgiveness` → **mercy_crown** · `scaffoldTalenBribe` + `scaffoldCrownStance = bargain` + mercy ≤ 0 → **morwens_republic** · `scaffoldCrownStance = law` + mercy between −10 and +25 → **selective_justice** · else **selective_justice** (fallback).
 
 **People before day 89:** Beats 1–3 list People effects as **banked** on day 90+; substitute Loyalty before day 89 per beat **Note**.
 
@@ -3736,7 +3742,7 @@ Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. D
 
 #### Node 0
 
-**Prompt:** Your Majesty, I am Morwen — the woman who turns policy into rope. Edwin's cells still hold men who swore to his ghost. I heard you cleansed the court, turned the household, or let whispers walk the halls. The lower dungeon breathes overcrowded. Hang the loyalists, sell amnesty for coin, or empty the cells and dare the realm to test you.
+**Prompt:** Your Majesty, I am Morwen — the woman who turns policy into rope. Edwin's cells still hold men who swore to his ghost. I heard you cleansed the court, turned the household, or let whispers walk the halls. The lower dungeon breathes overcrowded. Hang the loyalists, sell forgiveness for coin, or empty the cells and dare the realm to test you.
 
 **Prompt variant (`householdOutcome = clean_court`):** Your Majesty, I heard you purged Edwin's people. My queue is long and your mercy short. Good — rope appreciates clarity.
 
@@ -3749,7 +3755,7 @@ Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. D
 - **Sets stance:** `terror`
 - **Sets flag:** `scaffoldCellsFull`
 
-**Choice 2:** Sell amnesty — coin for clemency
+**Choice 2:** Sell forgiveness — coin for clemency
 - **Response:** Justice as tariff. Borvin will call it crude. I call it employment.
 - **Effects:** Treasury +15, Loyalty -4, Nobility -5
 - **Mercy:** +5
@@ -3766,14 +3772,14 @@ Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. D
 ### Beat 2 — Day 104 — Heaven Wants Heretics
 
 **Character:** Executioner Morwen
-**Note:** Between Hungry Season beats (day 100 Gromm, day 106 Rudolf). [Church](#the-crown-forfeit--tithe-war-persistent-story) active. Cyrus may be referenced.
+**Note:** Between Hungry Season beats (day 100 Gromm, day 106 Rudolf). [Church](#the-crown-forfeit--church tax-war-persistent-story) active. Cyrus may be referenced.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, Malrik sends names — schismatics, soup-preachers, men who call you forfeit in rhyme. I heard you knelt, defied, or fractured the Church. Heaven wants heretics. The crown wants traitors. My scaffold fits both if you widen it. Burn Church lists, hang crown lists, or hang everyone and let the mob sort scripture.
+**Prompt:** Your Majesty, Malrik sends names — church splitatics, soup-preachers, men who call you forfeit in rhyme. I heard you knelt, defied, or fractured the Church. Heaven wants heretics. The crown wants traitors. My scaffold fits both if you widen it. Burn Church lists, hang crown lists, or hang everyone and let the mob sort scripture.
 
-**Prompt variant (`churchArcStance = schism`):** Your Majesty, I heard Arvel's gate breeds sermons faster than I braid rope. Hang one side and the other calls you partisan. Hang both and the city calls you mad.
+**Prompt variant (`churchArcStance = church split`):** Your Majesty, I heard Arvel's gate breeds sermons faster than I braid rope. Hang one side and the other calls you partisan. Hang both and the city calls you mad.
 
 **Prompt variant (`scaffoldCellsFull`):** Your Majesty, I heard your cells still crowded from day ninety. Add heretics and the stench reaches the cathedral steps.
 
@@ -3864,7 +3870,7 @@ Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. D
 ### Beat 5 — Day 148 — Echo Before the Houses
 
 **Character:** Executioner Morwen
-**Note:** Between [Guild day 144](#beat-3--day-144--counterfeit-edwin-coin) and day 152. Foreshadows [Great Houses](#the-great-houses-persistent-story). Lords will soon demand rope for rivals.
+**Note:** Between [Guild day 144](#beat-3--day-144--fake coin-edwin-coin) and day 152. Foreshadows [Great Houses](#the-great-houses-persistent-story). Lords will soon demand rope for rivals.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
@@ -3916,7 +3922,7 @@ Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. D
 - **Response:** Bold mercy before nobility unlocks. She will call it bribery of conscience.
 - **Effects:** Loyalty +10, Nobility -6, Succession +5
 - **Mercy:** +15
-- **Sets flag:** `scaffoldMassAmnesty` (partial)
+- **Sets flag:** `scaffoldMassforgiveness` (partial)
 
 **Choice 3:** Accept Ashford's first name — partnership in rope
 - **Response:** Then you hang before she bows. Partnership — or submission. She will know which.
@@ -3959,25 +3965,25 @@ Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. D
 
 ---
 
-### Beat 8 — Day 179 — Mass Amnesty or Mass Hanging
+### Beat 8 — Day 179 — Mass forgiveness or Mass Hanging
 
 **Character:** Executioner Morwen
-**Note:** Between [Great Houses day 178](#beat-7--day-178--forgery-accusation) and day 181 Goose. Post–[Northern day 172](#beat-12--day-172--houses-measure-your-wars) (no collision — northern 172, scaffold 179). Callback `housesDeadCount` if trial fired early... trial is day 201 — use `scaffoldHousesEcho` only.
+**Note:** Between [Great Houses day 178](#beat-7--day-178--fake seal-accusation) and day 181 Goose. Post–[Northern day 172](#beat-12--day-172--houses-measure-your-wars) (no collision — northern 172, scaffold 179). Callback `housesDeadCount` if trial fired early... trial is day 201 — use `scaffoldHousesEcho` only.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, the cells are full again — rioters, heretics, madmen, names Talen misplaced, names lords prepaid. I heard Great Houses sharpening knives for each other. Declare mass amnesty and empty my yard, declare mass hanging and teach the realm silence, or continue case by case while peers murder in alleys without me.
+**Prompt:** Your Majesty, the cells are full again — rioters, heretics, madmen, names Talen misplaced, names lords prepaid. I heard Great Houses sharpening knives for each other. Declare mass forgiveness and empty my yard, declare mass hanging and teach the realm silence, or continue case by case while peers murder in alleys without me.
 
-**Prompt variant (`scaffoldTalenBribe`):** Your Majesty, I heard Talen owns part of my list. Amnesty embarrasses him. Hanging embarrasses you. Choose who blushes.
+**Prompt variant (`scaffoldTalenBribe`):** Your Majesty, I heard Talen owns part of my list. forgiveness embarrasses him. Hanging embarrasses you. Choose who blushes.
 
-**Prompt variant (`scaffoldMassAmnesty` partial):** Your Majesty, I heard you emptied the yard once before Ashford. Finish the habit or break it.
+**Prompt variant (`scaffoldMassforgiveness` partial):** Your Majesty, I heard you emptied the yard once before Ashford. Finish the habit or break it.
 
-**Choice 1:** Mass amnesty — empty Morwen's yard
+**Choice 1:** Mass forgiveness — empty Morwen's yard
 - **Response:** Then I oil unused hinges. The realm calls it weakness until it calls it wisdom.
 - **Effects:** Loyalty +15, Army -6, People +8
 - **Mercy:** +30
-- **Sets flag:** `scaffoldMassAmnesty`
+- **Sets flag:** `scaffoldMassforgiveness`
 
 **Choice 2:** Mass hanging — forty in one dawn
 - **Response:** Then birds avoid the square. Order arrives. Mercy leaves on horseback.
@@ -4002,7 +4008,7 @@ Every scheduled day shows one Scaffold beat while `scaffoldArcPhase = active`. D
 
 **Prompt (outcome `bloody_peace`):** Your Majesty, ninety-three days since Morwen first counted Edwin's loyalists — and the realm knows you by rope. I heard heretics, rioters, madmen, and Talen's misplaced names. The square is quiet. The heart is not. You bought bloody peace. It holds — until it does not.
 
-**Prompt (outcome `mercy_crown`):** Your Majesty, I heard amnesty more often than axe-strokes. Morwen's yard is empty enough to embarrass a tyrant. The commons call you merciful. The barracks call you soft. Both may be wrong. You rule a mercy crown.
+**Prompt (outcome `mercy_crown`):** Your Majesty, I heard forgiveness more often than axe-strokes. Morwen's yard is empty enough to embarrass a tyrant. The commons call you merciful. The barracks call you soft. Both may be wrong. You rule a mercy crown.
 
 **Prompt (outcome `morwens_republic`):** Your Majesty, I heard Talen price throats and Morwen hate her ledger. Justice became commerce without your face on the coin. Morwen's republic — rope sold by fixers. Efficient. Monstrous. Yours.
 
@@ -4042,7 +4048,7 @@ Sparse **wildcard** arc spanning days **105–318**. **Astrologer Meribald** rea
 
 | Day | Character | Beat | Era |
 |-----|-----------|------|-----|
-| 105 | Astrologer Meribald | Comet confirms regicide | People era (unlock 89) |
+| 105 | Astrologer Meribald | Comet confirms killing a king | People era (unlock 89) |
 | 155 | Astrologer Meribald | Ashford's house in the stars | Pre-Nobility |
 | 212 | Meribald & Nameless Prophet | Two omens, one mob (2 nodes) | Great Houses era |
 | 235 | Astrologer Meribald | Succession omen | Pre-Loyalty (260) |
@@ -4063,7 +4069,7 @@ Every scheduled beat fires while `starArcPhase = active` unless suppressed. Day 
 
 ---
 
-### Beat 1 — Day 105 — Comet Confirms Regicide
+### Beat 1 — Day 105 — Comet Confirms killing a king
 
 **Character:** Astrologer Meribald
 **Note:** Between Hungry beats (100, 106). Opens arc. Post–People unlock (89). Sets `starArcPhase = active`, `starCometProclaimed` on public embrace.
@@ -4071,7 +4077,7 @@ Every scheduled beat fires while `starArcPhase = active` unless suppressed. Day 
 
 #### Node 0
 
-**Prompt:** Your Majesty, I am Meribald — I read what heaven writes in numbers, not rhymes. A comet crosses Edwin's constellation on the night you took his chair. I heard a blade, a household purged or haunted, and Malrik still deciding your soul's tax bracket. The comet confirms regicide to anyone who looks up. Silence me, regulate me, or crown the sky your privy council.
+**Prompt:** Your Majesty, I am Meribald — I read what heaven writes in numbers, not rhymes. A comet crosses Edwin's constellation on the night you took his chair. I heard a blade, a household purged or haunted, and Malrik still deciding your soul's tax bracket. The comet confirms killing a king to anyone who looks up. Silence me, regulate me, or crown the sky your king's close advisors.
 
 **Prompt variant (`prophetFirstHeard`):** Your Majesty, I heard a nameless prophet rhymes in the market while I measure angles in the tower. Street faith hates comets. Comets hate street faith. You stand between.
 
@@ -4215,7 +4221,7 @@ Every scheduled beat fires while `starArcPhase = active` unless suppressed. Day 
 - **Sets flag:** `starSuccessionOmen`
 
 **Choice 2:** Suppress the chart — burn copies
-- **Response:** Then Knox sells forgeries by Friday. You chose mystery. Mystery is expensive.
+- **Response:** Then Knox sells fake seals by Friday. You chose mystery. Mystery is expensive.
 - **Effects:** Loyalty -6, Treasury -8
 - **Credibility:** −5
 
@@ -4298,7 +4304,7 @@ Every scheduled beat fires while `starArcPhase = active` unless suppressed. Day 
 | **Cordial** | +5…+34 | Managed trust |
 | **Trusted court** | ≥ +35 | Catalogued loyalty, mutual leverage |
 
-**Arc state:** `courtTrust`, `knivesArcPhase` (active / resolved), `knivesCrownStance` (purge / manage / trust / sell), flags (`knivesKnoxOffer`, `knivesOsricForgery`, `knivesMaskedAudience`, `knivesRaenaDoor`, `knivesIlanaSold`, `knivesBorvinLeak`, `knivesTalenTriple`, `knivesVarnPurge`), `knivesOutcome` (none / iron_chancellor / hollow_court / traitor_king / managed_spies)
+**Arc state:** `courtTrust`, `knivesArcPhase` (active / resolved), `knivesCrownStance` (purge / manage / trust / sell), flags (`knivesKnoxOffer`, `knivesOsricfake seal`, `knivesMaskedAudience`, `knivesRaenaDoor`, `knivesIlanaSold`, `knivesBorvinLeak`, `knivesTalenTriple`, `knivesVarnPurge`), `knivesOutcome` (none / iron_chancellor / hollow_court / traitor_king / managed_spies)
 
 **Beat schedule (Ilana day 276 — not 280; [Star Chamber](#the-star-chamber-wildcard--cross-arc) owns 280):**
 
@@ -4323,7 +4329,7 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 
 **Loyalty unlock day 260:** Beats 1–4 (days 248–268) bank Loyalty effects as documented; beats 5+ apply Loyalty stat live.
 
-**Day 315 outcome priority:** `courtTrust` ≤ −35 + (`knivesVarnPurge` or `knivesCrownStance = purge`) → **iron_chancellor** · `courtTrust` ≤ −20 + three+ flags (`knivesKnoxOffer`, `knivesOsricForgery`, `knivesBorvinLeak`) → **hollow_court** · `knivesKnoxOffer` accepted + trust ≤ 0 or `knivesTalenTriple` + trust ≤ −10 → **traitor_king** · trust ≥ +20 + `knivesCrownStance = manage` → **managed_spies** · else **managed_spies** (fallback).
+**Day 315 outcome priority:** `courtTrust` ≤ −35 + (`knivesVarnPurge` or `knivesCrownStance = purge`) → **iron_chancellor** · `courtTrust` ≤ −20 + three+ flags (`knivesKnoxOffer`, `knivesOsricfake seal`, `knivesBorvinLeak`) → **hollow_court** · `knivesKnoxOffer` accepted + trust ≤ 0 or `knivesTalenTriple` + trust ≤ −10 → **traitor_king** · trust ≥ +20 + `knivesCrownStance = manage` → **managed_spies** · else **managed_spies** (fallback).
 
 **Cross-arc callbacks:** [Northern](#the-northern-price-persistent-story) `northernTrust`, [Guild](#the-guild-compact-persistent-story) `guildKnoxLeak`, [Star Chamber](#the-star-chamber-wildcard--cross-arc) `starKnoxStars`, [Below the Tapestry](#below-the-tapestry-persistent-story) `tapestryKnoxServants`, [Scaffold](#the-scaffolds-ledger-persistent-story) Talen, [Great Houses](#the-great-houses-persistent-story) `housesOutcome`.
 
@@ -4406,7 +4412,7 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 
 #### Node 0
 
-**Prompt:** Your Majesty, decrees circulate in Edwin's hand — my hand — your hand — and the forgery is exquisite. I heard Knox sell maps, foreign houses bid, and Loyalty unlock approach. Hang the forger, authenticate every seal with pain, or use false decrees to feed false buyers and learn who bites.
+**Prompt:** Your Majesty, decrees circulate in Edwin's hand — my hand — your hand — and the fake seal is exquisite. I heard Knox sell maps, foreign houses bid, and Loyalty unlock approach. Hang the forger, authenticate every seal with pain, or use false decrees to feed false buyers and learn who bites.
 
 **Prompt variant (`householdCutClerks` or `householdOutcome = clean_court`):** Your Majesty, I heard you purged archives. Forgers thrive in confusion. That is not philosophy — it is paperwork.
 
@@ -4415,17 +4421,17 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 - **Effects:** Loyalty +10, Treasury -8, Succession +6
 - **Trust:** +12
 
-**Choice 2:** Feed forgeries to Knox's buyers — counter-intelligence
+**Choice 2:** Feed fake seals to Knox's buyers — counter-intelligence
 - **Response:** Then liars eat liars. If they compare notes, you burn. Until then, you learn.
 - **Effects:** Loyalty +4, Army +3
 - **Trust:** +6
-- **Sets flag:** `knivesOsricForgery`
+- **Sets flag:** `knivesOsricfake seal`
 
 **Choice 3:** Hang Osric — scapegoat the archive
-- **Response:** Convenient. Forgeries continue without a neck to blame. You chose theatre.
+- **Response:** Convenient. fake seals continue without a neck to blame. You chose theatre.
 - **Effects:** Loyalty -12, Succession +5
 - **Trust:** −18
-- **Sets flag:** `knivesOsricForgery` (worse fallout)
+- **Sets flag:** `knivesOsricfake seal` (worse fallout)
 
 ---
 
@@ -4471,7 +4477,7 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 
 #### Node 0
 
-**Prompt:** Your Majesty, three men claim my post — mercenary, Edwin's veteran, foreign sworn sword. I heard Knox's offer, Osric's forgeries, and a mask in your council. Loyalty meter says the realm watches who you trust at the door. Keep me, rotate guards, or double posts and bankrupt trust.
+**Prompt:** Your Majesty, three men claim my post — mercenary, Edwin's veteran, foreign sworn sword. I heard Knox's offer, Osric's fake seals, and a mask in your council. Loyalty meter says the realm watches who you trust at the door. Keep me, rotate guards, or double posts and bankrupt trust.
 
 **Prompt variant (`knivesKnoxOffer`):** Your Majesty, I heard you sold maps abroad. My sword is not for export — yet.
 
@@ -4505,7 +4511,7 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 
 **Prompt:** Your Majesty, I write the first draft of your reign while knives sell second drafts abroad. I heard Knox, foreign houses, and Talen price your mornings. Buy my chapter exclusively, let chapters leak and learn who reads, or burn drafts and rule without chronicle — blind, but unquoted.
 
-**Prompt variant (`knivesOsricForgery`):** Your Majesty, I heard decrees lie. I prefer verbs that do not need forgeries to rhyme.
+**Prompt variant (`knivesOsricfake seal`):** Your Majesty, I heard decrees lie. I prefer verbs that do not need fake seals to rhyme.
 
 **Prompt variant (`housesDeadCount` ≥ 2):** Your Majesty, I heard blood in the peerage. My ink is still wet.
 
@@ -4630,7 +4636,7 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 
 #### Node 0
 
-**Prompt (outcome `iron_chancellor`):** Your Majesty, sixty-seven days since Knox's foreign offer — and the court knows you by purge. I heard forgeries hunted, masks refused, guards replaced, ledgers scapegoated. Iron chancellor — fear keeps the council in line. Loyalty survives. Warmth does not.
+**Prompt (outcome `iron_chancellor`):** Your Majesty, sixty-seven days since Knox's foreign offer — and the court knows you by purge. I heard fake seals hunted, masks refused, guards replaced, ledgers scapegoated. Iron chancellor — fear keeps the council in line. Loyalty survives. Warmth does not.
 
 **Prompt (outcome `hollow_court`):** Your Majesty, I heard maps sold, chapters leaked, ledgers false, masks unnamed. Hollow court — everyone present, no one believed. You reign among spies who hate each other almost as much as they hate you.
 
@@ -4652,20 +4658,20 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 
 ## The Nephew in the Fog (persistent story)
 
-**Defeat lane:** Succession — *"A usurper without a story dies when a nephew finds his voice."*  
+**Defeat lane:** Succession — *"A king who took the throne without a story dies when a nephew finds his voice."*  
 **Span:** days **234–335**, **10 beats** — begins between [Star Chamber day 235](#beat-5--day-235--succession-omen) and [Court of Knives day 248](#beat-1--day-248--foreign-offer), crosses Succession unlock (**320**), ends before [Grey Lung day 340](#beat-8--day-340--historical-verdict-outcome-cured). **The Masked One** claims to speak for Edwin's nephew; **Talen**, **Ashford**, **Knox**, **Osric**, **Ilana**, and **Ingvar** price the boy's location. Day **335** is a **Prophet coda** after the day-328 finale — not a Prophet-arc beat.
 
 **Hidden stat (runtime, not shown in top bar):** `heirCredibility` (−100…+100, starts at **0**)
 
 | Tier | Range | Realm belief |
 |------|-------|----------------|
-| **Usurper secure** | ≤ −35 | Nephew dismissed; your line stands |
+| **king who took the throne secure** | ≤ −35 | Nephew dismissed; your line stands |
 | **Doubted** | −34…−5 | Rumours without proof |
 | **Contested** | −4…+4 | Two stories, one throne |
 | **Credible heir** | +5…+34 | Nephew gains allies |
 | **True line** | ≥ +35 | Succession crisis imminent |
 
-**Arc state:** `heirCredibility`, `heirArcPhase` (active / resolved), `heirCrownStance` (silence / hunt / legitimize / exile), flags (`heirMaskedClaim`, `heirAshfordMarriage`, `heirTalenBuyers`, `heirKnoxNorth`, `heirOsricBirthForge`, `heirIlanaDualChapter`, `heirIngvarBid`, `heirUnmasked`, `heirNephewAlive`, `heirIdentity` none / nephew / impostor / ashford_pawn), `heirOutcome` (none / nephew_dead / nephew_crowned / nephew_exiled / usurper_legitimized)
+**Arc state:** `heirCredibility`, `heirArcPhase` (active / resolved), `heirCrownStance` (silence / hunt / make lawful / exile), flags (`heirMaskedClaim`, `heirAshfordMarriage`, `heirTalenBuyers`, `heirKnoxNorth`, `heirOsricBirthForge`, `heirIlanaDualChapter`, `heirIngvarBid`, `heirUnmasked`, `heirNephewAlive`, `heirIdentity` none / nephew / impostor / ashford_pawn), `heirOutcome` (none / nephew_dead / nephew_crowned / nephew_exiled / king who took the throne_made lawful)
 
 **Beat schedule (Talen day 257, Knox day 271 — avoid Court of Knives 255/268):**
 
@@ -4679,18 +4685,18 @@ Every scheduled day shows one Court of Knives beat while `knivesArcPhase = activ
 | 298 | Chronicler Ilana | Two succession chapters |
 | 310 | Ambassador Ingvar | Northern princes want the heir |
 | 322 | The Masked One | Unmasking |
-| 328 | Old Advisor Edric | Legitimacy finale |
+| 328 | Old Advisor Edric | lawful right to rule finale |
 | 335 | Nameless Prophet | Omen on the true line (coda) |
 
-**Possible endings (day 328):** Nephew Dead · Nephew Crowned (game over) · Nephew Exiled · Usurper Legitimized
+**Possible endings (day 328):** Nephew Dead · Nephew Crowned (game over) · Nephew Exiled · The king who took the throne, made lawful
 
 ### Nephew in the Fog — beat resolution rules
 
-Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234 sets `heirArcPhase = active`. Day 328 finale: compute `heirOutcome` from priority on load, then show [notification beat](#beat-9--day-328--legitimacy-finale). Day 335 coda fires after finale regardless of outcome — Prophet **reports** an omen; one acknowledgment choice; does not change `heirOutcome`.
+Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234 sets `heirArcPhase = active`. Day 328 finale: compute `heirOutcome` from priority on load, then show [notification beat](#beat-9--day-328--lawful right to rule-finale). Day 335 coda fires after finale regardless of outcome — Prophet **reports** an omen; one acknowledgment choice; does not change `heirOutcome`.
 
 **Succession before day 320:** Beats 1–7 bank Succession effects; beats 8+ apply Succession stat live.
 
-**Day 328 outcome priority:** `heirNephewAlive` false or (`heirCrownStance = hunt` + credibility ≤ −25) → **nephew_dead** · `heirUnmasked` + `heirIdentity = nephew` + credibility ≥ +40 → **nephew_crowned** (triggers **game over** at implementation — nephew takes throne) · `heirIngvarBid` + `heirCrownStance = exile` + nephew alive → **nephew_exiled** · `heirAshfordMarriage` or `heirCrownStance = legitimize` + credibility ≤ −15 → **usurper_legitimized** · else **usurper_legitimized** (fallback — fog persists).
+**Day 328 outcome priority:** `heirNephewAlive` false or (`heirCrownStance = hunt` + credibility ≤ −25) → **nephew_dead** · `heirUnmasked` + `heirIdentity = nephew` + credibility ≥ +40 → **nephew_crowned** (triggers **game over** at implementation — nephew takes throne) · `heirIngvarBid` + `heirCrownStance = exile` + nephew alive → **nephew_exiled** · `heirAshfordMarriage` or `heirCrownStance = make lawful` + credibility ≤ −15 → **king who took the throne_made lawful** · else **king who took the throne_made lawful** (fallback — fog persists).
 
 **Cross-arc callbacks:** [Court of Knives](#the-court-of-knives-persistent-story) `knivesMaskedAudience`, `knivesTalenTriple`, `knivesKnoxOffer`, [Great Houses](#the-great-houses-persistent-story) `housesAshfordCouncil`, [Star Chamber](#the-star-chamber-wildcard--cross-arc) `starSuccessionOmen`, [Prophet](#the-prophets-winter-wildcard--cross-arc) `prophetOutcome`, [Northern](#the-northern-price-persistent-story) `northernTrust`.
 
@@ -4710,7 +4716,7 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 **Prompt variant (`starSuccessionOmen`):** Your Majesty, I heard Meribald mapped a child-shaped gap. I am the gap's voice — or its vendor.
 
-**Choice 1:** Deny the nephew — crown calls claim forgery
+**Choice 1:** Deny the nephew — crown calls claim fake seal
 - **Response:** Then the fog thickens. Someone will believe anyway. Lies need only patience.
 - **Effects:** Succession +8, Nobility +6, Loyalty -4
 - **Credibility:** −12
@@ -4750,7 +4756,7 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 - **Effects:** Nobility +12, Succession +10, Loyalty -8, Army +4
 - **Credibility:** −10
 - **Sets flag:** `heirAshfordMarriage`
-- **Sets stance:** `legitimize`
+- **Sets stance:** `make lawful`
 
 **Choice 2:** Refuse marriage — hunt nephew for crown alone
 - **Response:** Then we are rivals, not kin. I will remember who refused insurance.
@@ -4807,7 +4813,7 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 #### Node 0
 
-**Prompt:** Your Majesty, Ingvar's clerks offer coin for a boy matching the nephew's description — alive, dead, or convincingly dead. I heard Talen's auction and Ashford's marriage plots. Sell the nephew north and buy peace, refuse and arm a legend, or fake a corpse and sell the forgery twice.
+**Prompt:** Your Majesty, Ingvar's clerks offer coin for a boy matching the nephew's description — alive, dead, or convincingly dead. I heard Talen's auction and Ashford's marriage plots. Sell the nephew north and buy peace, refuse and arm a legend, or fake a corpse and sell the fake seal twice.
 
 **Prompt variant (`knivesKnoxOffer`):** Your Majesty, I heard you rented me abroad. Nephews are a side market. I diversify.
 
@@ -4842,7 +4848,7 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 **Prompt:** Your Majesty, birth records disagree — Edwin's nephew born in spring, summer, or not at all. I heard Knox sold north, Talen sold coordinates, Ashford sold marriage. Forge records proving nephew bastard, restore Edwin's original line, or burn the archive and let fog win.
 
-**Prompt variant (`knivesOsricForgery`):** Your Majesty, I heard decrees already lie. Birth is merely decrees with crying.
+**Prompt variant (`knivesOsricfake seal`):** Your Majesty, I heard decrees already lie. Birth is merely decrees with crying.
 
 **Prompt variant (`heirKnoxNorth`):** Your Majesty, I heard the north wants a boy. Records are how they justify the invoice.
 
@@ -4879,7 +4885,7 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 **Prompt variant (`heirIlanaDualChapter` false + high credibility):** Your Majesty, the boy gains verbs in my draft whether you approve or not.
 
-**Choice 1:** Publish nephew chapter — legitimacy contest in ink
+**Choice 1:** Publish nephew chapter — lawful right to rule contest in ink
 - **Response:** Then the realm reads civil war before breakfast. Honest — if you survive it.
 - **Effects:** Succession -12, People +8, Loyalty +6
 - **Credibility:** +15
@@ -4924,11 +4930,11 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 - **Sets flag:** `heirIngvarBid`
 - **Sets stance:** `exile`
 
-**Choice 3:** Offer usurper's charter — you are the only king that matters
-- **Response:** Bold blasphemy against blood. I will carry the message north. They will laugh — then calculate.
+**Choice 3:** Offer throne-stealer's charter — you are the only king that matters
+- **Response:** Bold insult to the sacred against blood. I will carry the message north. They will laugh — then calculate.
 - **Effects:** Succession +15, Nobility -8, Loyalty -6
 - **Credibility:** −12
-- **Sets stance:** `legitimize`
+- **Sets stance:** `make lawful`
 
 ---
 
@@ -4940,7 +4946,7 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 #### Node 0
 
-**Prompt:** Your Majesty, the mask comes off because stories must end or explode. I heard chapters, forgeries, northern bids, and your reign measured in fog. I may be Edwin's nephew, Ashford's pawn, a merchant's son, or a mask Knox wears for profit. Demand truth publicly, accept private answer, or declare the mask itself the only heir that matters.
+**Prompt:** Your Majesty, the mask comes off because stories must end or explode. I heard chapters, fake seals, northern bids, and your reign measured in fog. I may be Edwin's nephew, Ashford's pawn, a merchant's son, or a mask Knox wears for profit. Demand truth publicly, accept private answer, or declare the mask itself the only heir that matters.
 
 **Prompt variant (`knivesMaskedAudience`):** Your Majesty, I heard you granted me council once. Unmasking is payment due.
 
@@ -4967,7 +4973,7 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 ---
 
-### Beat 9 — Day 328 — Legitimacy Finale
+### Beat 9 — Day 328 — lawful right to rule Finale
 
 **Character:** Old Advisor Edric
 **Note:** Arc finale. Eight days after Succession unlock (320). **On load:** run [day 328 outcome priority](#nephew-in-the-fog--beat-resolution-rules) → `heirOutcome`, `heirArcPhase = resolved`.
@@ -4975,13 +4981,13 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 #### Node 0
 
-**Prompt (outcome `nephew_dead`):** Your Majesty, ninety-four days since a mask named Edwin's nephew — and the boy is dead on paper, in fact, or convincingly enough. I heard hunts, forgeries, northern bids, and Ashford's insurance. Nephew dead. Your line stands on blade and ledger. Guard it — fog has cousins.
+**Prompt (outcome `nephew_dead`):** Your Majesty, ninety-four days since a mask named Edwin's nephew — and the boy is dead on paper, in fact, or convincingly enough. I heard hunts, fake seals, northern bids, and Ashford's insurance. Nephew dead. Your line stands on blade and ledger. Guard it — fog has cousins.
 
 **Prompt (outcome `nephew_crowned`):** Your Majesty, I heard the mask was blood, the chapters were true, and the realm prefers birth to blade. The nephew lives and the throne moves. Nephew crowned — **your reign ends here** at implementation. I write the last page you will authorize.
 
 **Prompt (outcome `nephew_exiled`):** Your Majesty, I heard the north bought a boy and you bought spring. Nephew exiled — alive, elsewhere, hungry for your mistakes. Peace today. Story tomorrow.
 
-**Prompt (outcome `usurper_legitimized`):** Your Majesty, I heard marriage, forged bastardy, or fog too thick to cut. The realm accepts your story — not Edwin's line, not Ashford's pawn, **you**. Usurper legitimized. Rare. Costly. Yours.
+**Prompt (outcome `king who took the throne_made lawful`):** Your Majesty, I heard marriage, forged bastardy, or fog too thick to cut. The realm accepts your story — not Edwin's line, not Ashford's pawn, **you**. The king who took the throne, made lawful. Rare. Costly. Yours.
 
 **Choice 1:** I have heard the line — dismiss the succession court
 - **Response (outcome `nephew_dead`):** Then I write *survivor* and close the nephew ledger.
@@ -4990,15 +4996,15 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 - **Effects (outcome `nephew_crowned`):** *(game over — no further days)*
 - **Response (outcome `nephew_exiled`):** Then I write *exile* and hope distance equals mercy.
 - **Effects (outcome `nephew_exiled`):** Succession +8, Army +6, Treasury -10
-- **Response (outcome `usurper_legitimized`):** Then I write *legitimacy bought* and pray it holds past winter.
-- **Effects (outcome `usurper_legitimized`):** Succession +12, Nobility +8, Loyalty +6
+- **Response (outcome `king who took the throne_made lawful`):** Then I write *Lawful rule bought with votes* and pray it holds past winter.
+- **Effects (outcome `king who took the throne_made lawful`):** Succession +12, Nobility +8, Loyalty +6
 
 ---
 
 ### Beat 10 — Day 335 — Omen on the True Line (coda)
 
 **Character:** Nameless Prophet
-**Note:** **Coda** after [finale day 328](#beat-9--day-328--legitimacy-finale). `heirArcPhase` already `resolved`. Does **not** change `heirOutcome`. Cross-callback [Prophet day 325](#beat-6--day-325--the-last-sign). Ten days before [Grey Lung day 340](#beat-8--day-340--historical-verdict-outcome-cured).
+**Note:** **Coda** after [finale day 328](#beat-9--day-328--lawful right to rule-finale). `heirArcPhase` already `resolved`. Does **not** change `heirOutcome`. Cross-callback [Prophet day 325](#beat-6--day-325--the-last-sign). Ten days before [Grey Lung day 340](#beat-8--day-340--historical-verdict-outcome-cured).
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
@@ -5009,21 +5015,21 @@ Every scheduled day shows one Nephew beat while `heirArcPhase = active`. Day 234
 
 **Prompt (heirOutcome `nephew_exiled`):** Your Majesty, I heard the nephew walks northern snow. Exile is a kind of crown — cold, far, patient. The true line breathes where you cannot reach.
 
-**Prompt (heirOutcome `usurper_legitimized`):** Your Majesty, I heard the realm chose your story over Edwin's blood. Legitimacy is a sermon the living preach. My omen: **the usurper becomes dynasty** — if you survive the next winter.
+**Prompt (heirOutcome `king who took the throne_made lawful`):** Your Majesty, I heard the realm chose your story over Edwin's blood. Your right to rule is a sermon the living preach. My omen: **the king who took the throne becomes dynasty** — if you survive the next winter.
 
 **Choice 1:** I have heard the omen — let the prophet go
 - **Response (heirOutcome `nephew_dead`):** Then fog closes. Spring opens other ledgers.
 - **Effects (heirOutcome `nephew_dead`):** Church -4, Loyalty +3
 - **Response (heirOutcome `nephew_exiled`):** Then pray the north keeps him hungry, not ambitious.
 - **Effects (heirOutcome `nephew_exiled`):** Succession +4, Loyalty +2
-- **Response (heirOutcome `usurper_legitimized`):** Then dynasty is a verb. Prove it daily.
-- **Effects (heirOutcome `usurper_legitimized`):** Succession +6, People +4
+- **Response (heirOutcome `king who took the throne_made lawful`):** Then dynasty is a verb. Prove it daily.
+- **Effects (heirOutcome `king who took the throne_made lawful`):** Succession +6, People +4
 
 ---
 
 ## The Prophet's Winter (wildcard / cross-arc)
 
-Sparse **wildcard** arc spanning days **62–325**. The **Nameless Prophet** speaks in riddles that stitch other arcs together; **Saint Fox** appears once as an absurd rival miracle. Not tied to a single defeat lane — instead shifts **Church vs People** tension via hidden `prophetFavor`. Touches [Household](#the-old-kings-household-persistent-story), [Empty Purse](#the-empty-purse-persistent-story), [Church](#the-crown-forfeit--tithe-war-persistent-story), [Northern](#the-northern-price-persistent-story), [Grey Lung](#grey-lung-cure-arc-persistent-story), and stat-unlock eras (People 89, Nobility 175, Loyalty 260, Succession 320).
+Sparse **wildcard** arc spanning days **62–325**. The **Nameless Prophet** speaks in riddles that stitch other arcs together; **Saint Fox** appears once as an absurd rival miracle. Not tied to a single defeat lane — instead shifts **Church vs People** tension via hidden `prophetFavor`. Touches [Household](#the-old-kings-household-persistent-story), [Empty Purse](#the-empty-purse-persistent-story), [Church](#the-crown-forfeit--church tax-war-persistent-story), [Northern](#the-northern-price-persistent-story), [Grey Lung](#grey-lung-cure-arc-persistent-story), and stat-unlock eras (People 89, Nobility 175, Loyalty 260, Succession 320).
 
 **Hidden stat (runtime, not shown in top bar):** `prophetFavor` (−100…+100, starts at **0**)
 
@@ -5060,7 +5066,7 @@ Sparse **wildcard** arc spanning days **62–325**. The **Nameless Prophet** spe
 
 **Day 335 (Nephew coda):** [Nephew in the Fog beat 10](#beat-10--day-335--omen-on-the-true-line-coda) uses the Prophet as speaker but is **not** a Prophet-arc beat. Fires after Nephew finale (328). Prophet arc last beat remains day 325.
 
-**Day 325 outcome priority:** `prophetSilenced` → **silenced_seer** · `prophetFoxCult` + favor ≥ 20 → **saint_and_fox** · favor ≥ 35 → **voice_of_winter** · favor ≤ −35 → **omen_throne** (crown feared as blasphemy) · else **ignored_winter**.
+**Day 325 outcome priority:** `prophetSilenced` → **silenced_seer** · `prophetFoxCult` + favor ≥ 20 → **saint_and_fox** · favor ≥ 35 → **voice_of_winter** · favor ≤ −35 → **omen_throne** (crown feared as insult to the sacred) · else **ignored_winter**.
 
 **People before day 89:** Beats 1–2 use Loyalty instead of People where noted. Beat 3 (day 140) is first beat that may apply People freely.
 
@@ -5113,7 +5119,7 @@ Sparse **wildcard** arc spanning days **62–325**. The **Nameless Prophet** spe
 
 #### Node 0
 
-**Prompt:** Your Majesty, the wards cough and the bells toll. I heard you funded Mira's bottles — or Malrik's holy water — or neither and called it prudence. I preach what the fever teaches: the throne is a lung, the realm exhales debt, and the usurper is whichever king stops breathing last. Do you baptize my sermon, ban it, or let the sick decide?
+**Prompt:** Your Majesty, the wards cough and the bells toll. I heard you funded Mira's bottles — or Malrik's holy water — or neither and called it prudence. I preach what the fever teaches: the throne is a lung, the realm exhales debt, and the king who took the throne is whichever king stops breathing last. Do you baptize my sermon, ban it, or let the sick decide?
 
 **Prompt variant (`plagueOutcome = miracle` or `church_route`):** Your Majesty, I heard Malrik calls it God's mercy. The coughing poor call it timing. I call it a miracle with your face on the poster. Share the altar, or share the blame.
 
@@ -5152,10 +5158,10 @@ Sparse **wildcard** arc spanning days **62–325**. The **Nameless Prophet** spe
 
 **Prompt variant (`prophetFirstHeard` + favor ≥ 10):** Your Majesty, I heard you let the Nameless Prophet speak in winter. Now a fox out-preaches him. That is comedy — until it is politics.
 
-**Prompt variant (`churchArcStance = submit` or `churchOutcome` anointed):** Your Majesty, I heard you knelt for Malrik. The fox does not kneel. The mob prefers fur to incense today.
+**Prompt variant (`churchArcStance = submit` or `churchOutcome` blessed by the church):** Your Majesty, I heard you knelt for Malrik. The fox does not kneel. The mob prefers fur to incense today.
 
 **Choice 1:** Embrace the fox cult — street faith is still faith
-- **Response:** Then banners will carry whiskers. Malrik will excommunicate a mammal. You will laugh until the levies refuse to march.
+- **Response:** Then banners will carry whiskers. Malrik will cast out from church a mammal. You will laugh until the levies refuse to march.
 - **Effects:** Church -18, Loyalty +12, Food -5
 - **Favor:** +22
 - **Sets flag:** `prophetFoxCult`
@@ -5256,12 +5262,12 @@ Sparse **wildcard** arc spanning days **62–325**. The **Nameless Prophet** spe
 
 **Prompt (outcome `saint_and_fox`):** Your Majesty, the fox still has shrines. You still have a crown. One of us will survive the chronicles. You chose absurd policy — therefore memorable. The court laughs. The provinces pray. Both serve you poorly and well.
 
-**Prompt (outcome `omen_throne`):** Your Majesty, I heard you fought every omen until the realm learned fear. Fear keeps thrones — until it doesn't. You declared yourself the sign. Ashford pales. Malrik roars. A nephew in exile might pray. Bold blasphemy is still blasphemy.
+**Prompt (outcome `omen_throne`):** Your Majesty, I heard you fought every omen until the realm learned fear. Fear keeps thrones — until it doesn't. You declared yourself the sign. Ashford pales. Malrik roars. A nephew in exile might pray. Bold insult to the sacred is still insult to the sacred.
 
 **Prompt (outcome `ignored_winter`):** Your Majesty, I leave unnamed. Winter ends. What you built remains — for Ingvar to count on day three-fifty. Neither faith nor purge. The omen walks into spring without crown or scaffold.
 
 **Choice 1:** I have heard the last sign — let the prophet go
-- **Response (outcome `voice_of_winter`):** Then rule sermons and steel. Malrik will excommunicate the year. The people will remember rhymes.
+- **Response (outcome `voice_of_winter`):** Then rule sermons and steel. Malrik will cast out from church the year. The people will remember rhymes.
 - **Effects (outcome `voice_of_winter`):** Church -20, Loyalty +15, Succession -8, People +12
 - **Response (outcome `silenced_seer`):** Then sleep without whispers. You bought quiet at a price you may not see yet.
 - **Effects (outcome `silenced_seer`):** Church +12, Army +6, Loyalty -6
@@ -5431,7 +5437,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, you asked for two weeks. I gave them. Twenty-seven dead in the lower wards while your treasurer counted coins. I am back — not to plead, but to learn whether a usurper can afford to save the realm he seized, or whether Estedor must burn twice.
+**Prompt:** Your Majesty, you asked for two weeks. I gave them. Twenty-seven dead in the lower wards while your treasurer counted coins. I am back — not to plead, but to learn whether a king who took the throne can afford to save the realm he seized, or whether Estedor must burn twice.
 
 **Choice 1:** Fund the cure in full — the wait is over
 - **Response:** Then let the realm see a king who spends on breath, not banners. I will begin the distilleries tonight.
@@ -5549,7 +5555,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 - **Effects:** Army -15, Health +8, Loyalty -15
 
 **Choice 3:** It will burn itself out — do nothing
-- **Response:** Then write my report for the chronicles: the usurper watched Estedor cough itself hollow and called it patience.
+- **Response:** Then write my report for the chronicles: the king who took the throne watched Estedor cough itself hollow and called it patience.
 - **Effects:** Health -20, Loyalty -10
 - **Locks outcome:** `failed`
 
@@ -5587,7 +5593,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, the cough has broken. In the lower wards they shout your name without spitting — I did not think I would live to hear that under a usurper's reign. The formula holds. The chronicles will call you the king who saved breath. I will call you the king who paid for bottles when others paid for prayers.
+**Prompt:** Your Majesty, the cough has broken. In the lower wards they shout your name without spitting — I did not think I would live to hear that under a throne-stealer's reign. The formula holds. The chronicles will call you the king who saved breath. I will call you the king who paid for bottles when others paid for prayers.
 
 **Choice 1:** I have heard the wards — dismiss the physic court
 - **Response:** Then may the next plague find a crown that remembers the price of air.
@@ -5603,7 +5609,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, the fever fades — but not before it carved a scar across three provinces. We saved many. We buried more. I will not lie and call it triumph. The realm will call you the Scarred King — or the usurper who did enough. Both are true. Neither is comfort.
+**Prompt:** Your Majesty, the fever fades — but not before it carved a scar across three provinces. We saved many. We buried more. I will not lie and call it triumph. The realm will call you the Scarred King — or the king who took the throne who did enough. Both are true. Neither is comfort.
 
 **Choice 1:** I have heard the dead counted — dismiss the physic court
 - **Response:** Grief named aloud heals faster than grief denied. You counted the dead. That matters.
@@ -5635,7 +5641,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, God cured the realm. The fever broke where holy water fell and prayer did not cease. The people kneel — not to the blade that took the throne, but to the hand that held the chalice. The conclave will call you the anointed usurper. Mira will call it theatre. The faithful will call it salvation.
+**Prompt:** Your Majesty, God cured the realm. The fever broke where holy water fell and prayer did not cease. The people kneel — not to the blade that took the throne, but to the hand that held the chalice. The conclave will call you the king blessed by the church. Mira will call it theatre. The faithful will call it salvation.
 
 **Choice 1:** I have heard heaven's verdict — dismiss the chapter
 - **Response:** Then kneel when I ask. Heaven owns part of this story now.
@@ -5786,10 +5792,10 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, the lower wards want a statue — not of a saint, not of a soldier, but of the king who funded the bottles. Vulgar, flattering, and politically useful. Borvin says it costs gold. I say it buys something rarer: a usurper remembered for breath instead of blood.
+**Prompt:** Your Majesty, the lower wards want a statue — not of a saint, not of a soldier, but of the king who funded the bottles. Vulgar, flattering, and politically useful. Borvin says it costs gold. I say it buys something rarer: a king who took the throne remembered for breath instead of blood.
 
 **Choice 1:** Fund the statue — let the people see their king
-- **Response:** Then stand still long enough to be carved. Even usurpers may have one honest portrait.
+- **Response:** Then stand still long enough to be carved. Even kings who took the throne may have one honest portrait.
 - **Effects:** Treasury -10, Loyalty +10, People +5
 
 **Choice 2:** Refuse vanity — fund another ward instead
@@ -5809,7 +5815,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, the northern princes closed their mountain passes to Estedor caravans. They call it caution. I call it the smell of pyres carried on the wind. Your neighbors do not fear the usurper's blade anymore. They fear your cough.
+**Prompt:** Your Majesty, the northern princes closed their mountain passes to Estedor caravans. They call it caution. I call it the smell of pyres carried on the wind. Your neighbors do not fear the throne-stealer's blade anymore. They fear your cough.
 
 **Choice 1:** Send physic and gold — reopen trade with proof of cure
 - **Response:** Too late for pride. If you can prove the fever wanes, they may unlock the gates. May.
@@ -5832,7 +5838,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, the Holy See sends word: they would canonize the miracle of Estedor and name you its instrument on earth. A usurper anointed by Rome itself. Mira calls it theft. The faithful call it destiny. What shall I answer?
+**Prompt:** Your Majesty, the Holy See sends word: they would canonize the miracle of Estedor and name you its instrument on earth. A king who took the throne blessed by the church by Rome itself. Mira calls it theft. The faithful call it destiny. What shall I answer?
 
 **Choice 1:** Accept canonization — let the Church crown the reign
 - **Response:** Then kneel once more. The throne becomes altar. Your enemies lose their best argument.
@@ -5879,7 +5885,7 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 
 #### Node 0
 
-**Prompt:** Your Majesty, I feed the poor at my monastery gate. Lately they speak of Grey Lung more than bread. The fever faded, but the grief did not. They ask whether the usurper who funded bottles will fund a name for their dead — or whether survival is the only mercy they will ever see.
+**Prompt:** Your Majesty, I feed the poor at my monastery gate. Lately they speak of Grey Lung more than bread. The fever faded, but the grief did not. They ask whether the king who took the throne who funded bottles will fund a name for their dead — or whether survival is the only mercy they will ever see.
 
 **Choice 1:** Fund provincial memorials — let the dead be named
 - **Response:** Then I will read their names aloud at my gate. That is more than most thrones offer.
@@ -5946,12 +5952,12 @@ Multi-day story arc spanning days 25–340. Each beat replaces the random pool e
 ### Beat 8 — Day 340 — Historical Verdict (outcome: `miracle`)
 
 **Character:** High Priest Malrik
-**Note:** **On load:** use existing `plagueOutcome` (must be `miracle`). Sets nickname flag: *The Anointed Usurper*. Malrik **reports** year-end legacy — one acknowledgment choice.
+**Note:** **On load:** use existing `plagueOutcome` (must be `miracle`). Sets nickname flag: *The king blessed by the church*. Malrik **reports** year-end legacy — one acknowledgment choice.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, the year closes and heaven still owns the story. The people call you the king the saints saved. The soldiers call you the priest's puppet. The nobles call you useful. The See will write *anointed usurper*. Mira will not. History rarely pleases everyone.
+**Prompt:** Your Majesty, the year closes and heaven still owns the story. The people call you the king the saints saved. The soldiers call you the priest's puppet. The nobles call you useful. The See will write *the king blessed by the church*. Mira will not. History rarely pleases everyone.
 
 **Choice 1:** I have heard heaven's ledger — dismiss the chapter
 - **Response:** Then kneel when I ask. Heaven owns part of your memory now.
@@ -6058,7 +6064,7 @@ _Days 1–10 (index 0 = Edric tutorial, replaced at runtime; no People stat)_
 
 #### Node 0
 
-**Prompt:** Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or usurper.
+**Prompt:** Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or one who took the throne.
 
 **Choice 1:** Ask the church for a blessing.
 - **Response:** Humility is a fitting beginning for one who reached the throne through blood.
@@ -6104,13 +6110,13 @@ _Days 1–10 (index 0 = Edric tutorial, replaced at runtime; no People stat)_
 
 #### Node 0
 
-**Prompt:** Temples collect tithe. The treasury collects taxes. Soon the people will see they pay twice.
+**Prompt:** Temples collect church tax. The treasury collects taxes. Soon the people will see they pay twice.
 
-**Choice 1:** Limit the church tithe.
+**Choice 1:** Limit the church tax.
 - **Response:** The treasury is grateful. The altar will hiss.
 - **Effects:** Church -20, Treasury +15, Health +5
 
-**Choice 2:** Leave the tithe to the church.
+**Choice 2:** Leave the church tax to the church.
 - **Response:** Priests love it when their gold is called faith.
 - **Effects:** Church +10, Treasury -10
 
@@ -6330,43 +6336,32 @@ _Days 1–10 (index 0 = Edric tutorial, replaced at runtime; no People stat)_
 ### Encounter #13 — Old Advisor Edric
 
 **Character:** Old Advisor Edric
-**Nodes:** 2 (start node: 0)
+**Nodes:** 1 (start node: 0)
+**Day gate:** Does not appear before day 8 unless [Old King's Household](#the-old-kings-household-persistent-story) beat 0 has fired (`householdArcPhase >= 1`). Implemented in `pool_prompts.das` / `question_pools.das`.
+
+**Runtime:** `resolve_pool_dialogue_node()` replaces static text. Before the household arc introduces names, choices use roles (*The cook and the kitchens* / *The chief scribe and the archive*). After beat 0 or if `householdKeptGromm`, choices name Gromm and Osric.
 
 #### Node 0
 
-**Prompt:** The people of the former king still serve in the palace. If you drive everyone away, the palace will go blind. If you leave everyone, you will sleep among someone else's memory.
+**Prompt:** Your Majesty, after your decision on Edwin's household, the court wants specifics. Six servants still walk these halls — whom do you watch first this week?
 
-**Choice 1:** Drive away all the old servants.
-- **Response:** The palace will become cleaner. And much more stupid.
-- **Effects:** Army +5, Treasury -10, Food -5
+**Choice 1:** The cook and the kitchens. *(or "Cook Gromm and the kitchens." after household beat 0)*
+- **Response:** Sensible. Hunger is a weapon if the cook turns.
+- **Effects:** Loyalty +3
 
-**Choice 2:** Leave those who take a new oath.
-- **Response:** An oath is not always loyalty. But this is a start.
-- **Effects:** Army +3, Treasury -3
+**Choice 2:** The chief scribe and the archive. *(or "Scribe Osric and the archive." after household beat 2)*
+- **Response:** Ink is deadlier than knives. A good choice for the paranoid.
+- **Effects:** Army +5, Treasury -3
 
-**Choice 3:** Leave everyone.
-- **Response:** The palace machine will continue to work. The question is - to whom.
-- **Effects:** Army -5, Treasury +5
+**Choice 3:** The door warden and stair servants.
+- **Response:** The door is the first line. Who passes controls the whispers.
+- **Effects:** Army +3, Loyalty +2
 
-**Choice 4:** Which one is dangerous?
-- **Effects:** No stat change
-- **Next node:** 1
+**Choice 4:** No one — trust the work.
+- **Response:** Bold. Or lazy. The court will decide which.
+- **Effects:** Army -3, Treasury +3
 
-#### Node 1
-
-**Prompt:** The most dangerous of all are those who are too silent. A devoted servant is always a little human. A spy is always furniture.
-
-**Choice 1:** Make a list of suspects.
-- **Response:** The list won't save you, but it will tell you who not to trust with wine.
-- **Effects:** Army +5, Treasury -5
-
-**Choice 2:** Replace only those closest to the throne.
-- **Response:** Soft cleaning. Sometimes a soft knife cuts more accurately.
-- **Effects:** Army +5, Treasury -5
-
-**Choice 3:** Don't touch anyone.
-- **Response:** Then the palace will smile at you with its old teeth.
-- **Effects:** Army -5, Treasury +3
+**Note:** The older two-node "Which one is dangerous?" flow is retired; encounter #13 is a single-node watch-priority question gated to day 8+.
 
 ---
 
@@ -8003,12 +7998,12 @@ _Days 30–89 (index 80 = Church unlock fixed encounter; no People stat)_
 ### Encounter #80 — High Priest Malrik
 
 **Character:** High Priest Malrik
-**Note:** Pool slot on day 30 (Church unlock). **At runtime replaced by** [Crown Forfeit & Tithe War — Beat 1](#beat-1--day-30--the-verdict). Legacy one-node text preserved in encounters_en.das until `church_crown_arc.das` ships.
+**Note:** Pool slot on day 30 (Church unlock). **At runtime replaced by** [Crown Forfeit & church tax War — Beat 1](#beat-1--day-30--the-verdict). Legacy one-node text preserved in encounters_en.das until `church_crown_arc.das` ships.
 **Nodes:** 1 (start node: 0)
 
 #### Node 0
 
-**Prompt:** Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or usurper.
+**Prompt:** Your Majesty, the people know your crown, but do not know whether it is blessed. Today the church must decide whether to name you king or one who took the throne.
 
 **Choice 1:** Ask the church for a blessing.
 - **Response:** Humility is a fitting beginning for one who reached the throne through blood.
@@ -8054,13 +8049,13 @@ _Days 30–89 (index 80 = Church unlock fixed encounter; no People stat)_
 
 #### Node 0
 
-**Prompt:** Temples collect tithe. The treasury collects taxes. Soon the people will see they pay twice.
+**Prompt:** Temples collect church tax. The treasury collects taxes. Soon the people will see they pay twice.
 
-**Choice 1:** Limit the church tithe.
+**Choice 1:** Limit the church tax.
 - **Response:** The treasury is grateful. The altar will hiss.
 - **Effects:** Church -20, Treasury +15, Health +5
 
-**Choice 2:** Leave the tithe to the church.
+**Choice 2:** Leave the church tax to the church.
 - **Response:** Priests love it when their gold is called faith.
 - **Effects:** Church +10, Treasury -10
 
@@ -10000,7 +9995,7 @@ _Days 30–89 extension (no People stat)_
 - **Response:** Good. Bribes hide poorly when confession is no shield.
 - **Effects:** Church -12, Army +10
 
-**Choice 3:** Amnesty for those who confess themselves.
+**Choice 3:** forgiveness for those who confess themselves.
 - **Response:** A soft trap. Sometimes the best.
 - **Effects:** Church +5, Army +5, Treasury +3
 
@@ -10223,7 +10218,7 @@ _Days 30–89 extension (no People stat)_
 **Prompt:** If you keep quarreling with the temple, some priests may refuse you prayers. The people will hear that as verdict.
 
 **Choice 1:** Yield to the temple.
-- **Response:** Prayers continue. Peace costs less than schism.
+- **Response:** Prayers continue. Peace costs less than church split.
 - **Effects:** Church +20, Army -5, Treasury -10
 
 **Choice 2:** Threaten the temple.
@@ -10320,7 +10315,7 @@ _Days 90–174 (People stat unlock at day 89)_
 
 #### Node 0
 
-**Prompt:** The people whisper the word 'usurper'. But if the church performs a rite of purification of the crown, the whisper will become a prayer.
+**Prompt:** The people whisper the word 'king who took the throne'. But if the church performs a rite of purification of the crown, the whisper will become a prayer.
 
 **Choice 1:** Carry out an expensive ritual.
 - **Response:** The gods love humility. And the people love to see the king bow his head.
@@ -11275,7 +11270,7 @@ _Days 90–174 (People stat unlock at day 89)_
 - **Response:** Ah, royal trade: first the order, then the price.
 - **Effects:** Army +3, Treasury -8, Food +18
 
-**Choice 3:** Confiscate half.
+**Choice 3:** seize half.
 - **Response:** You will receive grain. And merchants who will begin to hide everything else.
 - **Effects:** People -8, Treasury -5, Food +25
 
@@ -11701,7 +11696,7 @@ _Days 90–174 (People stat unlock at day 89)_
 - **Response:** The fair way. Not the fastest, but strong.
 - **Effects:** People +5, Treasury -10
 
-**Choice 2:** Declare counterfeits treason.
+**Choice 2:** Declare fake coins treason.
 - **Response:** Lenders will become more careful. And angrier.
 - **Effects:** Army +5, Treasury +8
 
@@ -12003,7 +11998,7 @@ _Days 90–174 (People stat unlock at day 89)_
 - **Effects:** People -8, Treasury +20
 
 **Choice 2:** Take only from rich monasteries.
-- **Response:** Moderate sacrilege. Almost financial reform.
+- **Response:** Moderate insult to the sacred. Almost financial reform.
 - **Effects:** People -5, Treasury +15
 
 **Choice 3:** Don't touch the temples.
@@ -12600,7 +12595,7 @@ _Days 90–174 (People stat unlock at day 89)_
 
 **Prompt:** He swears he doesn't know. And I don’t like the oaths of people who sell their eyes for two coins.
 
-**Choice 1:** Find the cart and confiscate the cargo.
+**Choice 1:** Find the cart and seize the cargo.
 - **Response:** Let's catch the trail while the wheels are still fresh.
 - **Effects:** Army +3, Treasury -3, Food +10
 
@@ -12621,7 +12616,7 @@ _Days 90–174 (People stat unlock at day 89)_
 
 #### Node 0
 
-**Prompt:** People are not afraid of punishment, but of punishment without trial. Even a usurper needs a law.
+**Prompt:** People are not afraid of punishment, but of punishment without trial. Even a king who took the throne needs a law.
 
 **Choice 1:** Create a temporary court.
 - **Response:** Law is a slow shield. But still a shield.
@@ -13192,7 +13187,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, the eastern lords want a privy council seat before winter — or they will call your reign a merchant's coup.
+**Prompt:** Your Majesty, the eastern lords want a seat on the king's council before winter — or they will call your reign a coup of merchants.
 
 **Choice 1:** Grant Ashford's cousin a seat.
 - **Response:** Then blood buys silence. Efficient, if you can stomach the receipt.
@@ -13216,7 +13211,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for legitimacy, and legitimacy for your usurper's name.
+**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for your lawful rule, and your lawful name for the king who took the throne.
 
 **Choice 1:** Accept the match.
 - **Response:** Then ink binds blood. The realm sees a dynasty forming, not a blade.
@@ -13264,7 +13259,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's confiscated holdings — or they will fund your enemies.
+**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's seized holdings — or they will fund your enemies.
 
 **Choice 1:** Grant eastern manors to loyal lords.
 - **Response:** Land buys swords. The peasants on those manors will scream.
@@ -13411,7 +13406,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 **Prompt:** Your Majesty, the ambassador says northern princes will recognize your crown if you grant a border barony to their cousin.
 
 **Choice 1:** Grant the barony — buy recognition.
-- **Response:** Land for legitimacy abroad. The eastern lords will riot.
+- **Response:** Land for a legal claim abroad. The eastern lords will riot.
 - **Effects:** People -8, Army +5, Nobility +12
 
 **Choice 2:** Refuse — recognition is not for sale.
@@ -13504,14 +13499,14 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, the mint master says counterfeit noble seals flood the markets — your face on false decrees.
+**Prompt:** Your Majesty, the mint master says fake noble seals flood the markets — your face on false decrees.
 
 **Choice 1:** Hang the forgers publicly.
 - **Response:** Fear refreshes respect. Merchants tremble honestly.
 - **Effects:** People -5, Army +5, Nobility +8
 
 **Choice 2:** Recall all seals and reissue.
-- **Response:** Expensive order. Forgery dies slowly, dies nonetheless.
+- **Response:** Expensive order. fake seal dies slowly, dies nonetheless.
 - **Effects:** Treasury -15, Nobility +10
 
 **Choice 3:** Ignore — decrees are verified by word not wax.
@@ -13576,7 +13571,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, the eastern lords want a privy council seat before winter — or they will call your reign a merchant's coup.
+**Prompt:** Your Majesty, the eastern lords want a seat on the king's council before winter — or they will call your reign a coup of merchants.
 
 **Choice 1:** Grant Ashford's cousin a seat.
 - **Response:** Then blood buys silence. Efficient, if you can stomach the receipt.
@@ -13600,7 +13595,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for legitimacy, and legitimacy for your usurper's name.
+**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for your lawful rule, and your lawful name for the king who took the throne.
 
 **Choice 1:** Accept the match.
 - **Response:** Then ink binds blood. The realm sees a dynasty forming, not a blade.
@@ -13648,7 +13643,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's confiscated holdings — or they will fund your enemies.
+**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's seized holdings — or they will fund your enemies.
 
 **Choice 1:** Grant eastern manors to loyal lords.
 - **Response:** Land buys swords. The peasants on those manors will scream.
@@ -13795,7 +13790,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 **Prompt:** Your Majesty, the ambassador says northern princes will recognize your crown if you grant a border barony to their cousin.
 
 **Choice 1:** Grant the barony — buy recognition.
-- **Response:** Land for legitimacy abroad. The eastern lords will riot.
+- **Response:** Land for a legal claim abroad. The eastern lords will riot.
 - **Effects:** People -8, Army +5, Nobility +12
 
 **Choice 2:** Refuse — recognition is not for sale.
@@ -13888,14 +13883,14 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, the mint master says counterfeit noble seals flood the markets — your face on false decrees.
+**Prompt:** Your Majesty, the mint master says fake noble seals flood the markets — your face on false decrees.
 
 **Choice 1:** Hang the forgers publicly.
 - **Response:** Fear refreshes respect. Merchants tremble honestly.
 - **Effects:** People -5, Army +5, Nobility +8
 
 **Choice 2:** Recall all seals and reissue.
-- **Response:** Expensive order. Forgery dies slowly, dies nonetheless.
+- **Response:** Expensive order. fake seal dies slowly, dies nonetheless.
 - **Effects:** Treasury -15, Nobility +10
 
 **Choice 3:** Ignore — decrees are verified by word not wax.
@@ -13960,7 +13955,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, the eastern lords want a privy council seat before winter — or they will call your reign a merchant's coup.
+**Prompt:** Your Majesty, the eastern lords want a seat on the king's council before winter — or they will call your reign a coup of merchants.
 
 **Choice 1:** Grant Ashford's cousin a seat.
 - **Response:** Then blood buys silence. Efficient, if you can stomach the receipt.
@@ -13984,7 +13979,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for legitimacy, and legitimacy for your usurper's name.
+**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for your lawful rule, and your lawful name for the king who took the throne.
 
 **Choice 1:** Accept the match.
 - **Response:** Then ink binds blood. The realm sees a dynasty forming, not a blade.
@@ -14032,7 +14027,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's confiscated holdings — or they will fund your enemies.
+**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's seized holdings — or they will fund your enemies.
 
 **Choice 1:** Grant eastern manors to loyal lords.
 - **Response:** Land buys swords. The peasants on those manors will scream.
@@ -14179,7 +14174,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 **Prompt:** Your Majesty, the ambassador says northern princes will recognize your crown if you grant a border barony to their cousin.
 
 **Choice 1:** Grant the barony — buy recognition.
-- **Response:** Land for legitimacy abroad. The eastern lords will riot.
+- **Response:** Land for a legal claim abroad. The eastern lords will riot.
 - **Effects:** People -8, Army +5, Nobility +12
 
 **Choice 2:** Refuse — recognition is not for sale.
@@ -14272,14 +14267,14 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, the mint master says counterfeit noble seals flood the markets — your face on false decrees.
+**Prompt:** Your Majesty, the mint master says fake noble seals flood the markets — your face on false decrees.
 
 **Choice 1:** Hang the forgers publicly.
 - **Response:** Fear refreshes respect. Merchants tremble honestly.
 - **Effects:** People -5, Army +5, Nobility +8
 
 **Choice 2:** Recall all seals and reissue.
-- **Response:** Expensive order. Forgery dies slowly, dies nonetheless.
+- **Response:** Expensive order. fake seal dies slowly, dies nonetheless.
 - **Effects:** Treasury -15, Nobility +10
 
 **Choice 3:** Ignore — decrees are verified by word not wax.
@@ -14344,7 +14339,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, the eastern lords want a privy council seat before winter — or they will call your reign a merchant's coup.
+**Prompt:** Your Majesty, the eastern lords want a seat on the king's council before winter — or they will call your reign a coup of merchants.
 
 **Choice 1:** Grant Ashford's cousin a seat.
 - **Response:** Then blood buys silence. Efficient, if you can stomach the receipt.
@@ -14368,7 +14363,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for legitimacy, and legitimacy for your usurper's name.
+**Prompt:** Your Majesty, a marriage proposal arrived from the Dell house — land for your lawful rule, and your lawful name for the king who took the throne.
 
 **Choice 1:** Accept the match.
 - **Response:** Then ink binds blood. The realm sees a dynasty forming, not a blade.
@@ -14416,7 +14411,7 @@ _Days 175–259 (Nobility stat unlock at day 175). Loyalty and Succession effect
 
 #### Node 0
 
-**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's confiscated holdings — or they will fund your enemies.
+**Prompt:** Your Majesty, landless lords camp outside the walls. They want estates from Edwin's seized holdings — or they will fund your enemies.
 
 **Choice 1:** Grant eastern manors to loyal lords.
 - **Response:** Land buys swords. The peasants on those manors will scream.
@@ -14522,7 +14517,7 @@ _Days 260–319 (Loyalty stat unlock at day 260). Succession effects must be 0._
 - **Response:** Words bind some. Others count coins.
 - **Effects:** Army +12, Treasury -8, Loyalty +10
 
-**Choice 2:** Pay a bonus from the privy purse.
+**Choice 2:** Pay a bonus from the king's private money.
 - **Response:** Gold buys silence in steel. Brief silence.
 - **Effects:** Army +15, Treasury -15, Loyalty +8
 
@@ -14882,7 +14877,7 @@ _Days 260–319 (Loyalty stat unlock at day 260). Succession effects must be 0._
 - **Response:** Words bind some. Others count coins.
 - **Effects:** Army +12, Treasury -8, Loyalty +10
 
-**Choice 2:** Pay a bonus from the privy purse.
+**Choice 2:** Pay a bonus from the king's private money.
 - **Response:** Gold buys silence in steel. Brief silence.
 - **Effects:** Army +15, Treasury -15, Loyalty +8
 
@@ -15242,7 +15237,7 @@ _Days 260–319 (Loyalty stat unlock at day 260). Succession effects must be 0._
 - **Response:** Words bind some. Others count coins.
 - **Effects:** Army +12, Treasury -8, Loyalty +10
 
-**Choice 2:** Pay a bonus from the privy purse.
+**Choice 2:** Pay a bonus from the king's private money.
 - **Response:** Gold buys silence in steel. Brief silence.
 - **Effects:** Army +15, Treasury -15, Loyalty +8
 
@@ -15627,7 +15622,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 **Prompt:** Your Majesty, Edric says the law books list three succession paths — blood, election, and conquest. You have used only the third.
 
 **Choice 1:** Pursue election by great houses.
-- **Response:** Legitimacy bought in votes. Ashford smiles.
+- **Response:** Lawful rule bought with votes. Ashford smiles.
 - **Effects:** Treasury -10, Loyalty +5, Nobility +15, Succession +10
 
 **Choice 2:** Pursue blood — find any kin.
@@ -15648,7 +15643,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 
 #### Node 0
 
-**Prompt:** Your Majesty, the prophet speaks without being asked: 'When the usurper names no heir, the realm names three.'
+**Prompt:** Your Majesty, the prophet speaks without being asked: 'When the king who took the throne names no heir, the realm names three.'
 
 **Choice 1:** Hear him in private.
 - **Response:** Omen noted. Court nervous.
@@ -15751,7 +15746,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 - **Effects:** Loyalty +5, Nobility +10, Succession +12
 
 **Choice 2:** Approve blade chapter.
-- **Response:** Honest usurper myth. Honest unrest.
+- **Response:** Honest king who took the throne myth. Honest unrest.
 - **Effects:** People -5, Army +8, Nobility -5, Succession +15
 
 **Choice 3:** Approve bargain chapter.
@@ -15840,7 +15835,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 
 #### Node 0
 
-**Prompt:** Your Majesty, Arvel says the poor pray for 'a name after the usurper.' Give them a name or give them bread?
+**Prompt:** Your Majesty, Arvel says the poor pray for 'a name after the king who took the throne.' Give them a name or give them bread?
 
 **Choice 1:** Announce a public heir.
 - **Response:** Name given. Target acquired.
@@ -15960,7 +15955,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 
 #### Node 0
 
-**Prompt:** Your Majesty, Ashford offers to legitimize your line through her house's blood — if succession names her nephew as regent.
+**Prompt:** Your Majesty, Ashford offers to make lawful your line through her house's blood — if succession names her nephew as regent.
 
 **Choice 1:** Accept regency bargain.
 - **Response:** Succession tethered to Ashford. Peace costly.
@@ -16035,7 +16030,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 **Prompt:** Your Majesty, Edric says the law books list three succession paths — blood, election, and conquest. You have used only the third.
 
 **Choice 1:** Pursue election by great houses.
-- **Response:** Legitimacy bought in votes. Ashford smiles.
+- **Response:** Lawful rule bought with votes. Ashford smiles.
 - **Effects:** Treasury -10, Loyalty +5, Nobility +15, Succession +10
 
 **Choice 2:** Pursue blood — find any kin.
@@ -16056,7 +16051,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 
 #### Node 0
 
-**Prompt:** Your Majesty, the prophet speaks without being asked: 'When the usurper names no heir, the realm names three.'
+**Prompt:** Your Majesty, the prophet speaks without being asked: 'When the king who took the throne names no heir, the realm names three.'
 
 **Choice 1:** Hear him in private.
 - **Response:** Omen noted. Court nervous.
@@ -16159,7 +16154,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 - **Effects:** Loyalty +5, Nobility +10, Succession +12
 
 **Choice 2:** Approve blade chapter.
-- **Response:** Honest usurper myth. Honest unrest.
+- **Response:** Honest king who took the throne myth. Honest unrest.
 - **Effects:** People -5, Army +8, Nobility -5, Succession +15
 
 **Choice 3:** Approve bargain chapter.
@@ -16248,7 +16243,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 
 #### Node 0
 
-**Prompt:** Your Majesty, Arvel says the poor pray for 'a name after the usurper.' Give them a name or give them bread?
+**Prompt:** Your Majesty, Arvel says the poor pray for 'a name after the king who took the throne.' Give them a name or give them bread?
 
 **Choice 1:** Announce a public heir.
 - **Response:** Name given. Target acquired.
@@ -16368,7 +16363,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 
 #### Node 0
 
-**Prompt:** Your Majesty, Ashford offers to legitimize your line through her house's blood — if succession names her nephew as regent.
+**Prompt:** Your Majesty, Ashford offers to make lawful your line through her house's blood — if succession names her nephew as regent.
 
 **Choice 1:** Accept regency bargain.
 - **Response:** Succession tethered to Ashford. Peace costly.
@@ -16443,7 +16438,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 **Prompt:** Your Majesty, Edric says the law books list three succession paths — blood, election, and conquest. You have used only the third.
 
 **Choice 1:** Pursue election by great houses.
-- **Response:** Legitimacy bought in votes. Ashford smiles.
+- **Response:** Lawful rule bought with votes. Ashford smiles.
 - **Effects:** Treasury -10, Loyalty +5, Nobility +15, Succession +10
 
 **Choice 2:** Pursue blood — find any kin.
@@ -16464,7 +16459,7 @@ _Days 320–365 (Succession stat unlock at day 320). All nine stats may appear._
 
 #### Node 0
 
-**Prompt:** Your Majesty, the prophet speaks without being asked: 'When the usurper names no heir, the realm names three.'
+**Prompt:** Your Majesty, the prophet speaks without being asked: 'When the king who took the throne names no heir, the realm names three.'
 
 **Choice 1:** Hear him in private.
 - **Response:** Omen noted. Court nervous.

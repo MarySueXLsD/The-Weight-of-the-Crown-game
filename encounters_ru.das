@@ -11,11 +11,11 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Солдаты проливали кровь, чтобы посадить вас на трон. Теперь они ждут монет. Если казна промолчит, мечи тоже могут заговорить.",
+            prompt = "Ваше Величество, солдаты проливали кровь, чтобы посадить вас на трон. Теперь они ждут монет.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Заплатить армии полностью.",
+                choiceText = "Заплатить солдатам полностью и поблагодарить за помощь.",
                 response = "Солдаты запомнят щедрого короля. По крайней мере, до следующего жалования.",
                 statDeltas = fixed_array(0, 0, 20, -25, 0, 0, 0, 0, 0)
             ),
@@ -26,7 +26,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Служба королю — уже честь.",
-                response = "Честь не звенит в кошеле. Я надеюсь, ваши стены крепче вашей щедрости.",
+                response = "Честь не звенит в кошеле. Надеюсь, ваши стены крепче вашей щедрости.",
                 statDeltas = fixed_array(0, 0, -20, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -48,12 +48,12 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 10, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Заплатить всем, чтобы не злить армию.",
+                choiceText = "Заплатить всем, чтобы не злить солдат и командиров.",
                 response = "Щедрый приказ. Даже лжецы будут славить вас громко.",
                 statDeltas = fixed_array(0, 0, 18, -20, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Заморозить выплаты до проверки.",
+                choiceText = "Заморозить выплаты до полной проверки.",
                 response = "Проверки кормят бумагу, не солдат. Я предупреждал.",
                 statDeltas = fixed_array(0, 0, -12, 10, 0, 0, 0, 0, 0)
             ),
@@ -71,7 +71,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Ваше Величество, народ знает вашу корону, но не знает, благословлена ли она. Сегодня церковь должна решить, как называть вас: королём или узурпатором.",
+            prompt = "Ваше Величество, народ знает вашу корону, но не знает, благословлена ли она. Сегодня церковь должна решить, как называть вас: королём или же узурпатором.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -80,7 +80,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 20, 0, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Потребовать признания моей власти.",
+                choiceText = "Потребовать признания своей власти.",
                 response = "Приказы доходят до солдат. До небес они поднимаются хуже.",
                 statDeltas = fixed_array(0, -15, 8, 0, 0, 0, 0, 0, 0)
             ),
@@ -104,7 +104,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "После проповеди к монастырю пришло больше голодных, чем обычно. Они верят, что храм накормит их, если король не может.",
+            prompt = "После проповеди к монастырю пришло больше голодных, чем обычно. Они верят, что храм накормит их, если король это сделать не в состоянии.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -137,22 +137,22 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Храмы собирают десятину. Казна собирает налоги. Народ скоро поймёт, что платит дважды.",
+            prompt = "Храмы собирают церковный налог. Король собирает налог на жильё и охрану. Народ не дурной и вскоре начнёт бунтовать из-за того, что платит дважды.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Ограничить церковную десятину.",
-                response = "Казна благодарна. Алтарь будет шипеть.",
+                choiceText = "Ограничить церковный налог.",
+                response = "Чтож, надеюсь мы об этом не пожалеем. Время покажет.",
                 statDeltas = fixed_array(0, -20, 0, 15, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Оставить десятину церкви.",
-                response = "Священники любят, когда их золото называют верой.",
+                choiceText = "Уменьшить королевский налог.",
+                response = "Чтож, надеюсь мы об этом не пожалеем. Время покажет.",
                 statDeltas = fixed_array(0, 10, 0, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Собирать налоги вместе с церковью.",
-                response = "Двойная рука в одном кармане. Удобно, но опасно.",
+                choiceText = "Оставить всё как есть и продолжать собирать налоги вместе с церковью.",
+                response = "Две руки тянутся в один карман. Чтож, надеюсь мы об этом не пожалеем. Время покажет.",
                 statDeltas = fixed_array(0, 5, 0, 10, -8, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -170,22 +170,22 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Малрик хочет отправить священников в казармы. Говорит, солдатам нужна душа. Солдатам нужен хлеб и сталь.",
+            prompt = "Верховный жрец Малрик хочет отправить своих священников в наши казармы. Говорит, солдаты нуждаются в душевном просветлении. Я могу с уверенностью заверить, что нашим солдатам нужно больше хлеба и стали, а не весь этот цирк.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Разрешить священников в казармах.",
-                response = "Если они начнут учить солдат милосердию, я выставлю их сам.",
+                choiceText = "Пустить священников в казармы.",
+                response = "Чёрт, если они начнут учить солдат милосердию - я выставлю их сам.",
                 statDeltas = fixed_array(0, 12, -5, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Запретить им вход.",
-                response = "Казармы останутся казармами, а не молитвенным залом.",
+                choiceText = "Запретить священникам вход в казармы.",
+                response = "Отлично! Казармы останутся казармами, а не молитвенным залом.",
                 statDeltas = fixed_array(0, -12, 10, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Пускать только перед битвами.",
-                response = "Перед смертью люди охотнее слушают богов. С этим спорить трудно.",
+                choiceText = "Пускать священников в казармы только перед битвами.",
+                response = "Чтож, перед смертью люди охотнее слушают всё это мракобесие. С этим спорить трудно.",
                 statDeltas = fixed_array(0, 5, 5, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -203,12 +203,12 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Люди отказываются пить кипячённую воду. Они покупают святую. Она из того же грязного колодца.",
+            prompt = "Это уже ни в какие ворота не лезет. Люди отказываются пить кипячённую воду и вместо этого покупают святую... Но ведь она из того же грязного колодца.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Запретить продажу святой воды.",
-                response = "Спасибо. Болезнь не исчезнет от молитвы над грязью.",
+                response = "Спасибо. Болезни не исчезнут, но их хотя бы станет меньше.",
                 statDeltas = fixed_array(0, -15, 0, 0, 15, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -218,7 +218,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Не вмешиваться в обряды.",
-                response = "Тогда я буду лечить последствия вашей осторожности.",
+                response = "Эх... Тогда я буду лечить последствия вашей осторожности.",
                 statDeltas = fixed_array(0, 8, 0, 0, -15, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -236,22 +236,22 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Церковь объявила пост. Мяса есть будут меньше, это хорошо. Но солдаты уже спрашивают, почему богам нужна их похлёбка.",
+            prompt = "Церковь объявила пост. Мяса будет меньше, это хорошо. Но солдаты уже начинают спрашивать зачем богам нужна их похлёбка.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Пост для всех, включая армию.",
+                choiceText = "Утвердить пост для всех, включая армию.",
                 response = "Репа станет святой. Солдаты — злые.",
                 statDeltas = fixed_array(0, 10, -15, 0, 0, 0, 0, 20, 0)
             ),
             DialogueChoice(
-                choiceText = "Пост только для дворца.",
-                response = "Вот это зрелище: придворные страдают почти как люди.",
+                choiceText = "Утвердить пост только для дворца.",
+                response = "Вот это зрелище: высшие чины страдают почти как люди...",
                 statDeltas = fixed_array(0, 5, 0, 0, 5, 0, 0, 5, 0)
             ),
             DialogueChoice(
-                choiceText = "Отменить пост для армии.",
-                response = "Солдаты будут сыты. Священники — голодны до возмущения.",
+                choiceText = "Отменить пост для армии, утвердив его для всех остальных, включая церковь.",
+                response = "Хоть солдаты будут сыты. А священники — голодны до возмущения. Хехе.",
                 statDeltas = fixed_array(0, -8, 10, 0, 0, 0, 0, -10, 0)
             ),
             DialogueChoice(),
@@ -269,22 +269,21 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "У главного храма собралась толпа. Они требуют, чтобы церковь сказала, законный ли вы король.",
+            prompt = "У главного храма собралась небольшая толпа. Они требуют, чтобы церковь ответила им прямо, законный ли вы король...",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Поставить стражу у храма.",
-                response = "Копья удержат двери. Не вопросы.",
+                choiceText = "Поставить стражу у храма и разогнать толпу.",
+                response = "Копья помогут задавать меньше вопросов. Но шептаться они продолжат...",
                 statDeltas = fixed_array(0, -5, 8, 0, -5, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Позволить толпе слушать проповедь.",
-                response = "Хорошо. Но если слова станут искрами, я предупреждал.",
+                choiceText = "Не вмешиваться, пусть церковь разбирается.",
                 statDeltas = fixed_array(0, 8, 0, 0, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
                 choiceText = "Раздать хлеб перед храмом.",
-                response = "Сытый человек кричит реже. Иногда это лучшая охрана.",
+                response = "Чтож, не плохое решение. Всё же сытый человек кричит реже, чем голодный.",
                 statDeltas = fixed_array(0, 5, 0, 0, 10, 0, 0, -12, 0)
             ),
             DialogueChoice(),
@@ -335,22 +334,22 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "После открытия церкви люди покупают свечи, иконы, амулеты. Я могу наладить торговлю. И отдать вам долю.",
+            prompt = "Теперь, когда церковь снова на виду, люди покупают свечи, иконы, амулеты. Я могу наладить торговлю этими товарами и отдать вам долю, если получу от вас разрешение на продажу с минимальными налогами.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Разрешить торговлю святынями.",
+                choiceText = "Согласиться на сделку.",
                 response = "Вера продаётся лучше хлеба. И хранится дольше.",
                 statDeltas = fixed_array(0, -8, 0, 20, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
                 choiceText = "Запретить наживаться на вере.",
-                response = "Благородно. Очень невыгодно.",
+                response = "Чтож, это благородно, но чертовски невыгодно...",
                 statDeltas = fixed_array(0, 10, 0, -10, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
                 choiceText = "Разрешить только храмовые товары.",
-                response = "Монополия святости. Церковь быстро учится торговле.",
+                response = "Монополия на святость. Церковь быстро учится торговле.",
                 statDeltas = fixed_array(0, 8, 0, 8, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -373,12 +372,12 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Казнить его.",
-                response = "Площадь снова получит урок. Надеюсь, он будет стоить этой крови.",
+                response = "Чтож, народ получит свой урок. Надеюсь, это будет стоить крови невежды.",
                 statDeltas = fixed_array(0, 15, 5, 0, -10, 0, 0, 0, 0)
             ),
             DialogueChoice(
                 choiceText = "Посадить в темницу.",
-                response = "Тюрьма тише виселицы. Но священники любят громкие ответы.",
+                response = "Тюрьма благороднее виселицы. Но священники любят громкие заявления.",
                 statDeltas = fixed_array(0, -5, 5, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -401,7 +400,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Храмы жгут ладан против заразы. Красиво пахнет. Бесполезно лечит. У меня есть травы получше.",
+            prompt = "Храмы жгут ладан против заразы. Красиво пахнет. От болезни не помогает. У меня есть травы получше.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -467,7 +466,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Во дворце ещё служат люди прежнего короля. Если прогнать всех, дворец ослепнет. Если оставить всех, вы будете спать среди чужой памяти.",
+            prompt = "Во дворце ещё служат люди прежнего короля. Если прогнать всех — двор потеряет тех, кто знает каждый угол. Если оставить всех — вы будете спать среди тех, кто помнит Эдвина.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
@@ -482,7 +481,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Оставить всех.",
-                response = "Машина дворца продолжит работать. Вопрос — на кого.",
+                response = "Двор продолжит работать как прежде. Вопрос — на кого.",
                 statDeltas = fixed_array(0, 0, -5, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -495,7 +494,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
             )
         ),
         DialogueNode(
-            prompt = "Опаснее всех те, кто молчит слишком правильно. Преданный слуга всегда немного человек. Шпион — всегда мебель.",
+            prompt = "Опаснее всех те, кто молчит слишком правильно. Верный слуга всё же человек. Шпион притворяется мебелью.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -795,7 +794,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Открытие церкви принесло не мир, а новый центр власти. Теперь каждый ваш приказ будут сравнивать с проповедью.",
+            prompt = "Церковь всё громче говорит от своего имени. Теперь каждый ваш приказ будут сравнивать с проповедью.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -927,7 +926,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Священники говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны.",
+            prompt = "Священники в казармах говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны. Что прикажете с их проповедями?",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -993,22 +992,22 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "К столице идут паломники. Если их не накормить, они рухнут у ворот. Если накормить — рухнут наши запасы.",
+            prompt = "К столице идут странники. Если их не накормить, они рухнут у ворот. Если накормить — рухнут наши запасы.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Накормить паломников.",
+                choiceText = "Накормить странников.",
                 response = "Святые люди едят как обычные. Иногда даже больше.",
                 statDeltas = fixed_array(0, 15, 0, 0, 10, 0, 0, -20, 0)
             ),
             DialogueChoice(
                 choiceText = "Пустить только тех, кто несёт еду с собой.",
-                response = "Город сохранит зерно. Паломники сохранят обиду.",
+                response = "Город сохранит зерно. Странники сохранят обиду.",
                 statDeltas = fixed_array(0, -8, 0, 0, -3, 0, 0, 5, 0)
             ),
             DialogueChoice(
                 choiceText = "Организовать дешёвую похлёбку.",
-                response = "Жидко, но честно. Для паломников сойдёт.",
+                response = "Жидко, но честно. Для странников сойдёт.",
                 statDeltas = fixed_array(0, 8, 0, -5, 5, 0, 0, -10, 0)
             ),
             DialogueChoice(),
@@ -1026,11 +1025,11 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "В город идут паломники. Среди них легко спрятать шпионов, убийц и беглых солдат.",
+            prompt = "В город идут странники. Среди них легко спрятать шпионов, убийц и беглых солдат.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Обыскивать всех паломников.",
+                choiceText = "Обыскивать всех странников.",
                 response = "Безопаснее. Но святость будет стоять в очереди на досмотр.",
                 statDeltas = fixed_array(0, -8, 10, 0, -3, 0, 0, 0, 0)
             ),
@@ -1041,7 +1040,7 @@ let public allEncountersRuEarly : Encounter[POOL_EARLY_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Проверять только мужчин с оружием.",
-                response = "Компромисс. Не идеальный, но живой.",
+                response = "Компромисс. Не идеальный, но терпимый.",
                 statDeltas = fixed_array(0, 3, 5, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -1096,7 +1095,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Паломники покупают всё: хлеб, свечи, воду, тряпки, надежду. Разрешите временный рынок у храма.",
+            prompt = "Странники покупают всё: хлеб, свечи, воду, тряпки, надежду. Разрешите временный рынок у храма.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -1134,7 +1133,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Разрешить покаяние вместо казни.",
-                response = "Монастырь получит грешников. Я — свободный день.",
+                response = "Монастырь получит грешников. А у меня будет день без казней.",
                 statDeltas = fixed_array(0, 12, -8, 0, 8, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -1172,7 +1171,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Отказать.",
-                response = "Твёрдый ответ. Надеюсь, ваши границы так же тверды.",
+                response = "Твёрдый ответ. Надеюсь, ваши границы так же твёрды.",
                 statDeltas = fixed_array(0, 0, -5, 10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -1181,7 +1180,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, -10, 20, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Почему твой князь просит именно сейчас?",
+                choiceText = "Почему ваш князь просит именно сейчас?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -1321,7 +1320,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Паломники продают свои вещи за кусок хлеба. Некоторые уже падают на дороге к храму.",
+            prompt = "Странники продают свои вещи за кусок хлеба. Некоторые уже падают на дороге к храму.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -1335,7 +1334,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 0, 5, 8, 0, 0, -8, 0)
             ),
             DialogueChoice(
-                choiceText = "Закрыть город для новых паломников.",
+                choiceText = "Закрыть город для новых странников.",
                 response = "Ворота сохранят хлеб. И потеряют сердца.",
                 statDeltas = fixed_array(0, -15, 0, 0, -5, 0, 0, 10, 0)
             ),
@@ -1369,7 +1368,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Не собирать с народа.",
-                response = "Милосердие снова ограбило казну.",
+                response = "Казна снова опустела — в этот раз от милости.",
                 statDeltas = fixed_array(0, 0, 0, -10, 8, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -1505,7 +1504,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 0, 5, 0, 0, 0, -10, 0)
             ),
             DialogueChoice(
-                choiceText = "Почему тебе нужна именно королевская охрана?",
+                choiceText = "Почему вам нужна именно королевская охрана?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -1880,12 +1879,12 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Дать монополию.",
+                choiceText = "Дать монополию на воск.",
                 response = "Свечи будут гореть. Монеты тоже.",
                 statDeltas = fixed_array(0, 5, 0, 20, -5, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Запретить монополию.",
+                choiceText = "Запретить монополию на воск.",
                 response = "Свободный рынок свечей. Как возвышенно скучно.",
                 statDeltas = fixed_array(0, 0, 0, -5, 5, 0, 0, 0, 0)
             ),
@@ -1947,7 +1946,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Приказать храмам не мешать лечению.",
-                response = "Спасибо. Болезни терпение не раздражает, а радует.",
+                response = "Спасибо. Болезнь радуется, когда её лечат, а не когда больным велят терпеть.",
                 statDeltas = fixed_array(0, -10, 0, 0, 15, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -2101,7 +2100,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Городские бедняки злятся: паломников кормят, а местные голодают. Милость стала поводом для зависти.",
+            prompt = "Городские бедняки злятся: странников кормят, а местные голодают. Милость стала поводом для зависти.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -2115,7 +2114,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 8, 0, 0, 15, 0, 0, -18, 0)
             ),
             DialogueChoice(
-                choiceText = "Кормить только паломников у храма.",
+                choiceText = "Кормить только странников у храма.",
                 response = "Тогда город решит, что вера пришла не к нему.",
                 statDeltas = fixed_array(0, 10, 0, 0, -12, 0, 0, -8, 0)
             ),
@@ -2403,7 +2402,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Дать серебро на колокол.",
-                response = "Колокол будет звонить. Казна — пустеть.",
+                response = "Колокол будет звонить. Казна опустеет.",
                 statDeltas = fixed_array(0, 15, 0, -15, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -2539,11 +2538,11 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Разделить контроль.",
-                response = "Компромисс. Я не люблю их, но этот хотя бы съедобен.",
+                response = "Компромисс. Я не люблю их, но с этим можно жить.",
                 statDeltas = fixed_array(0, 0, 5, -3, 0, 0, 0, 5, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты хочешь контролировать хлеб?",
+                choiceText = "Вы хотите контролировать хлеб?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -2584,16 +2583,16 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Паломники принесли новую болезнь. Священники называют её испытанием. Я называю её заразой.",
+            prompt = "Странники принесли новую болезнь. Священники называют её испытанием. Я называю её заразой.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Закрыть город для паломников.",
+                choiceText = "Закрыть город для странников.",
                 response = "Это спасёт город. И разозлит тех, кто идёт к святыне.",
                 statDeltas = fixed_array(0, -15, 0, 0, 20, 0, 0, 5, 0)
             ),
             DialogueChoice(
-                choiceText = "Проверять паломников у ворот.",
+                choiceText = "Проверять странников у ворот.",
                 response = "Медленно, но лучше, чем пускать болезнь с песнями.",
                 statDeltas = fixed_array(0, -3, 0, -8, 12, 0, 0, 0, 0)
             ),
@@ -2617,7 +2616,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "У храма продают рыбу для поста. Половина уже пахнет как проповедь после дождя.",
+            prompt = "У храма продают рыбу для поста. Половина уже протухла — пахнет сильнее, чем должна.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -2688,7 +2687,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Купить благочестивую репутацию.",
-                response = "Репутация куплена. Теперь важно, чтобы чек не нашли.",
+                response = "Репутация куплена. Главное — чтобы никто не спросил, за сколько.",
                 statDeltas = fixed_array(0, 20, 0, -20, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -2830,7 +2829,7 @@ let public allEncountersRuMid : Encounter[POOL_MID_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Принять, если они будут жить отдельно.",
-                response = "Полуприют. Лучше дороги, хуже дома.",
+                response = "Частичный приют. Лучше дороги, хуже дома.",
                 statDeltas = fixed_array(0, -5, 0, -5, 0, 0, 0, -8, 0)
             ),
             DialogueChoice(),
@@ -2852,7 +2851,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Ваше Величество, народ знает вашу корону, но не знает, благословлена ли она. Сегодня церковь должна решить, как называть вас: королём или узурпатором.",
+            prompt = "Ваше Величество, народ знает вашу корону, но не знает, благословлена ли она. Сегодня церковь должна решить, как называть вас: королём или тем, кто взял трон.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -2918,16 +2917,16 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Храмы собирают десятину. Казна собирает налоги. Народ скоро поймёт, что платит дважды.",
+            prompt = "Храмы собирают церковный налог. Казна собирает налоги. Народ скоро поймёт, что платит дважды.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Ограничить церковную десятину.",
+                choiceText = "Ограничить церковный налог.",
                 response = "Казна благодарна. Алтарь будет шипеть.",
                 statDeltas = fixed_array(0, -20, 0, 15, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Оставить десятину церкви.",
+                choiceText = "Оставить церковный налог церкви.",
                 response = "Священники любят, когда их золото называют верой.",
                 statDeltas = fixed_array(0, 10, 0, -10, 0, 0, 0, 0, 0)
             ),
@@ -2955,7 +2954,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Разрешить священников в казармах.",
+                choiceText = "Пустить священников в казармы.",
                 response = "Если они начнут учить солдат милосердию, я выставлю их сам.",
                 statDeltas = fixed_array(0, 12, -5, 0, 0, 0, 0, 0, 0)
             ),
@@ -3017,7 +3016,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Церковь объявила пост. Мяса есть будут меньше, это хорошо. Но солдаты уже спрашивают, почему богам нужна их похлёбка.",
+            prompt = "Церковь объявила пост. Мяса будет меньше, это хорошо. Но солдаты уже спрашивают, почему богам нужна их похлёбка.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -3116,7 +3115,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "После открытия церкви люди покупают свечи, иконы, амулеты. Я могу наладить торговлю. И отдать вам долю.",
+            prompt = "Теперь, когда церковь снова на виду, люди покупают свечи, иконы, амулеты. Я могу наладить торговлю. И отдать вам долю.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -3131,7 +3130,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Разрешить только храмовые товары.",
-                response = "Монополия святости. Церковь быстро учится торговле.",
+                response = "Монополия на святость. Церковь быстро учится торговле.",
                 statDeltas = fixed_array(0, 8, 0, 8, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -3182,7 +3181,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Храмы жгут ладан против заразы. Красиво пахнет. Бесполезно лечит. У меня есть травы получше.",
+            prompt = "Храмы жгут ладан против заразы. Красиво пахнет. От болезни не помогает. У меня есть травы получше.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -3479,7 +3478,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Открытие церкви принесло не мир, а новый центр власти. Теперь каждый ваш приказ будут сравнивать с проповедью.",
+            prompt = "Церковь всё громче говорит от своего имени. Теперь каждый ваш приказ будут сравнивать с проповедью.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -3611,7 +3610,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Священники говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны.",
+            prompt = "Священники в казармах говорят, что северяне — безбожники. Если они продолжат, солдаты сами начнут ждать войны. Что прикажете с их проповедями?",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -3677,22 +3676,22 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "К столице идут паломники. Если их не накормить, они рухнут у ворот. Если накормить — рухнут наши запасы.",
+            prompt = "К столице идут странники. Если их не накормить, они рухнут у ворот. Если накормить — рухнут наши запасы.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Накормить паломников.",
+                choiceText = "Накормить странников.",
                 response = "Святые люди едят как обычные. Иногда даже больше.",
                 statDeltas = fixed_array(0, 15, 0, 0, 10, 0, 0, -20, 0)
             ),
             DialogueChoice(
                 choiceText = "Пустить только тех, кто несёт еду с собой.",
-                response = "Город сохранит зерно. Паломники сохранят обиду.",
+                response = "Город сохранит зерно. Странники сохранят обиду.",
                 statDeltas = fixed_array(0, -8, 0, 0, -3, 0, 0, 5, 0)
             ),
             DialogueChoice(
                 choiceText = "Организовать дешёвую похлёбку.",
-                response = "Жидко, но честно. Для паломников сойдёт.",
+                response = "Жидко, но честно. Для странников сойдёт.",
                 statDeltas = fixed_array(0, 8, 0, -5, 5, 0, 0, -10, 0)
             ),
             DialogueChoice(),
@@ -3710,11 +3709,11 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "В город идут паломники. Среди них легко спрятать шпионов, убийц и беглых солдат.",
+            prompt = "В город идут странники. Среди них легко спрятать шпионов, убийц и беглых солдат.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Обыскивать всех паломников.",
+                choiceText = "Обыскивать всех странников.",
                 response = "Безопаснее. Но святость будет стоять в очереди на досмотр.",
                 statDeltas = fixed_array(0, -8, 10, 0, -3, 0, 0, 0, 0)
             ),
@@ -3725,7 +3724,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Проверять только мужчин с оружием.",
-                response = "Компромисс. Не идеальный, но живой.",
+                response = "Компромисс. Не идеальный, но терпимый.",
                 statDeltas = fixed_array(0, 3, 5, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -3776,7 +3775,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Паломники покупают всё: хлеб, свечи, воду, тряпки, надежду. Разрешите временный рынок у храма.",
+            prompt = "Странники покупают всё: хлеб, свечи, воду, тряпки, надежду. Разрешите временный рынок у храма.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -3814,7 +3813,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Разрешить покаяние вместо казни.",
-                response = "Монастырь получит грешников. Я — свободный день.",
+                response = "Монастырь получит грешников. А у меня будет день без казней.",
                 statDeltas = fixed_array(0, 12, -8, 0, 8, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -3941,7 +3940,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Паломники продают свои вещи за кусок хлеба. Некоторые уже падают на дороге к храму.",
+            prompt = "Странники продают свои вещи за кусок хлеба. Некоторые уже падают на дороге к храму.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -3955,7 +3954,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 0, 5, 8, 0, 0, -8, 0)
             ),
             DialogueChoice(
-                choiceText = "Закрыть город для новых паломников.",
+                choiceText = "Закрыть город для новых странников.",
                 response = "Ворота сохранят хлеб. И потеряют сердца.",
                 statDeltas = fixed_array(0, -15, 0, 0, -5, 0, 0, 10, 0)
             ),
@@ -3989,7 +3988,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Не собирать с народа.",
-                response = "Милосердие снова ограбило казну.",
+                response = "Казна снова опустела — в этот раз от милости.",
                 statDeltas = fixed_array(0, 0, 0, -10, 8, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -4440,12 +4439,12 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Дать монополию.",
+                choiceText = "Дать монополию на воск.",
                 response = "Свечи будут гореть. Монеты тоже.",
                 statDeltas = fixed_array(0, 5, 0, 20, -5, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Запретить монополию.",
+                choiceText = "Запретить монополию на воск.",
                 response = "Свободный рынок свечей. Как возвышенно скучно.",
                 statDeltas = fixed_array(0, 0, 0, -5, 5, 0, 0, 0, 0)
             ),
@@ -4507,7 +4506,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Приказать храмам не мешать лечению.",
-                response = "Спасибо. Болезни терпение не раздражает, а радует.",
+                response = "Спасибо. Болезнь радуется, когда её лечат, а не когда больным велят терпеть.",
                 statDeltas = fixed_array(0, -10, 0, 0, 15, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -4601,7 +4600,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Городские бедняки злятся: паломников кормят, а местные голодают. Милость стала поводом для зависти.",
+            prompt = "Городские бедняки злятся: странников кормят, а местные голодают. Милость стала поводом для зависти.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -4615,7 +4614,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 8, 0, 0, 15, 0, 0, -18, 0)
             ),
             DialogueChoice(
-                choiceText = "Кормить только паломников у храма.",
+                choiceText = "Кормить только странников у храма.",
                 response = "Тогда город решит, что вера пришла не к нему.",
                 statDeltas = fixed_array(0, 10, 0, 0, -12, 0, 0, -8, 0)
             ),
@@ -4903,7 +4902,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Дать серебро на колокол.",
-                response = "Колокол будет звонить. Казна — пустеть.",
+                response = "Колокол будет звонить. Казна опустеет.",
                 statDeltas = fixed_array(0, 15, 0, -15, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -4964,16 +4963,16 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Паломники принесли новую болезнь. Священники называют её испытанием. Я называю её заразой.",
+            prompt = "Странники принесли новую болезнь. Священники называют её испытанием. Я называю её заразой.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Закрыть город для паломников.",
+                choiceText = "Закрыть город для странников.",
                 response = "Это спасёт город. И разозлит тех, кто идёт к святыне.",
                 statDeltas = fixed_array(0, -15, 0, 0, 20, 0, 0, 5, 0)
             ),
             DialogueChoice(
-                choiceText = "Проверять паломников у ворот.",
+                choiceText = "Проверять странников у ворот.",
                 response = "Медленно, но лучше, чем пускать болезнь с песнями.",
                 statDeltas = fixed_array(0, -3, 0, -8, 12, 0, 0, 0, 0)
             ),
@@ -4997,7 +4996,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
         nodeCount = 1,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "У храма продают рыбу для поста. Половина уже пахнет как проповедь после дождя.",
+            prompt = "У храма продают рыбу для поста. Половина уже протухла — пахнет сильнее, чем должна.",
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
@@ -5068,7 +5067,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Купить благочестивую репутацию.",
-                response = "Репутация куплена. Теперь важно, чтобы чек не нашли.",
+                response = "Репутация куплена. Главное — чтобы никто не спросил, за сколько.",
                 statDeltas = fixed_array(0, 20, 0, -20, 5, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -5210,7 +5209,7 @@ let public allEncountersRuLateA : Encounter[POOL_LATE_A_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Принять, если они будут жить отдельно.",
-                response = "Полуприют. Лучше дороги, хуже дома.",
+                response = "Частичный приют. Лучше дороги, хуже дома.",
                 statDeltas = fixed_array(0, -5, 0, -5, 0, 0, 0, -8, 0)
             ),
             DialogueChoice(),
@@ -5610,7 +5609,7 @@ let public allEncountersRuLateB : Encounter[POOL_LATE_B_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Взять копии реликвий.",
-                response = "Подделка для храбрости. Странно, но легче защищать.",
+                response = "Фальшивая монета для храбрости. Странно, но легче защищать.",
                 statDeltas = fixed_array(0, 5, 0, -3, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(),
@@ -5708,7 +5707,7 @@ let public allEncountersRuLateB : Encounter[POOL_LATE_B_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, -12, 10, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Объявить амнистию тем, кто признается сам.",
+                choiceText = "Объявить прощение тем, кто признается сам.",
                 response = "Мягкий капкан. Иногда лучшие.",
                 statDeltas = fixed_array(0, 5, 5, 3, 0, 0, 0, 0, 0)
             ),
@@ -6164,7 +6163,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Народ шепчет слово ‘узурпатор’. Но если церковь проведёт обряд очищения короны, шёпот станет молитвой.",
+            prompt = "Народ шепчет: «тот, кто взял трон». Но если церковь проведёт обряд очищения короны, шёпот станет молитвой.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
@@ -6243,7 +6242,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 0, -5, 0, 0, 0, 10, 0)
             ),
             DialogueChoice(
-                choiceText = "Найди другой источник дохода.",
+                choiceText = "Найдите другой источник дохода.",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -6284,7 +6283,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "В нижнем городе жар и кашель. Это может быть простуда, а может быть начало мора. Нужно действовать сейчас.",
+            prompt = "В нижнем городе жар и кашель. Это может быть простуда, а может быть начало чумы. Нужно действовать сейчас.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
@@ -6349,7 +6348,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             choices = fixed_array(
             DialogueChoice(
                 choiceText = "Устроить роскошный пир.",
-                response = "Пир будет таким, что гости забудут голод. Правда, город — нет.",
+                response = "Пир будет таким, что гости забудут голод. Город — не забудет.",
                 statDeltas = fixed_array(0, 0, 5, -10, 0, 0, 0, -20, 0)
             ),
             DialogueChoice(
@@ -6423,7 +6422,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(-2, 0, -5, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Кого ты подозреваешь?",
+                choiceText = "Кого Вы подозреваете?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -6474,7 +6473,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Увеличить сбор налогов.",
-                response = "Казна оживёт. Народ, возможно, наоборот.",
+                response = "Казна оживёт. Народ, возможно, помрёт с голоду.",
                 statDeltas = fixed_array(-10, 0, 0, 20, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -7154,7 +7153,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Позволить брать плату с больных.",
-                response = "Казна вздохнёт. Бедняки, возможно, перестанут.",
+                response = "Казна вздохнёт с облегчением. Бедняки, возможно, перестанут выздоравливать.",
                 statDeltas = fixed_array(-15, 0, 0, 3, 0, 0, 0, 0, 0)
             ),
             DialogueChoice()
@@ -7264,7 +7263,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 3, -3, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Что ты думаешь о письме?",
+                choiceText = "Что Вы думаете о письме?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -7447,7 +7446,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Дать тебе монополию.",
+                choiceText = "Дать вам монополию.",
                 response = "Мудро. Народ получит хлеб, а я — благодарность в монетах.",
                 statDeltas = fixed_array(-8, 0, 0, 10, 0, 0, 0, 25, 0)
             ),
@@ -7462,7 +7461,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(0, 0, 0, 5, 0, 0, 0, -15, 0)
             ),
             DialogueChoice(
-                choiceText = "Почему у тебя уже есть столько зерна?",
+                choiceText = "Откуда у Вас столько зерна?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -7655,7 +7654,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             choiceCount = 3,
             choices = fixed_array(
             DialogueChoice(
-                choiceText = "Заплатить твою цену.",
+                choiceText = "Заплатить вашу цену.",
                 response = "Мудро. Иногда жизнь дешевле купить, чем потом оплакивать.",
                 statDeltas = fixed_array(25, 0, 0, -20, 0, 0, 0, 0, 0)
             ),
@@ -8080,7 +8079,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(5, 0, 0, -10, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Объявить подделки изменой.",
+                choiceText = "Объявить фальшивые монеты изменой.",
                 response = "Кредиторы станут осторожнее. И злее.",
                 statDeltas = fixed_array(0, 0, 5, 8, 0, 0, 0, 0, 0)
             ),
@@ -8242,7 +8241,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(-8, 0, 0, 5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Почему ты предлагаешь помощь так охотно?",
+                choiceText = "Почему Вы предлагаете помощь так охотно?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -8320,7 +8319,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(8, 0, 0, -5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Купить много. Дозировку доверить тебе.",
+                choiceText = "Купить много. Дозировку доверить Вам.",
                 response = "Наконец-то король, который уважает опасные таланты.",
                 statDeltas = fixed_array(12, 0, 0, -12, 0, 0, 0, 0, 0)
             ),
@@ -8362,7 +8361,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(5, 0, 0, 0, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты называешь это порядком или страхом?",
+                choiceText = "Вы называете это порядком или страхом?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -8501,7 +8500,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
             ),
             DialogueChoice(
                 choiceText = "Взять только у богатых монастырей.",
-                response = "Умеренное святотатство. Почти финансовая реформа.",
+                response = "Умеренное оскорбление святого. Почти финансовая реформа.",
                 statDeltas = fixed_array(-5, 0, 0, 15, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
@@ -8602,7 +8601,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(5, 0, 0, 3, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты думаешь, оно испорчено?",
+                choiceText = "Вы думаете, оно испорчено?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -8662,7 +8661,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(-8, 0, 5, 0, 0, 0, 0, 5, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты знаешь, кто помогает ворам?",
+                choiceText = "Вы знаете, кто помогает ворам?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -8902,7 +8901,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(-10, 0, 0, 0, 0, 0, 0, 5, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты хочешь кормить или обращать?",
+                choiceText = "Вы хотите кормить или обращать?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -8962,7 +8961,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(5, 0, 0, 0, 0, 0, 0, -5, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты предлагаешь мне яд?",
+                choiceText = "Вы предлагаете мне яд?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -9022,7 +9021,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(10, 0, 5, -15, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты хочешь, чтобы я выбрал между мечом и народом?",
+                choiceText = "Вы хотите, чтобы я выбрал между мечом и народом?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -9363,7 +9362,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
         nodeCount = 2,
         nodes = fixed_array(
         DialogueNode(
-            prompt = "Люди боятся не наказаний, а наказаний без суда. Даже узурпатору нужен закон.",
+            prompt = "Люди боятся не наказаний, а наказаний без суда. Даже тому, кто взял трон, нужен закон.",
             choiceCount = 4,
             choices = fixed_array(
             DialogueChoice(
@@ -9442,7 +9441,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(-10, 0, 5, 0, 0, 0, 0, 25, 0)
             ),
             DialogueChoice(
-                choiceText = "Ты угрожаешь короне голодом?",
+                choiceText = "Вы угрожаете короне голодом?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -9617,12 +9616,12 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(8, 0, 0, -6, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Обвинить тебя в создании яда.",
+                choiceText = "Обвинить Вас в создании яда.",
                 response = "Удобно. Когда не знаешь, кто виноват, хватай того, кто знает травы.",
                 statDeltas = fixed_array(-5, 0, 5, 0, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Откуда ты знаешь, что это яд?",
+                choiceText = "Откуда Вы знаете, что это яд?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1
@@ -10042,7 +10041,7 @@ let public allEncountersRuPeople : Encounter[POOL_PEOPLE_COUNT] <- fixed_array(
                 statDeltas = fixed_array(5, 0, 0, -5, 0, 0, 0, 0, 0)
             ),
             DialogueChoice(
-                choiceText = "Почему тебе нужен именно мост?",
+                choiceText = "Почему вам нужен именно мост?",
                 response = "",
                 statDeltas = NO_STAT_CHANGE,
                 nextNodeIdx = 1

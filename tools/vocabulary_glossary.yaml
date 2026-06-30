@@ -1,0 +1,396 @@
+# A2-B1 vocabulary replacements for court dialogue.
+# fields: all | prompt_choice (prompt + choiceText only; usurper kept in response)
+
+replacements:
+  # --- Russian (all fields) ---
+  - find: выкорчевали
+    replace: выгнали всех
+    fields: all
+  - find: выкорчевать свиту
+    replace: выгнать всех из двора
+    fields: all
+  - find: выгнать всех свиту
+    replace: выгнать всех из двора
+    fields: all
+  - find: Выкорчевать
+    replace: Выгнать
+    fields: all
+  - find: выкорчевать
+    replace: выгнать
+    fields: all
+  - find: выкорчевал
+    replace: выгнал всех
+    fields: all
+  - find: десятину
+    replace: церковный налог
+    fields: all
+  - find: десятины
+    replace: церковного налога
+    fields: all
+  - find: десятине
+    replace: церковному налогу
+    fields: all
+  - find: Десятина
+    replace: Церковный налог
+    fields: all
+  - find: гроссбухам
+    replace: счетам
+  - find: гроссбухах
+    replace: счетах
+  - find: гроссбухи
+    replace: записи казны
+    fields: all
+  - find: гроссбуха
+    replace: счёта
+    fields: all
+  - find: гроссбухом
+    replace: счётом
+    fields: all
+  - find: гроссбухе
+    replace: счёте
+    fields: all
+  - find: гроссбуху
+    replace: счёту
+    fields: all
+  - find: гроссбух
+    replace: счёт
+    fields: all
+  - find: церковная десятина
+    replace: церковный налог
+    fields: all
+  - find: платёжеспособный
+    replace: кто может платить
+    fields: all
+  - find: платёжеспособность
+    replace: деньги в казне
+    fields: all
+  - find: конфискации
+    replace: забор имущества
+    fields: all
+  - find: конфискацию
+    replace: забор имущества
+    fields: all
+  - find: эмбарго
+    replace: запрет на торговлю
+    fields: all
+  - find: Легитимизируете
+    replace: Сделаете ли вы правление законным
+    fields: all
+  - find: легитимизирует
+    replace: делает правление законным
+    fields: all
+  - find: легитимизировать
+    replace: сделать правление законным
+    fields: all
+  - find: Легитимность
+    replace: Законное право править
+    fields: all
+  - find: легитимность
+    replace: законное право править
+    fields: all
+  - find: отлучение
+    replace: отвержение церковью
+    fields: all
+  - find: отлучит
+    replace: отвернёт от церкви
+    fields: all
+  - find: отлучить
+    replace: отвернуть от церкви
+    fields: all
+  - find: отлучённым
+    replace: отвергнутым церковью
+    fields: all
+  - find: святотатством
+    replace: оскорблением святого
+    fields: all
+  - find: святотатство
+    replace: оскорбление святого
+    fields: all
+  - find: векселя
+    replace: долговые записки
+    fields: all
+  - find: векселей
+    replace: долговых записок
+    fields: all
+  - find: ликвидность
+    replace: деньги в казне
+    fields: all
+  - find: несостоятельность
+    replace: нет денег
+    fields: all
+  - find: несостоятельности
+    replace: отсутствия денег
+    fields: all
+  - find: дознание
+    replace: расследование
+    fields: all
+  - find: дознания
+    replace: расследования
+    fields: all
+  - find: ультиматумы
+    replace: последние требования
+    fields: all
+  - find: ультиматум
+    replace: последнее требование
+    fields: all
+  - find: дефолта
+    replace: неуплаты
+    fields: all
+  - find: дефолт
+    replace: неуплата
+    fields: all
+  - find: консолидированную
+    replace: одну общую
+    fields: all
+  - find: монополией
+    replace: единоличной властью над рынком
+    fields: all
+  - find: монополию
+    replace: единоличную власть над рынком
+    fields: all
+  - find: амнистию
+    replace: прощение
+    fields: all
+  - find: монополию
+    replace: единоличную власть над рынком
+    fields: all
+  - find: монополии
+    replace: единоличной власти над рынком
+    fields: all
+  - find: монополия
+    replace: единоличная власть над рынком
+    fields: all
+  - find: Платёжеспособный король
+    replace: Король, который может платить
+    fields: all
+  - find: Платёжеспособный
+    replace: Могущий платить
+    fields: all
+  - find: Отлучение
+    replace: Отвержение церковью
+    fields: all
+  - find: Эмбарго
+    replace: Запрет на торговлю
+    fields: all
+  - find: Лицензированный
+    replace: Официальный
+    fields: all
+  - find: Подделка
+    replace: Фальшивая монета
+    fields: all
+  - find: Монополия
+    replace: Единоличная власть
+    fields: all
+  - find: Паломники
+    replace: Странники
+    fields: all
+  - find: Паломник
+    replace: Странник
+    fields: all
+  - find: паломники
+    replace: странники
+    fields: all
+  - find: паломник
+    replace: странник
+    fields: all
+  - find: таинства
+    replace: обряды
+    fields: all
+  - find: препятствие
+    replace: помеху
+    fields: all
+  - find: лицензированный
+    replace: официальный
+    fields: all
+  - find: нелицензированное
+    replace: неофициальное
+    fields: all
+  - find: провинциальные хартии
+    replace: местные права на хранение
+    fields: all
+  - find: хартии
+    replace: права
+    fields: all
+  - find: Подделки
+    replace: Фальшивые монеты
+    fields: all
+  - find: подделки
+    replace: фальшивые монеты
+    fields: all
+  - find: подделку
+    replace: фальшивую монету
+    fields: all
+  - find: подделка
+    replace: фальшивая монета
+    fields: all
+  - find: подделок
+    replace: фальшивых монет
+    fields: all
+
+  # --- Russian (prompt + choiceText only) ---
+  - find: узурпаторов
+    replace: тех, кто взял трон
+    fields: prompt_choice
+  - find: узурпатора
+    replace: того, кто взял трон
+    fields: prompt_choice
+  - find: узурпатором
+    replace: тем, кто взял трон
+    fields: prompt_choice
+  - find: узурпатору
+    replace: тому, кто взял трон
+    fields: prompt_choice
+  - find: узурпатор
+    replace: тот, кто взял трон
+    fields: prompt_choice
+
+  # --- English (all fields) ---
+  - find: root out his household
+    replace: send away all from his court
+    fields: all
+  - find: root out
+    replace: send away all from
+    fields: all
+  - find: rooted out
+    replace: sent away all from
+    fields: all
+  - find: legitimising
+    replace: making lawful
+    fields: all
+  - find: legitimizing
+    replace: making lawful
+    fields: all
+  - find: legitimised
+    replace: made lawful
+    fields: all
+  - find: legitimized
+    replace: made lawful
+    fields: all
+  - find: legitimise
+    replace: make lawful
+    fields: all
+  - find: legitimize
+    replace: make lawful
+    fields: all
+  - find: legitimacy
+    replace: lawful right to rule
+    fields: all
+  - find: privy purse
+    replace: king's private money
+    fields: all
+  - find: церковную десятину
+    replace: церковный налог
+    fields: all
+  - find: privy council seat
+    replace: seat on the king's council
+    fields: all
+  - find: regicides
+    replace: king-killers
+    fields: all
+  - find: regicide
+    replace: killing a king
+    fields: all
+  - find: schism
+    replace: church split
+    fields: all
+  - find: embargo
+    replace: trade ban
+    fields: all
+  - find: embargoes
+    replace: trade bans
+    fields: all
+  - find: excommunicate
+    replace: cast out from church
+    fields: all
+  - find: excommunicated
+    replace: cast out from church
+    fields: all
+  - find: confiscation
+    replace: seizing property
+    fields: all
+  - find: confiscate
+    replace: seize
+    fields: all
+  - find: solvency
+    replace: ability to pay
+    fields: all
+  - find: solvent
+    replace: able to pay
+    fields: all
+  - find: insolvency
+    replace: no money left
+    fields: all
+  - find: insolvent
+    replace: out of money
+    fields: all
+  - find: liquidity
+    replace: money in the treasury
+    fields: all
+  - find: promissory notes
+    replace: debt papers
+    fields: all
+  - find: consolidated
+    replace: one combined
+    fields: all
+  - find: ultimatums
+    replace: final demands
+    fields: all
+  - find: ultimatum
+    replace: final demand
+    fields: all
+  - find: forgery
+    replace: fake seal
+    fields: all
+  - find: forgeries
+    replace: fake seals
+    fields: all
+  - find: counterfeit
+    replace: fake coin
+    fields: all
+  - find: temple church tax
+    replace: church tax
+    fields: all
+  - find: temple tithe
+    replace: church tax
+    fields: all
+  - find: tithe
+    replace: church tax
+    fields: all
+  - find: blasphemy
+    replace: insult to the sacred
+    fields: all
+  - find: sacrilege
+    replace: insult to the sacred
+    fields: all
+  - find: inquest
+    replace: investigation
+    fields: all
+  - find: amnesty
+    replace: forgiveness
+    fields: all
+  - find: default clock
+    replace: payment deadline
+    fields: all
+  - find: reconciled
+    replace: matched
+    fields: all
+  - find: anointed
+    replace: blessed by church
+    fields: all
+  - find: usurper's
+    replace: throne-stealer's
+    fields: all
+  - find: merchant's coup
+    replace: coup of merchants
+    fields: all
+
+  # --- English (prompt + choiceText only) ---
+  - find: usurpers
+    replace: kings who took the throne
+    fields: prompt_choice
+  - find: usurper
+    replace: king who took the throne
+    fields: prompt_choice
+  - find: king or king who took the throne
+    replace: king or one who took the throne
+    fields: all
