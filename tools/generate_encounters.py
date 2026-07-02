@@ -15,6 +15,7 @@ if str(_TOOLS_DIR) not in sys.path:
 from encounter_data import ENCOUNTERS, INTRO_EN, INTRO_RU  # noqa: E402
 
 PROJECT_ROOT = _TOOLS_DIR.parent
+DAS_DATA = PROJECT_ROOT / "scripts" / "das" / "data"
 MAX_CHOICES = 5
 MAX_NODES = 4
 NO = "NO_STAT_CHANGE"
@@ -223,8 +224,8 @@ def generate_file(lang: str) -> str:
 
     return (
         "require engine.core\n"
-        "require constants\n"
-        "require dialogue_types\n"
+        "require scripts/das/core/constants\n"
+        "require scripts/das/core/dialogue_types\n"
         "\n"
         f"module {module} public\n"
         "\n"
@@ -241,8 +242,8 @@ def main() -> None:
     _, _, _, _, people = split_encounters()
     print(f"People pool: {len(people)} encounters (days {90}+)")
 
-    en_path = PROJECT_ROOT / "encounters_en.das"
-    ru_path = PROJECT_ROOT / "encounters_ru.das"
+    en_path = DAS_DATA / "encounters_en.das"
+    ru_path = DAS_DATA / "encounters_ru.das"
 
     en_content = generate_file("en")
     ru_content = generate_file("ru")

@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+DAS_DATA = ROOT / "scripts" / "das" / "data"
 
 CHAR_MAP = {
     "General Rudolf": "CHAR_RUDOLF",
@@ -205,8 +206,8 @@ def emit_encounter(enc: dict, indent: str = "    ") -> str:
 def emit_module(pool_name: str, array_name: str, count_const: str, encounters: list[dict], lang: str) -> str:
     body = ",\n".join(emit_encounter(e) for e in encounters)
     return f"""require engine.core
-require constants
-require dialogue_types
+require scripts/das/core/constants
+require scripts/das/core/dialogue_types
 
 module encounters_{pool_name}_{lang} public
 
@@ -242,14 +243,14 @@ def main() -> None:
     for pool, arr_en, count, lo, hi, en_title, ru_title in pools:
         en_enc = parse_encounters(extract_pool_section(en_src, en_title), lo, hi, ru=False)
         print(f"{pool} EN: {len(en_enc)} encounters (expected {hi - lo + 1})")
-        (ROOT / f"encounters_{pool}_en.das").write_text(
+        (DAS_DATA / f"encounters_{pool}_en.das").write_text(
             emit_module(pool, arr_en, count, en_enc, "en"), encoding="utf-8"
         )
 
         ru_enc = parse_encounters(extract_pool_section(ru_src, ru_title), lo, hi, ru=True)
         print(f"{pool} RU: {len(ru_enc)} encounters")
         ru_arr = arr_en.replace("allEncountersEn", "allEncountersRu")
-        (ROOT / f"encounters_{pool}_ru.das").write_text(
+        (DAS_DATA / f"encounters_{pool}_ru.das").write_text(
             emit_module(pool, ru_arr, count, ru_enc, "ru"), encoding="utf-8"
         )
 

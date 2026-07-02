@@ -5,6 +5,8 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+DAS_DATA = ROOT / "scripts" / "das" / "data"
+DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
 REF_EN = ROOT / "QUESTIONS_REFERENCE.md"
 REF_RU = ROOT / "QUESTIONS_REFERENCE_RU.md"
 
@@ -440,8 +442,8 @@ def emit_arc_module(all_beats: list[dict], module_name: str, beats_suffix: str, 
         enc_lines.append("")
 
     return f"""require engine.core
-require constants
-require dialogue_types
+require scripts/das/core/constants
+require scripts/das/core/dialogue_types
 
 module {module_name} public
 
@@ -512,11 +514,11 @@ def main():
 
     schedule = build_day_map(beats_en)
 
-    (ROOT / "arc_encounters_en.das").write_text(
+    (DAS_ARCS / "arc_encounters_en.das").write_text(
         emit_arc_module(beats_en, "arc_encounters_en", "BeatsEn"),
         encoding="utf-8",
     )
-    (ROOT / "arc_encounters_ru.das").write_text(
+    (DAS_ARCS / "arc_encounters_ru.das").write_text(
         emit_arc_module(beats_ru, "arc_encounters_ru", "BeatsRu", lang="ru"),
         encoding="utf-8",
     )
@@ -532,7 +534,7 @@ def main():
         f"    ArcDaySlot(day = {d}, arcId = {a}, beatIdx = {b}, priority = {p})" for d, a, b, p in schedule
     )
     sched_das = f"""require engine.core
-require constants
+require scripts/das/core/constants
 
 module arc_schedule public
 
@@ -553,7 +555,7 @@ let public {{
 {chr(10).join(count_lines)}
 }}
 """
-    (ROOT / "arc_schedule.das").write_text(sched_das, encoding="utf-8")
+    (DAS_ARCS / "arc_schedule.das").write_text(sched_das, encoding="utf-8")
     print(f"Schedule: {len(schedule)} arc days, EN beats: {len(beats_en)}, RU beats: {len(beats_ru)}")
 
 

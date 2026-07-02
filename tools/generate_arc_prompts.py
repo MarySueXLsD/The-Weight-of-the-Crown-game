@@ -5,13 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "arc_prompts.das"
+DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
+OUT = DAS_ARCS / "arc_prompts.das"
 
 HEADER = '''require engine.core
-require constants
-require dialogue_types
-require arc_state
-require localization public
+require scripts/das/core/constants
+require scripts/das/core/dialogue_types
+require scripts/das/arcs/arc_state
+require scripts/das/localization/localization public
 
 
 module arc_prompts public

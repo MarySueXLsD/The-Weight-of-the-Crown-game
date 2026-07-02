@@ -1,0 +1,902 @@
+require engine.core
+
+module constants public
+
+let public {
+    STAT_COUNT = 9
+    STAT_PEOPLE_IDX = 0
+    STAT_CHURCH_IDX = 1
+    STAT_ARMY_IDX = 2
+    STAT_GOLD_IDX = 3
+    STAT_HEALTH_IDX = 4
+    STAT_LOYALTY_IDX = 5
+    STAT_RICH_LOVE_IDX = 6
+    STAT_FOOD_IDX = 7
+    STAT_SUCCESSION_IDX = 8
+    STAT_MAIN_COUNT = 8
+    STAT_MIN = 0
+    STAT_MAX = 100
+    STAT_DEFAULT_VALUE = 50
+
+    STAT_TIER_CRITICAL_MAX = 10
+    STAT_TIER_LOW_MAX = 20
+    STAT_TIER_STABLE_MAX = 79
+    STAT_TIER_STRONG_MAX = 89
+    STAT_TIER_STRONG_MIN = 80
+    STAT_TIER_CRITICAL = 0
+    STAT_TIER_LOW = 1
+    STAT_TIER_STABLE = 2
+    STAT_TIER_STRONG = 3
+    STAT_TIER_DOMINANT = 4
+    SYNERGY_BONUS_MAX = 3
+    SYNERGY_PENALTY_MAX = 3
+    CHOICE_PENALTY_MULTIPLIER = 1.25f
+
+    MAX_ADVISOR_ACTIONS = 8
+    ADVISOR_MIN_SPEND_STAT = 25
+    ADVISOR_LOYALTY_LOW_THRESHOLD = 20
+    ADVISOR_LOYALTY_USE_PENALTY = 2
+    ADVISOR_ACTION_TITLE_FONT_SIZE = 56.0
+    ADVISOR_ACTION_DESC_FONT_SIZE = 42.0
+    ADVISOR_ACTION_EFFECT_FONT_SIZE = 48.0
+    ADVISOR_ACTION_TITLE_DESC_SPACING = 32.0
+    ADVISOR_ACTION_DESC_EFFECT_SPACING = 54.0
+    ADVISOR_ACTION_EFFECT_LINE_SPACING = 16.0
+    ADVISOR_ACTION_EFFECT_LINE_HEIGHT_SCALE = 1.45f
+    ADVISOR_ACTION_EFFECT_PART_SPACING = 10.0
+    ADVISOR_ACTION_CARD_INNER_PAD = 28.0
+    ADVISOR_ACTION_CARD_HEIGHT = 360.0
+    ADVISOR_ACTION_IMAGE_GAP = 12.0
+    ADVISOR_ACTION_DISABLED_ALPHA = 0.45
+    ADVISOR_ACTION_OVERLAY_IDLE_COLOR = float4(0.06, 0.05, 0.04, 0.68)
+    ADVISOR_ACTION_OVERLAY_HOVER_COLOR = float4(0.10, 0.08, 0.06, 0.42)
+    ADVISOR_ACTION_TITLE_COLOR = float4(0.98, 0.95, 0.88, 1.0)
+    ADVISOR_ACTION_DESC_COLOR = float4(0.90, 0.84, 0.74, 1.0)
+    ADVISOR_ACTION_EFFECT_COLOR = float4(0.78, 0.90, 0.58, 1.0)
+    ADVISOR_ACTION_HOVER_SCALE = 1.02
+    ADVISOR_ACTION_FILL_HIT_ALPHA = 0.01
+    ADVISOR_CONFIRM_TITLE_FONT_SIZE = 36.0
+    ADVISOR_CONFIRM_BODY_FONT_SIZE = 28.0
+    ADVISOR_CONFIRM_BUTTON_FONT_SIZE = 28.0
+    ADVISOR_CONFIRM_PANEL_WIDTH = 720.0
+
+    DEFAULT_NICKNAME = "The Usurper"
+    TOP_BAR_HEIGHT = 80.0
+    TOP_BAR_HORIZONTAL_PADDING = 48.0
+    TOP_BAR_LEFT_INFO_WIDTH = 480.0
+    TOP_BAR_LEFT_INFO_SPACING = 20.0
+    TOP_BAR_PAUSE_MARGIN = 20.0
+    TOP_BAR_PAUSE_BUTTON_WIDTH = 176.0
+    TOP_BAR_PAUSE_BUTTON_HEIGHT = 52.0
+    TOP_BAR_PAUSE_BUTTON_FONT_SIZE = 48.0
+    BOTTOM_BAR_HEIGHT = 120.0
+    BOTTOM_BAR_ADVISOR_MARGIN = 20.0
+    BOTTOM_BAR_ADVISOR_BUTTON_WIDTH = 240.0
+    BOTTOM_BAR_ADVISOR_BUTTON_HEIGHT = 52.0
+    BOTTOM_BAR_ADVISOR_BUTTON_FONT_SIZE = 48.0
+    ADVISOR_HUD_ENABLED = false
+    ADVISOR_ICON_SIZE = 400.0
+    ADVISOR_ICON_PADDING_RIGHT = 20.0
+    ADVISOR_ICON_PADDING_BOTTOM = -50.0
+    ADVISOR_PANEL_WIDTH = 1680.0
+    ADVISOR_PANEL_PADDING = 36.0
+    ADVISOR_PANEL_CONTENT_LEFT_PAD = 100.0
+    ADVISOR_PANEL_TITLE_FONT_SIZE = 72.0
+    ADVISOR_PANEL_STATUS_FONT_SIZE = 40.0
+    ADVISOR_PANEL_TITLE_ROW_GAP = 28.0
+    ADVISOR_PANEL_TITLE_SPACING = 52.0
+    ADVISOR_PANEL_GRID_COLS = 2
+    ADVISOR_PANEL_GRID_GAP = 20.0
+    ADVISOR_PANEL_SCROLL_VIEWPORT_HEIGHT = 580.0
+    ADVISOR_PANEL_SCROLLBAR_WIDTH = 14.0
+    ADVISOR_PANEL_PORTRAIT_WIDTH = 360.0
+    ADVISOR_PANEL_PORTRAIT_HEIGHT = 860.0
+    ADVISOR_PANEL_PORTRAIT_OVERLAP = 150.0
+    ADVISOR_ANIM_IDLE = 0
+    ADVISOR_ANIM_OPENING = 1
+    ADVISOR_ANIM_OPEN = 2
+    ADVISOR_ANIM_CLOSING = 3
+    DAY_FONT_SIZE = 52.0
+    NICKNAME_FONT_SIZE = 52.0
+    DEATH_SUMMARY_FONT_SIZE = 48.0
+    DEATH_RECORD_FONT_SIZE = 32.0
+    TRY_AGAIN_FONT_SIZE = 38.0
+    DEATH_SUMMARY_BOX_PADDING = 28.0
+    DEATH_SUMMARY_BOX_WIDTH = 600.0
+    DEATH_SUMMARY_EXTRA_PADDING = 20.0
+    TRY_AGAIN_BUTTON_WIDTH = 200.0
+
+    CHARACTER_HEIGHT_SCREEN_RATIO = 0.80
+    // Horizontal center of the character in 1920-wide reference space.
+    CHARACTER_CENTER_DESIGN_X = 400.0
+    DIALOGUE_SCREEN_MARGIN_DESIGN = 24.0
+    DIALOGUE_MIN_WIDTH = 200.0
+    // Offset from the character image top-right corner (design pixels).
+    DIALOGUE_CHARACTER_GAP_X = -50.0
+    DIALOGUE_CHARACTER_GAP_Y = 72.0
+    DIALOGUE_ANSWER_SPACING = 16.0
+    DIALOGUE_BOX_PADDING = 14.0
+    UI_BOX_BORDER = 2.0
+    ANSWER_FONT_CHAR_WIDTH_RATIO = 0.38
+    STAT_EMPHASIS_SCALE = 1.24
+    STAT_EMPHASIS_DROP = 30.0
+    STAT_EMPHASIS_LERP_SPEED = 14.0
+    STAT_CONFIRM_FLASH_DURATION = 0.12
+    STAT_CONFIRM_FILL_DURATION = 0.42
+    STAT_CONFIRM_COLOR_DURATION = 0.2
+    STAT_CONFIRM_SHRINK_DURATION = 0.24
+    STAT_CONFIRM_IDLE = 0
+    STAT_CONFIRM_FLASH = 1
+    STAT_CONFIRM_FILL = 2
+    STAT_CONFIRM_COLOR = 3
+    STAT_CONFIRM_SHRINK = 4
+    STAT_FLASH_POSITIVE_COLOR = float4(0.35, 0.88, 0.42, 1.0)
+    STAT_FLASH_NEGATIVE_COLOR = float4(0.92, 0.28, 0.28, 1.0)
+    STAT_BAR_MID_COLOR = float4(0.95, 0.78, 0.2, 1.0)
+    MAX_CHOICES = 5
+    MAX_NODES_PER_ENCOUNTER = 4
+    NO_NEXT_NODE = -1
+    HOVER_NONE = -1
+    ANSWER_HOVER_SCALE = 1.06
+    ANSWER_HOVER_LERP_SPEED = 12.0
+    ANSWER_BUTTON_IDLE_ALPHA = 0.88
+    ANSWER_HOVER_ALPHA = 1.0
+    CHARACTER_ANIM_ENTER_SPEED = 676.0
+    CHARACTER_ANIM_EXIT_SPEED = 676.0
+    // Extra travel past the left screen edge before exit completes (design pixels).
+    CHARACTER_EXIT_EXTRA_OFFSET = 50.0
+    CHARACTER_WALK_BOB_AMPLITUDE = 4.0
+    CHARACTER_WALK_BOB_FREQ = 3.0
+    CHARACTER_BREATH_BOB_AMPLITUDE = 2.5
+    CHARACTER_BREATH_BOB_FREQ = 0.55
+    QUESTION_FONT_SIZE = 36.0
+    DIALOGUE_BRANCH_RESPONSE_FONT_SIZE = 28.0
+    DIALOGUE_BRANCH_RESPONSE_COLOR = float4(0.78, 0.74, 0.68, 1.0)
+    DIALOGUE_NAME_FONT_SIZE = 66.0
+    DIALOGUE_NAME_SPACING = 8.0
+    DIALOGUE_NAME_COLOR = float4(0.40, 0.70, 1.0, 1.0)
+    ANSWER_FONT_SIZE = 32.0
+    RESPONSE_FONT_SIZE = 37.0
+    MAX_REIGN_DAYS = 365
+    DAY_PERIOD_LENGTH = 30
+    CALENDAR_START_MONTH = 7
+    CALENDAR_START_DAY = 18
+    INFO_HOVER_NONE = -1
+    INFO_HOVER_DAY = 0
+    INFO_HOVER_NICKNAME = 1
+    INFO_HOVER_STAT_BASE = 2
+    INFO_TOOLTIP_MAX_PERIODS = 13
+    INFO_TOOLTIP_WIDTH = 1100.0
+    INFO_TOOLTIP_PADDING = 14.0
+    INFO_TOOLTIP_SECTION_GAP = 12.0
+    INFO_TOOLTIP_FONT_SIZE = 33.0
+    INFO_TOOLTIP_TITLE_COLOR = float4(1.0, 1.0, 1.0, 1.0)
+    INFO_TOOLTIP_BODY_COLOR = float4(0.85, 0.78, 0.65, 1.0)
+    INFO_TOOLTIP_INFLUENCE_HEADER_COLOR = float4(1.0, 0.84, 0.38, 1.0)
+    INFO_TOOLTIP_SCREEN_MARGIN = 16.0
+    INFO_TOOLTIP_OFFSET_Y = 14.0
+    INFO_TOOLTIP_ABOVE_OFFSET = 14.0
+    MENU_BUTTON_FONT_SIZE = 48.0
+    MENU_PANEL_WIDTH = 500.0
+    MENU_PANEL_PADDING = 36.0
+    MENU_PANEL_BUTTON_HEIGHT = 72.0
+    MENU_PANEL_BUTTON_SPACING = 24.0
+    MENU_SLIDE_DURATION = 0.4
+    MENU_ANIM_IDLE = 0
+    MENU_ANIM_OPENING = 1
+    MENU_ANIM_OPEN = 2
+    MENU_ANIM_CLOSING = 3
+    OPTIONS_PANEL_WIDTH = 1120.0
+    OPTIONS_PANEL_PADDING = 40.0
+    OPTIONS_ROW_HEIGHT = 72.0
+    OPTIONS_ROW_WIDTH = 960.0
+    OPTIONS_ROW_SPACING = 22.0
+    OPTIONS_SLIDER_WIDTH = 520.0
+    OPTIONS_SLIDER_HEIGHT = 48.0
+    OPTIONS_LANGUAGE_BUTTON_WIDTH = 252.0
+    OPTIONS_LANGUAGE_BUTTON_SPACING = 16.0
+    OPTIONS_LABEL_FONT_SIZE = 56.0
+    OPTIONS_LABEL_FONT_SIZE_RU = 46.0
+    OPTIONS_LABEL_WIDTH = 300.0
+    OPTIONS_LABEL_WIDTH_RU = 420.0
+    OPTIONS_SLIDER_WIDTH_RU = 460.0
+    OPTIONS_ROW_LABEL_GAP = 32.0
+    OPTIONS_CONTROL_FONT_SIZE = 44.0
+    OPTIONS_CHECKBOX_SIZE = 64.0
+    OPTIONS_TOGGLE_FONT_SIZE = 48.0
+    OPTIONS_FULLSCREEN_ENABLED = false
+    OPTIONS_TITLE_FONT_SIZE = 72.0
+    OPTIONS_VERSION_FONT_SIZE = 40.0
+    OPTIONS_TEXT_COLOR = float4(0.93, 0.86, 0.72, 1.0)
+    OPTIONS_CONTROL_BG_COLOR = float4(0.93, 0.86, 0.72, 0.88)
+    OPTIONS_CONTROL_TEXT_COLOR = float4(0.18, 0.14, 0.1, 1.0)
+    OPTIONS_BUTTON_HEIGHT = 96.0
+    OPTIONS_BUTTON_FONT_SIZE = 96.0
+    OPTIONS_LANGUAGE_COUNT = 2
+    OPTIONS_DEFAULT_LANGUAGE_IDX = 0
+    OPTIONS_STORAGE_KEY = "game_options"
+    GAME_VERSION = "0.1.0"
+
+    SCREEN_MAIN_MENU = 0
+    SCREEN_PLAYING = 1
+
+    // Set to false before shipping; skips splash/menu/intro and starts in gameplay.
+    DEBUG_SKIP_TO_GAME_SCREEN = false
+
+    SPLASH_NONE = 0
+    SPLASH_BLACK_HOLD = 1
+    SPLASH_FADE_IN_LOGO = 2
+    SPLASH_HOLD_LOGO = 3
+    SPLASH_FADE_IN_MENU = 4
+
+    SPLASH_BLACK_HOLD_DURATION = 1.0
+    SPLASH_FADE_IN_LOGO_DURATION = 2.0
+    SPLASH_HOLD_LOGO_DURATION = 2.0
+    SPLASH_MUSIC_BEFORE_MENU = 4.0
+    SPLASH_FADE_IN_MENU_DURATION = 1.5
+
+    SPLASH_LOGO_MAX_WIDTH_RATIO = 0.90
+    SPLASH_LOGO_MAX_HEIGHT_RATIO = 0.62
+
+    INTRO_NONE = 0
+    INTRO_FADE_TO_BLACK = 1
+    INTRO_SCENE_WAIT = 2
+    INTRO_PICTURE_WAIT = 3
+    INTRO_NAME_SLIDE = 4
+    INTRO_TYPEWRITER = 5
+    INTRO_POST_TEXT_WAIT = 6
+    INTRO_SLIDE_OUT = 7
+    INTRO_SEQ2_SLIDE_IN = 8
+    INTRO_DIALOGUE = 9
+    INTRO_SEQ3_SLIDE_IN = 10
+    INTRO_SEQ4_APPEAR = 11
+    INTRO_SEQ5_APPEAR = 12
+    INTRO_SEQ6_APPEAR = 13
+    INTRO_FADE_OUT = 14
+    INTRO_UNFADE = 15
+    INTRO_IMAGE_SHAKE = 16
+    INTRO_POST_SHAKE_WAIT = 17
+    INTRO_BLACK_PAUSE = 18
+
+    INTRO_LAYOUT_SEQ1 = 0
+    INTRO_LAYOUT_MULTI = 1
+    INTRO_LAYOUT_SCENE3_PAIR = 2
+
+    INTRO_STORY_SCENE_NONE = 0
+    INTRO_STORY_SCENE_3 = 3
+    INTRO_STORY_SCENE_4 = 4
+    INTRO_STORY_SCENE_5 = 5
+    INTRO_STORY_SCENE_6 = 6
+    INTRO_STORY_SCENE_7 = 7
+
+    INTRO_POST_SHAKE_ACTION_NONE = 0
+    INTRO_POST_SHAKE_ACTION_SCENE_6 = 1
+    INTRO_POST_SHAKE_ACTION_DIALOGUE_23 = 2
+
+    INTRO_DIALOGUE_NAME_SLIDE = 0
+    INTRO_DIALOGUE_TYPEWRITER = 1
+    INTRO_DIALOGUE_POST_WAIT = 2
+
+    INTRO_DIALOGUE_BEAT_COUNT = 41
+    INTRO_DIALOGUE_BEAT_SPLIT = 30
+
+    INTRO_SHAKE_DURATION = 1.0
+    INTRO_SHAKE_AMPLITUDE = 12.0
+    INTRO_POST_SHAKE_WAIT_DURATION = 1.0
+    INTRO_BLACK_PAUSE_DURATION = 2.0
+    INTRO_SCENE3_SEQ7_WIDTH_RATIO = 0.35
+    INTRO_SCENE3_SEQ8_WIDTH_RATIO = 0.50
+    INTRO_SCENE3_SEQ7_UV_Y_ANCHOR = 0.0
+    INTRO_SCENE3_SEQ8_UV_Y_ANCHOR = 0.35
+
+    INTRO_FADE_DURATION = 1.0
+    CUTSCENE_SKIP_HOLD_DURATION = 2.0
+    CUTSCENE_SKIP_HINT_FONT_SIZE = 36.0
+    CUTSCENE_SKIP_HINT_IDLE_HIDE_DELAY = 2.0
+    CUTSCENE_SKIP_HINT_FADE_DURATION = 1.0
+    CUTSCENE_SKIP_EXIT_FADE_DURATION = 2.0
+    CUTSCENE_SKIP_EXIT_UNFADE_DURATION = 2.0
+    CUTSCENE_SKIP_BAR_HEIGHT = 6.0
+    CUTSCENE_SKIP_PADDING_RIGHT = 72.0
+    CUTSCENE_SKIP_PADDING_BOTTOM = 96.0
+    CUTSCENE_SKIP_TEXT_BAR_GAP = 8.0
+    CUTSCENE_SKIP_BAR_EXTRA_UP = 10.0
+    CUTSCENE_SKIP_BAR_EXTRA_WIDTH = 36.0
+    CUTSCENE_SKIP_BAR_MIN_WIDTH = 120.0
+    CUTSCENE_SKIP_BAR_BG_COLOR = float4(1.0, 1.0, 1.0, 0.25)
+    CUTSCENE_SKIP_BAR_FILL_COLOR = float4(1.0, 1.0, 1.0, 0.85)
+    CUTSCENE_SKIP_HINT_COLOR = float4(0.75, 0.75, 0.78, 0.85)
+
+    CONTINUE_FADE_NONE = 0
+    CONTINUE_FADE_OUT = 1
+    CONTINUE_FADE_IN = 2
+
+    INTRO_SCENE_WAIT_DURATION = 1.0
+    INTRO_PICTURE_WAIT_DURATION = 1.0
+    INTRO_POST_TEXT_WAIT_DURATION = 0.0
+    INTRO_SLIDE_DURATION = 0.65
+    INTRO_IMAGE_EDGE_PADDING_RATIO = 0.03
+    INTRO_IMAGE_BOTTOM_Y_RATIO = 0.76
+    INTRO_MULTI_TEXT_AREA_RATIO = 0.18
+    INTRO_SEQ2_MIN_INNER_HEIGHT = 100.0
+    INTRO_CORNER_PAIR_GAP = 6.0
+    INTRO_CORNER_ROW_GAP = 8.0
+    INTRO_MULTI_TOP_ROW_HEIGHT_RATIO = 0.50
+    INTRO_MULTI_BOTTOM_WEIGHT_4 = 0.40
+    INTRO_MULTI_BOTTOM_WEIGHT_5 = 0.30
+    INTRO_MULTI_BOTTOM_WEIGHT_6 = 0.40
+    INTRO_IMAGE_BEVEL_SIZE = 6.0
+    INTRO_IMAGE_SHADOW_OFFSET = 18.0
+    INTRO_IMAGE_BEVEL_DARK_COLOR = float4(0.32, 0.30, 0.28, 1.0)
+    INTRO_IMAGE_BEVEL_DARKER_COLOR = float4(0.18, 0.16, 0.14, 1.0)
+    INTRO_IMAGE_SHADOW_COLOR = float4(0.0, 0.0, 0.0, 0.45)
+    INTRO_TEXT_SPACING = 16.0
+    INTRO_TEXT_TOP_OFFSET = 10.0
+    INTRO_REPLIC_FONT_SIZE = 42.0
+    INTRO_TYPEWRITER_CHARS_PER_SEC = 16.0
+    INTRO_CUTSCENE_BG_COLOR = float4(0.0, 0.0, 0.0, 1.0)
+    INTRO_TEXTURE_PATH_SEQ1 = "static/Cut-Scenes/sequence_1.png"
+    INTRO_TEXTURE_PATH_SEQ2 = "static/Cut-Scenes/sequence_2.png"
+    INTRO_TEXTURE_PATH_SEQ3 = "static/Cut-Scenes/sequence_3.png"
+    INTRO_TEXTURE_PATH_SEQ4 = "static/Cut-Scenes/sequence_4.png"
+    INTRO_TEXTURE_PATH_SEQ5 = "static/Cut-Scenes/sequence_5.png"
+    INTRO_TEXTURE_PATH_SEQ6 = "static/Cut-Scenes/sequence_6.png"
+    INTRO_TEXTURE_PATH_SEQ7 = "static/Cut-Scenes/sequence_7.png"
+    INTRO_TEXTURE_PATH_SEQ8 = "static/Cut-Scenes/sequence_8.png"
+    INTRO_TEXTURE_PATH_SEQ9 = "static/Cut-Scenes/sequence_9.png"
+    INTRO_TEXTURE_PATH_SEQ10 = "static/Cut-Scenes/sequence_10.png"
+    INTRO_TEXTURE_PATH_SEQ11 = "static/Cut-Scenes/sequence_11.png"
+    INTRO_TEXTURE_PATH_SEQ12 = "static/Cut-Scenes/sequence_12.png"
+    INTRO_TEXTURE_PATH_SEQ13 = "static/Cut-Scenes/sequence_13.png"
+    INTRO_TEXTURE_PATH_SEQ14 = "static/Cut-Scenes/sequence_14.png"
+    INTRO_TEXTURE_PATH_SEQ15 = "static/Cut-Scenes/sequence_15.png"
+    INTRO_TEXTURE_PATH_SEQ16 = "static/Cut-Scenes/sequence_16.png"
+    MAIN_MENU_BOTTOM_BAR_HEIGHT = 100.0
+    MAIN_MENU_BUTTON_HEIGHT = 64.0
+    MAIN_MENU_BUTTON_SPACING = 16.0
+    MAIN_MENU_BOTTOM_PADDING = 32.0
+    MAIN_MENU_BUTTON_COUNT = 5
+    MAIN_MENU_CONTINUE_IDX = 0
+    MAIN_MENU_NEW_GAME_IDX = 1
+    MAIN_MENU_OPTIONS_IDX = 2
+    MAIN_MENU_ABOUT_IDX = 3
+    MAIN_MENU_EXIT_IDX = 4
+    SAVE_STORAGE_KEY = "game_progress"
+    MENU_BUTTON_SHINE_SWEEP_DURATION = 3.5
+    MENU_BUTTON_SHINE_PAUSE_DURATION = 1.0
+    MENU_BUTTON_SHINE_UV_START = 0.42
+    MENU_BUTTON_SHINE_UV_END = -1.12
+    MENU_BUTTON_SHINE_COLOR = float4(1.0, 0.97, 0.82, 0.28)
+    MENU_BUTTON_SHINE_HOVER_BOOST = 0.35
+    MAIN_MENU_BACKGROUND_ZOOM_MIN = 1.0
+    MAIN_MENU_BACKGROUND_ZOOM_MAX = 1.08
+    MAIN_MENU_BACKGROUND_ZOOM_CYCLE = 15.0
+    MAIN_MENU_BUTTON_COLOR = float4(0.68, 0.60, 0.46, 0.92)
+    MAIN_MENU_BUTTON_HOVER_COLOR = float4(0.80, 0.72, 0.56, 1.0)
+    MAIN_MENU_DISABLED_BUTTON_COLOR = float4(0.42, 0.36, 0.28, 1.0)
+
+    CHARACTER_COUNT = 6
+    CHARACTER_KING_IDX = 5
+    COURT_CHARACTER_COUNT = 39
+    TOTAL_ENCOUNTER_COUNT = 391
+    POOL_EARLY_START = 0
+    POOL_EARLY_COUNT = 30
+    POOL_MID_START = 30
+    POOL_MID_COUNT = 50
+    POOL_LATE_START = 80
+    POOL_LATE_COUNT = 100
+    POOL_LATE_A_COUNT = 80
+    POOL_LATE_B_COUNT = 20
+    POOL_PEOPLE_START = 180
+    POOL_PEOPLE_COUNT = 72
+    POOL_NOBILITY_START = 252
+    POOL_NOBILITY_COUNT = 55
+    POOL_LOYALTY_START = 307
+    POOL_LOYALTY_COUNT = 44
+    POOL_SUCCESSION_START = 351
+    POOL_SUCCESSION_COUNT = 40
+    POOL_LATE_FIXED_IDX = 80
+    POOL_EARLY_FIXED_IDX = 0
+    POOL_RUDOLF_BORDER_IDX = 14
+    CHARACTER_DEBUT_DAY_GROMM = 8
+    CHARACTER_DEBUT_DAY_INGVAR = 5
+    FIXED_ARRAY_LITERAL_MAX = 80
+    POOL_EARLY_FIRST_DAY = 1
+    POOL_EARLY_LAST_DAY = 10
+    OPENING_WEEK_LAST_DAY = 10
+    OPENING_WEEK_ENC_BASE = 500
+    OPENING_WEEK_ENC_COUNT = 7
+    OPENING_WEEK_ENC_RUDOLF_PAY = 0
+    OPENING_WEEK_ENC_MALRIK_BLESS = 1
+    OPENING_WEEK_ENC_BORVIN_TREASURY = 2
+    OPENING_WEEK_ENC_MIRA_DISEASE = 3
+    OPENING_WEEK_ENC_VARN_GUARD = 4
+    OPENING_WEEK_ENC_EDRIC_DECREE = 5
+    OPENING_WEEK_ENC_RUDOLF_DESERTERS = 6
+    POOL_MID_FIRST_DAY = 11
+    POOL_MID_LAST_DAY = 29
+    POOL_LATE_FIRST_DAY = 30
+    POOL_LATE_LAST_DAY = 89
+    POOL_PEOPLE_FIRST_DAY = 90
+    POOL_PEOPLE_LAST_DAY = 174
+    POOL_NOBILITY_FIRST_DAY = 175
+    POOL_NOBILITY_LAST_DAY = 259
+    POOL_LOYALTY_FIRST_DAY = 260
+    POOL_LOYALTY_LAST_DAY = 319
+    POOL_SUCCESSION_FIRST_DAY = 320
+    POOL_SUCCESSION_LAST_DAY = 365
+    CHARACTER_QUESTION_COOLDOWN_DAYS = 2
+    CHAR_RUDOLF = 0
+    CHAR_MALRIK = 1
+    CHAR_BORVIN = 2
+    CHAR_MIRA = 3
+    CHAR_GROMM = 4
+    CHAR_VARN = 5
+    CHAR_EDRIC = 6
+    CHAR_SELENA = 7
+    CHAR_MORWEN = 8
+    CHAR_ARVEL = 9
+    CHAR_INGVAR = 10
+    CHAR_SIVIL = 11
+    CHAR_ASHFORD = 12
+    CHAR_KASPAR = 13
+    CHAR_YVETTE = 14
+    CHAR_MARIANNA = 15
+    CHAR_ILANA = 16
+    CHAR_DOMINIC = 17
+    CHAR_KNOX = 18
+    CHAR_RAENA = 19
+    CHAR_OTTO = 20
+    CHAR_LISSA = 21
+    CHAR_OSRIC = 22
+    CHAR_BRAN = 23
+    CHAR_ORM = 24
+    CHAR_FARA = 25
+    CHAR_RUTA = 26
+    CHAR_YAREK = 27
+    CHAR_ELINA = 28
+    CHAR_FINN = 29
+    CHAR_KARA = 30
+    CHAR_NERIUS = 31
+    CHAR_ODO = 32
+    CHAR_PROPHET = 33
+    CHAR_WIZARD = 34
+    CHAR_GOOSE = 35
+    CHAR_RAYMOND = 36
+    CHAR_CYRUS = 37
+    CHAR_TALEN = 38
+
+    EXTENDED_CHARACTER_COUNT = 39
+    ARC_NONE = -1
+    ARC_HOUSEHOLD = 0
+    ARC_TAPESTRY = 1
+    ARC_EMPTY_PURSE = 2
+    ARC_HUNGRY_SEASON = 3
+    ARC_GUILD_COMPACT = 4
+    ARC_CHURCH_CROWN = 5
+    ARC_NORTHERN_PRICE = 6
+    ARC_GREAT_HOUSES = 7
+    ARC_SCAFFOLD_LEDGER = 8
+    ARC_STAR_CHAMBER = 9
+    ARC_PROPHET_WINTER = 10
+    ARC_COURT_KNIVES = 11
+    ARC_NEPHEW_FOG = 12
+    ARC_PLAGUE_CURE = 13
+    ARC_COUNT = 14
+
+    HOUSEHOLD_STANCE_PURGE = 0
+    HOUSEHOLD_STANCE_INTEGRATE = 1
+    HOUSEHOLD_STANCE_IGNORE = 2
+    HOUSEHOLD_STANCE_SELECTIVE = 3
+
+    STAT_UNLOCK_CONFLICT_DAY_CHURCH = 30
+    STAT_UNLOCK_CONFLICT_DAY_PEOPLE = 90
+    STAT_UNLOCK_CONFLICT_DAY_NOBILITY = 175
+    STAT_UNLOCK_CONFLICT_DAY_LOYALTY = 261
+    STAT_UNLOCK_CONFLICT_DAY_SUCCESSION = 321
+
+    ARC_QUESTION_ID_BASE = 1000
+    CHARACTER_PROFILE_PANEL_WIDTH = 1400.0
+    CHARACTER_PROFILE_PADDING = 30.0
+    CHARACTER_PROFILE_PORTRAIT_SIZE = 300.0
+    CHARACTER_PROFILE_PORTRAIT_BORDER = 4.0
+    CHARACTER_PROFILE_PORTRAIT_INSET = 8.0
+    CHARACTER_PROFILE_HEADER_GAP = 22.0
+    CHARACTER_PROFILE_TITLE_FONT_SIZE = 56.0
+    CHARACTER_PROFILE_BODY_FONT_SIZE = 36.0
+    CHARACTER_PROFILE_TRAIT_FONT_SIZE = 30.0
+    CHARACTER_PROFILE_SPACING = 16.0
+    CHARACTER_PROFILE_BUTTON_HEIGHT = 68.0
+    CHARACTER_PROFILE_OKAY_BUTTON_WIDTH = 148.0
+    CHARACTER_PROFILE_BODY_LINE_HEIGHT = 1.12
+    CHARACTER_PROFILE_BODY_CHAR_WIDTH = 0.44
+    CHARACTER_PROFILE_TRAIT_CHAR_WIDTH = 0.46
+    CHARACTER_PROFILE_TEXT_HEIGHT_PAD = 0.06
+    CHARACTER_PROFILE_BESIDE_EXTRA_LINES = 1.0
+    CHARACTER_PROFILE_DIVIDER_HEIGHT = 4.0
+    CHARACTER_PROFILE_BOTTOM_SLACK = 20.0
+    CHARACTER_PROFILE_INNER_BG_COLOR = float4(0.28, 0.21, 0.15, 1.0)
+    CHARACTER_PROFILE_BORDER_COLOR = float4(0.42, 0.32, 0.20, 1.0)
+    CHARACTER_PROFILE_PORTRAIT_BORDER_COLOR = float4(0.72, 0.58, 0.36, 1.0)
+    CHARACTER_PROFILE_PORTRAIT_INSET_COLOR = float4(0.14, 0.10, 0.08, 1.0)
+    CHARACTER_PROFILE_TITLE_COLOR = float4(0.96, 0.88, 0.62, 1.0)
+    CHARACTER_PROFILE_BODY_COLOR = float4(0.90, 0.84, 0.72, 1.0)
+    CHARACTER_PROFILE_DIVIDER_COLOR = float4(0.55, 0.44, 0.30, 1.0)
+    PROFILE_ANIM_IDLE = 0
+    PROFILE_ANIM_OPENING = 1
+    PROFILE_ANIM_OPEN = 2
+    PROFILE_ANIM_CLOSING = 3
+    POPUP_SLIDE_DURATION = 0.65
+    MENU_BUTTON_COLOR = float4(0.75, 0.68, 0.55, 1.0)
+    MENU_BUTTON_HOVER_COLOR = float4(0.99, 0.94, 0.78, 1.0)
+    MENU_DISABLED_BUTTON_COLOR = float4(0.55, 0.50, 0.42, 1.0)
+    MENU_DISABLED_TEXT_COLOR = float4(0.45, 0.40, 0.35, 1.0)
+    CHARACTER_ANIM_IDLE = 0
+    CHARACTER_ANIM_EXIT = 1
+    CHARACTER_ANIM_ENTER = 2
+    CHARACTER_ANIM_REVEAL = 3
+    CHARACTER_ANIM_HIDE = 4
+    CHARACTER_REVEAL_DURATION = 0.55
+    CHARACTER_SILHOUETTE_FADE_RGB = 0.35
+    CHARACTER_TEXTURE_ALPHA_THRESHOLD = 32
+    CHARACTER_TEXTURE_UV_TRIM_TOP = 4
+    CHARACTER_RENDER_TOP_CLIP = 4.0
+    CHARACTER_HOVER_GRAY_TINT = 0.78
+    CHARACTER_OUTLINE_WIDTH = 6
+    OUTLINE_BUILD_ROWS_PER_FRAME = 10
+    CHARACTER_VISUAL_WARM_PER_FRAME = 1
+    CHARACTER_ALPHA_CACHE_MAX_SIZE = 96
+    CHARACTER_ALPHA_CACHE_MAX_SLOTS = 8
+    CHARACTER_ALPHA_PRELOAD_PER_FRAME = 1
+    CHARACTER_OUTLINE_BUILD_MAX_SIZE = 384
+    CHARACTER_OUTLINE_CACHE_MAX = 3
+    CHARACTER_OUTLINE_COLOR = float4(1.0, 0.92, 0.15, 1.0)
+    DIALOG_IDLE = 0
+    DIALOG_TYPEWRITER = 1
+    DIALOG_CHOOSING = 2
+    DIALOG_POST_RESPONSE_HOLD = 3
+    TYPEWRITER_PROMPT = 0
+    TYPEWRITER_RESPONSE = 1
+    TYPEWRITER_CHARS_PER_SEC = 32.0
+    POST_RESPONSE_HOLD_DURATION = 2.5
+    SAME_VISITOR_BRIDGE_TEXT = "And one more thing..."
+    ANSWER_BUTTON_WIDTH_RATIO = 0.76
+    ANSWER_BUTTON_MIN_WIDTH = 180.0
+    ANSWER_BUTTON_HEIGHT = 76.0
+    ANSWER_BUTTON_PADDING = 12.0
+    ANSWER_SPACING = 10.0
+
+    CAM_ZOOM_IDLE = 0
+    CAM_ZOOM_OUT = 1
+    CAM_ZOOM_WAIT = 2
+    CAM_ZOOM_IN = 3
+    CAMERA_ZOOM_OUT_SCALE = 1.0
+    CAMERA_ZOOM_IN_SCALE = 1.20
+    CAMERA_ZOOM_SPEED = 1.8
+    CAMERA_ZOOM_WAIT = 0.1
+
+    STAT_ICON_SIZE_RATIO = 0.65
+    STAT_ICON_OFFSET_Y = 8.0
+    STAT_ICON_LAYOUT_PAD = 6.0
+    STAT_BAR_HEIGHT = 18.0
+    STAT_BAR_WIDTH_RATIO = 1.55
+    STAT_BAR_GAP = 30.0
+    STAT_BAR_OFFSET_FROM_BOTTOM = 8.0
+    STAT_ICON_OFFSET_DOWN = 23.0
+    STAT_ICON_OUTLINE_ALPHA = 1.0
+    STAT_ICON_OUTLINE_SCALE = 1.2
+    STAT_HOVER_OUTLINE_BLINK_HZ = 3.0
+    STAT_ICON_COLOR_BRIGHTNESS = 0.68
+    STAT_COLUMN_GAP = 60.0
+    STAT_BAR_DIVIDER_WIDTH = 3.0
+    STAT_BAR_DIVIDER_GAP = 30.0
+    STAT_BAR_DIVIDER_HEIGHT = 84.0
+    STAT_BAR_DIVIDER_COLOR = float4(0.45, 0.38, 0.32, 1.0)
+    STAT_BAR_TRACK_COLOR = float4(0.18, 0.14, 0.11, 1.0)
+    STAT_UNLOCK_REVEAL_DURATION = 0.55
+    STAT_CHURCH_UNLOCK_DAY = 30
+    STAT_PEOPLE_UNLOCK_DAY = 89
+    STAT_NOBILITY_UNLOCK_DAY = 175
+    STAT_LOYALTY_UNLOCK_DAY = 260
+    STAT_SUCCESSION_UNLOCK_DAY = 320
+    CHURCH_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/church_sequence_1.png"
+    CHURCH_CUTSCENE_SOUND_COUNT = 4
+    PEOPLE_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_3.png"
+    NOBILITY_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_2.png"
+    LOYALTY_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_4.png"
+    SUCCESSION_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_5.png"
+
+    BG_COLOR = float3(0.14, 0.11, 0.09)
+    ANSWER_BUTTON_COLOR = float4(0.93, 0.86, 0.72, 0.88)
+    ANSWER_BUTTON_HOVER_COLOR = float4(0.99, 0.94, 0.78, 1.0)
+    BAR_BG_COLOR = float4(0.22, 0.18, 0.15, 1.0)
+    TEXT_COLOR = float4(0.18, 0.14, 0.1, 1.0)
+    DIALOGUE_TEXT_COLOR = float4(1.0, 1.0, 1.0, 1.0)
+    DIALOGUE_BOX_BG_COLOR = float4(0.42, 0.28, 0.16, 1.0)
+    TOP_BAR_BG_COLOR = float4(0.22, 0.17, 0.13, 1.0)
+    DEATH_SUMMARY_BOX_BG_COLOR = float4(0.22, 0.17, 0.13, 1.0)
+    UI_BOX_BORDER_COLOR = float4(0.0, 0.0, 0.0, 1.0)
+    MENU_OVERLAY_COLOR = float4(0.0, 0.0, 0.0, 0.72)
+
+    BACKGROUND_TEXTURE_PATH = "static/background.png"
+    BACKGROUND_MUSIC_PATH = "static/OST/main_theme.mp3"
+    BACKGROUND_MUSIC_MENU_VOLUME = 0.4
+    BACKGROUND_MUSIC_GAME_VOLUME = 0.1
+    BACKGROUND_MUSIC_FADE_DURATION = 1.0
+    INTRO_CUTSCENE_MUSIC_PATH = "static/Cut-Scenes/intro_background.mp3"
+    INTRO_CUTSCENE_MUSIC_VOLUME = 0.2
+    INTRO_WAR_HORN_PATH = "static/Cut-Scenes/war_horn.wav"
+    INTRO_SWORD_FIGHT_PATH = "static/Cut-Scenes/sword_fight.mp3"
+    INTRO_BATTLE_SFX_VOLUME = 0.45
+    MAIN_MENU_BACKGROUND_TEXTURE_PATH = "static/Main Menu/menu_background.png"
+    LOGO_TEXTURE_PATH = "static/Main Menu/logo.png"
+    KING_TEXTURE_PATH = "static/Characters/king.png"
+    PEASANT_TEXTURE_PATH = "static/Characters/village_elder_bran.png"
+    DEATH_SCREEN_TEXTURE_PATH = "static/death_screen.png"
+    ADVISOR_ICON_TEXTURE_PATH = "static/Portraits/old_advisor_edric.png"
+    ADVISOR_ICON_HOVER_TEXTURE_PATH = "static/Portraits/old_advisor_edric.png"
+    ADVISOR_CHARACTER_TEXTURE_PATH = "static/Characters/old_advisor_edric.png"
+    GAME_FONT_PATH = "static/Fonts/Canterbury.ttf"
+    DIALOGUE_FONT_PATH = "static/Fonts/Merriweather.ttf"
+    RUSSIAN_UI_FONT_PATH = "static/Fonts/Nizhegorodsky.otf"
+    RUSSIAN_DIALOGUE_FONT_PATH = "static/Fonts/Merriweather.ttf"
+    CHOICE_FONT_PATH = "static/Fonts/Nizhegorodsky.otf"
+    VISITOR_TEXTURE_COUNT = 5
+    VISITOR_LADY_ASHFORD_IDX = 3
+    VISITOR_BISHOP_IDX = 2
+    VISITOR_PEASANT_IDX = 4
+    ASHFORD_DEBUT_DAY = 175
+    ASHFORD_CUTSCENE_TEXTURE_PATH = "static/Cut-Scenes/sequence_2.png"
+    CHARACTER_VISUAL_CACHE_COUNT = 1 + VISITOR_TEXTURE_COUNT + COURT_CHARACTER_COUNT
+
+    DEFEAT_NONE = 0
+    DEFEAT_WAIT_EXIT = 1
+    DEFEAT_PEASANT_DIALOGUE = 2
+    DEFEAT_WAIT_FADE = 3
+    DEFEAT_FADE_OUT = 4
+    DEFEAT_SHOW_SCREEN = 5
+    DEFEAT_SHOW_SUMMARY = 6
+
+    DEFEAT_FADE_DURATION = 1.8
+    DEATH_SUMMARY_DELAY = 2.0
+    DEATH_SUMMARY_FADE_DURATION = 1.5
+}
+
+let public CHARACTER_OUTLINE_TOP_CLIP = 8.0
+
+let public INTRO_DIALOGUE_NAMES_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Soldier",
+    "Soldier",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Conspirator",
+    "Lord Gregor",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator"
+)
+
+let public INTRO_DIALOGUE_NAMES_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Narrator",
+    "Advisor"
+)
+
+let public INTRO_DIALOGUE_SOUND_PATHS_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "static/Cut-Scenes/Dialogue_1.mp3",
+    "static/Cut-Scenes/Dialogue_2.mp3",
+    "static/Cut-Scenes/Dialogue_3.mp3",
+    "static/Cut-Scenes/Dialogue_4.mp3",
+    "static/Cut-Scenes/Dialogue_5.mp3",
+    "static/Cut-Scenes/Dialogue_6.mp3",
+    "static/Cut-Scenes/Dialogue_7.mp3",
+    "static/Cut-Scenes/Dialogue_8.mp3",
+    "static/Cut-Scenes/Dialogue_9.mp3",
+    "static/Cut-Scenes/Dialogue_10.mp3",
+    "static/Cut-Scenes/Dialogue_11.mp3",
+    "static/Cut-Scenes/Dialogue_12.mp3",
+    "static/Cut-Scenes/Dialogue_13.mp3",
+    "static/Cut-Scenes/Dialogue_14.mp3",
+    "static/Cut-Scenes/Dialogue_15.mp3",
+    "static/Cut-Scenes/Dialogue_16.mp3",
+    "static/Cut-Scenes/Dialogue_17.mp3",
+    "static/Cut-Scenes/Dialogue_18.mp3",
+    "static/Cut-Scenes/Dialogue_19.mp3",
+    "static/Cut-Scenes/Dialogue_20.mp3",
+    "static/Cut-Scenes/Dialogue_21.mp3",
+    "static/Cut-Scenes/Dialogue_22.mp3",
+    "static/Cut-Scenes/Dialogue_23.mp3",
+    "static/Cut-Scenes/Dialogue_24.mp3",
+    "static/Cut-Scenes/Dialogue_25.mp3",
+    "static/Cut-Scenes/Dialogue_26.mp3",
+    "static/Cut-Scenes/Dialogue_27.mp3",
+    "static/Cut-Scenes/Dialogue_28.mp3",
+    "static/Cut-Scenes/Dialogue_29.mp3",
+    "static/Cut-Scenes/Dialogue_30.mp3"
+)
+
+let public INTRO_DIALOGUE_SOUND_PATHS_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "static/Cut-Scenes/Dialogue_31.mp3",
+    "static/Cut-Scenes/Dialogue_32.mp3",
+    "static/Cut-Scenes/Dialogue_33.mp3",
+    "static/Cut-Scenes/Dialogue_34.mp3",
+    "static/Cut-Scenes/Dialogue_35.mp3",
+    "static/Cut-Scenes/Dialogue_36.mp3",
+    "static/Cut-Scenes/Dialogue_37.mp3",
+    "static/Cut-Scenes/Dialogue_38.mp3",
+    "static/Cut-Scenes/Dialogue_39.mp3",
+    "static/Cut-Scenes/Dialogue_40.mp3",
+    "static/Cut-Scenes/Dialogue_41.mp3"
+)
+
+let public CHURCH_CUTSCENE_SOUND_PATHS : string[CHURCH_CUTSCENE_SOUND_COUNT] <- fixed_array(
+    "static/Cut-Scenes/Dialogue_42.mp3",
+    "static/Cut-Scenes/Dialogue_43.mp3",
+    "static/Cut-Scenes/Dialogue_44.mp3",
+    "static/Cut-Scenes/Dialogue_45.mp3"
+)
+
+let public INTRO_DIALOGUE_REPLICS_A : string[INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Estedor did not fall in a single night.",
+    "It rotted slowly, stubbornly, and with dignity — like an old nobleman who died at his table but still demands wine.",
+    "King Edwin called himself the Pious.",
+    "The people called him the Quiet.",
+    "The army called him the Blind.",
+    "The nobility called him the Convenient.",
+    "And those who spoke louder usually did not live to see morning.",
+    "When the granaries emptied, the king ordered the sacks counted.",
+    "When no sacks remained, he ordered sins counted.",
+    "Then came the plague.",
+    "It made no distinction between serf, knight, monk, and tax collector. Which, in fairness, earned it a certain popular affection.",
+    "The Church split in two.",
+    "One half said the calamities were the gods' punishment. The other — that punishment had long sat on the throne.",
+    "The army went three months without pay.",
+    "In the fourth month it still called itself loyal. By the fifth it began asking questions.",
+    "— I've already gone hungry for the king.",
+    "— Maybe if I fought for someone else, I'd at least get a meal?",
+    "Gregor was not born a king.",
+    "He was born a lord — not the oldest line, not the richest house, but strong enough that at court they counted him a threat behind his back.",
+    "He had lands of his own.",
+    "Fortresses of his own.",
+    "Banners of his own.",
+    "Men who followed him not because the king commanded it, but because they swore fealty to Gregor himself.",
+    "— The king is weak. The realm is dying.",
+    "— Time to take matters into our own hands.",
+    "The gates to the royal chambers were not opened with a key.",
+    "They were forced with iron.",
+    "In the royal square Gregor's men met Edwin's guard — and for the first time the city heard what new power sounded like.",
+    "That night, loyalty came cheap.",
+    "So died Edwin II the Pious."
+)
+
+let public INTRO_DIALOGUE_REPLICS_B : string[INTRO_DIALOGUE_BEAT_COUNT - INTRO_DIALOGUE_BEAT_SPLIT] <- fixed_array(
+    "Not in prayer.",
+    "Not in the arms of a loving people.",
+    "But on cold steps where thousands had once begged for mercy.",
+    "By morning Estedor had not healed.",
+    "The dead did not rise.",
+    "Bread did not grow.",
+    "The plague did not apologize.",
+    "The nobles did not grow honest.",
+    "Envoys did not become friends.",
+    "And the people, as ever, wanted to live.",
+    "— Your Majesty… where shall we begin?"
+)
+
+
+def public intro_dialogue_name_en(beat : int) : string {
+    if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+        return INTRO_DIALOGUE_NAMES_A[beat]
+    }
+    return INTRO_DIALOGUE_NAMES_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
+}
+
+
+def public intro_dialogue_replic_en(beat : int) : string {
+    if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+        return INTRO_DIALOGUE_REPLICS_A[beat]
+    }
+    return INTRO_DIALOGUE_REPLICS_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
+}
+
+
+def public intro_dialogue_sound_path(beat : int) : string {
+    if (beat < INTRO_DIALOGUE_BEAT_SPLIT) {
+        return INTRO_DIALOGUE_SOUND_PATHS_A[beat]
+    }
+    return INTRO_DIALOGUE_SOUND_PATHS_B[beat - INTRO_DIALOGUE_BEAT_SPLIT]
+}
+
+
+let public STAT_UNLOCK_DAYS : int[STAT_COUNT] <- fixed_array(
+    89,  // People
+    30,  // Church
+    1,   // Army
+    1,   // Treasury
+    1,   // Health
+    260, // Loyalty
+    175, // Nobility
+    1,   // Food
+    320  // Succession
+)
+
+let public STAT_BAR_DISPLAY_ORDER : int[STAT_MAIN_COUNT] <- fixed_array(
+    STAT_FOOD_IDX,
+    STAT_CHURCH_IDX,
+    STAT_ARMY_IDX,
+    STAT_GOLD_IDX,
+    STAT_HEALTH_IDX,
+    STAT_PEOPLE_IDX,
+    STAT_RICH_LOVE_IDX,
+    STAT_LOYALTY_IDX
+)
+
+let public STAT_START_VALUES : int[STAT_COUNT] <- fixed_array(
+    STAT_DEFAULT_VALUE, // People
+    STAT_DEFAULT_VALUE, // Church
+    STAT_DEFAULT_VALUE, // Army
+    STAT_DEFAULT_VALUE, // Treasury
+    STAT_DEFAULT_VALUE, // Health
+    STAT_DEFAULT_VALUE, // Loyalty
+    STAT_DEFAULT_VALUE, // Nobility
+    STAT_DEFAULT_VALUE, // Food
+    STAT_DEFAULT_VALUE  // Succession
+)
+
+let public STAT_TEXTURE_PATHS : string[STAT_COUNT] <- fixed_array(
+    "static/Top_Bar/stat_peasants.png",
+    "static/Top_Bar/stat_church.png",
+    "static/Top_Bar/stat_army.png",
+    "static/Top_Bar/stat_treasury.png",
+    "static/Top_Bar/stat_health.png",
+    "static/Top_Bar/stat_loyalty.png",
+    "static/Top_Bar/stat_nobility.png",
+    "static/Top_Bar/stat_food.png",
+    "static/Top_Bar/stat_success.png"
+)
+
+let public VISITOR_TEXTURE_PATHS : string[VISITOR_TEXTURE_COUNT] <- fixed_array(
+    "static/Characters/merchant.png",
+    "static/Characters/astrologer_meribald.png",
+    "static/Characters/bishop_yarmak.png",
+    "static/Characters/lady_ashford.png",
+    "static/Characters/village_elder_bran.png"
+)
+
+let public PORTRAIT_TEXTURE_PATHS : string[CHARACTER_COUNT] <- fixed_array(
+    "static/Portraits/merchant.png",
+    "static/Portraits/astrologer_meribald.png",
+    "static/Portraits/bishop_yarmak.png",
+    "static/Portraits/lady_ashford.png",
+    "static/Portraits/peasant.png",
+    "static/Portraits/king.png"
+)

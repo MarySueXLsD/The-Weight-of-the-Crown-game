@@ -12,8 +12,8 @@ def count_choices_in_encounters(path):
         counts.append(c)
     return counts
 
-en_c = count_choices_in_encounters('arc_encounters_en.das')
-ru_c = count_choices_in_encounters('arc_encounters_ru.das')
+en_c = count_choices_in_encounters('C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_en.das')
+ru_c = count_choices_in_encounters('C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_ru.das')
 print('encounters', len(en_c), len(ru_c))
 if len(en_c) != len(ru_c):
     print('ENCOUNTER COUNT MISMATCH')

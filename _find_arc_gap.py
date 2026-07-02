@@ -8,8 +8,8 @@ def extract_choices(path):
         content
     )
 
-en = extract_choices('arc_encounters_en.das')
-ru = extract_choices('arc_encounters_ru.das')
+en = extract_choices('C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_en.das')
+ru = extract_choices('C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_ru.das')
 print('choices with text:', len(en), len(ru))
 
 # show EN choices not in RU by choiceText

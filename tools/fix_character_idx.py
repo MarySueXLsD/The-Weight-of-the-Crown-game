@@ -4,6 +4,10 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+DAS_DATA = ROOT / "scripts" / "das" / "data"
+DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
+DAS_GAMEPLAY = ROOT / "scripts" / "das" / "gameplay"
+
 
 RULES = [
     (r"телохранительниц|bodyguard requests leave", "CHAR_RAENA"),
@@ -26,12 +30,12 @@ RULES = [
 ]
 
 FILES = [
-    "encounters_loyalty_ru.das",
-    "encounters_loyalty_en.das",
-    "encounters_nobility_ru.das",
-    "encounters_nobility_en.das",
-    "encounters_succession_ru.das",
-    "encounters_succession_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_en.das",
 ]
 
 

@@ -71,6 +71,6 @@ Built with **[EdenSpark](https://edenspark.io)** using **Gen2 daScript** (Daslan
 2. Clone this repository into your Eden projects directory
 3. Open the project from the launcher and press Play
 
-Game logic lives in `.das` modules (`main.das`, story arcs, encounters, UI, and game state). Python scripts under `tools/` and `scripts/` support dialogue generation and content pipelines.
+Game logic lives in `main.das` (engine entry) and `scripts/das/` modules organized by domain (`core/`, `data/`, `arcs/`, `gameplay/`, `localization/`, `ui/`). See `docs/MODULES.md` for the full layout. Python scripts under `tools/` and `scripts/` support dialogue generation and content pipelines.
 
 **Project ID:** `019eab54-61cf-7c88-a293-0fa895edb23b`

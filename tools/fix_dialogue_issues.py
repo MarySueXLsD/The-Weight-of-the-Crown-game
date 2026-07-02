@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+DAS_DATA = ROOT / "scripts" / "das" / "data"
+DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
+DAS_GAMEPLAY = ROOT / "scripts" / "das" / "gameplay"
+
 
 # (regex on prompt, character constant) — first match wins
 PROMPT_CHAR_RULES = [
@@ -32,15 +36,15 @@ PROMPT_CHAR_RULES = [
 ]
 
 POOL_FILES = [
-    "encounters_loyalty_ru.das",
-    "encounters_loyalty_en.das",
-    "encounters_nobility_ru.das",
-    "encounters_nobility_en.das",
-    "encounters_succession_ru.das",
-    "encounters_succession_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_en.das",
 ]
 
-ARC_FILES = ["arc_encounters_ru.das", "arc_encounters_en.das"]
+ARC_FILES = ["C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_ru.das", "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_en.das"]
 
 OTTO_PROMPT_RU_OLD = (
     'prompt = "Ваше Величество, молчаливый рыцарь не говорил годами — '
@@ -292,7 +296,7 @@ def main() -> None:
         n = shorten_arc_recaps(p)
         print(f"{name}: shortened recaps={n}")
 
-    for name in ("encounters_ru.das", "encounters_en.das"):
+    for name in ("C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_ru.das", "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_en.das"):
         p = ROOT / name
         if fix_household_pool_encounter(p):
             print(f"{name}: household pool deduped")

@@ -6,27 +6,31 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+DAS_DATA = ROOT / "scripts" / "das" / "data"
+DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
+DAS_GAMEPLAY = ROOT / "scripts" / "das" / "gameplay"
+
 GLOSSARY = Path(__file__).resolve().parent / "vocabulary_glossary.yaml"
 REPORT = Path(__file__).resolve().parent / "vocabulary_audit_report.txt"
 
 DIALOGUE_FILES = [
-    "encounters_en.das",
-    "encounters_ru.das",
-    "encounters_loyalty_en.das",
-    "encounters_loyalty_ru.das",
-    "encounters_nobility_en.das",
-    "encounters_nobility_ru.das",
-    "encounters_succession_en.das",
-    "encounters_succession_ru.das",
-    "arc_encounters_en.das",
-    "arc_encounters_ru.das",
-    "arc_prompts.das",
-    "edric_opener.das",
-    "ashford.das",
-    "defeat.das",
-    "stat_unlock_intro.das",
-    "pool_prompts.das",
-    "arc_effects.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_prompts.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/gameplay/edric_opener.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/gameplay/ashford.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/gameplay/defeat.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/gameplay/stat_unlock_intro.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/gameplay/pool_prompts.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_effects.das",
 ]
 
 FIELD_RE = re.compile(r'(prompt|choiceText|response)\s*=\s*"((?:[^"\\]|\\.)*)"')

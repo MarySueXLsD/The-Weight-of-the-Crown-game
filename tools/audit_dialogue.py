@@ -7,19 +7,23 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+DAS_DATA = ROOT / "scripts" / "das" / "data"
+DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
+DAS_GAMEPLAY = ROOT / "scripts" / "das" / "gameplay"
+
 
 ENCOUNTER_FILES = [
-    "encounters_en.das",
-    "encounters_ru.das",
-    "encounters_loyalty_en.das",
-    "encounters_loyalty_ru.das",
-    "encounters_nobility_en.das",
-    "encounters_nobility_ru.das",
-    "encounters_succession_en.das",
-    "encounters_succession_ru.das",
-    "arc_encounters_en.das",
-    "arc_encounters_ru.das",
-    "edric_opener.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_loyalty_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_nobility_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/data/encounters_succession_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_en.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/arcs/arc_encounters_ru.das",
+    "C:/Users/syanavi/Documents/My Games/eden/launcher/projects/019eab54-61cf-7c88-a293-0fa895edb23b/scripts/das/gameplay/edric_opener.das",
 ]
 
 ISSUE_PATTERNS = [

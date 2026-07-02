@@ -4,6 +4,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+DAS_DATA = ROOT / "scripts" / "das" / "data"
+DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
+DAS_GAMEPLAY = ROOT / "scripts" / "das" / "gameplay"
 
 # Match choiceText = "..." and capture text before first " — "
 PATTERN = re.compile(
@@ -11,21 +14,30 @@ PATTERN = re.compile(
 )
 
 FILES = [
-    "edric_opener.das",
-    "arc_encounters_en.das",
-    "arc_encounters_ru.das",
-    "encounters_en.das",
-    "encounters_ru.das",
-    "encounters_loyalty_en.das",
-    "encounters_loyalty_ru.das",
-    "encounters_nobility_en.das",
-    "encounters_nobility_ru.das",
-    "encounters_succession_en.das",
-    "encounters_succession_ru.das",
-    "stat_unlock_intro.das",
-    "defeat.das",
-    "ashford.das",
+    resolve_das_path("edric_opener.das"),
+    resolve_das_path("arc_encounters_en.das"),
+    resolve_das_path("arc_encounters_ru.das"),
+    resolve_das_path("encounters_en.das"),
+    resolve_das_path("encounters_ru.das"),
+    resolve_das_path("encounters_loyalty_en.das"),
+    resolve_das_path("encounters_loyalty_ru.das"),
+    resolve_das_path("encounters_nobility_en.das"),
+    resolve_das_path("encounters_nobility_ru.das"),
+    resolve_das_path("encounters_succession_en.das"),
+    resolve_das_path("encounters_succession_ru.das"),
+    resolve_das_path("stat_unlock_intro.das"),
+    resolve_das_path("defeat.das"),
+    resolve_das_path("ashford.das"),
 ]
+
+
+def resolve_das_path(name: str) -> Path:
+    if name.startswith("encounters_"):
+        return DAS_DATA / name
+    if name.startswith("arc_"):
+        return DAS_ARCS / name
+    return DAS_GAMEPLAY / name
+
 
 
 def process_file(path: Path) -> int:
@@ -39,7 +51,7 @@ def process_file(path: Path) -> int:
 def main() -> None:
     total = 0
     for name in FILES:
-        path = ROOT / name
+        path = name
         if not path.exists():
             print(f"skip (missing): {name}")
             continue
