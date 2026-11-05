@@ -67,6 +67,8 @@ This game was created for **[EdenSpark Game Jam #2](https://itch.io/jam/edenspar
 | --- | --- |
 | Game designer / programmer | Viktar Syanau (MarySue) |
 
+Trailer music: "Kingdom of Shadows" by AlkaKrab, from the Flameheart Dark Fantasy Music Pack.
+
 ## Development
 
 Built with **[EdenSpark](https://edenspark.io)** using **Gen2 daScript** (Daslang).

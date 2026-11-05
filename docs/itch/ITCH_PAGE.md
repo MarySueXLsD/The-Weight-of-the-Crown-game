@@ -70,7 +70,7 @@ All art is in this folder. Rebuild it with `python docs/itch/make_itch_art.py` f
 | **Cover image** | `cover.png` (630 × 500) | Animated: `cover.gif`. Torchlight, dust in the window light, and a glint on the crown. |
 | **Screenshots** | `screenshots/01_main_menu.jpg` … `05_reign_ends.jpg` | Upload in number order. Fresh captures of the current build (see below). Replace the jam-build screenshots on the page with these. |
 | **Gameplay GIF** (optional) | `gameplay.gif` (560 px, 37 s, 6.3 MB) | Add it as a screenshot, or put it at the top of the description. |
-| **Trailer** | `../trailer/the_weight_of_the_crown_trailer.mp4` (1080p, 40 s, 19 MB) | itch only embeds trailers from YouTube or Vimeo. Upload it there, then paste the link into **Gameplay video or trailer** on the Edit game page. |
+| **Trailer** | `../trailer/the_weight_of_the_crown_trailer.mp4` (1080p, 40 s, 16 MB) | itch only embeds trailers from YouTube or Vimeo. Upload it there, then paste the link into **Gameplay video or trailer** on the Edit game page. Music: "Kingdom of Shadows" by AlkaKrab (credit appreciated, so put it in the video description). |
 
 The GIFs start on a finished frame, so if itch ever flattens one to a still it still looks right.
 
