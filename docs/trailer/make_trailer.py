@@ -4,7 +4,6 @@
 
 <footage_root> holds what was captured from the editor's game view:
   take2/, take3/   gameplay frames at 24 fps, 1920x1080 JPEGs named <index>_<unix_ms>.jpg
-  stills/05_death_full.png   a 2560x1365 capture of the defeat screen
 The footage is not kept in the repo. The "play" shots below name a take and the
 second in it where each cut starts, so a new take needs those times re-picked.
 
@@ -65,8 +64,6 @@ class Footage:
 
 
 TAKES = {k: Footage(os.path.join(FOOT_ROOT, k)) for k in ("take2", "take3")}
-DEATH = Image.open(os.path.join(FOOT_ROOT, "stills", "05_death_full.png")).convert("RGB")
-DEATH = DEATH.crop((0, 0, 2560, 1347))  # drop the engine's FPS line
 
 
 def kenburns(img, u, z0, z1, c0, c1):
@@ -146,30 +143,33 @@ def band(frame, y0, h, strength):
 HIT = 7.65
 SHOTS = [
     (0.0, 3.7, "black", None),
-    (3.7, HIT, "play", ("take3", 0.6, 1.45, 1.58, (0.5, 0.48))),        # the throne-room menu
-    (HIT, 10.45, "play", ("take2", 12.6, 1.12, 1.16, (0.56, 0.45))),    # Edric, day 1, weighing the answers
-    (10.45, 12.36, "play", ("take2", 87.3, 1.14, 1.18, (0.56, 0.45))),  # General Rudolf
-    (12.36, 14.4, "play", ("take2", 89.9, 1.18, 1.22, (0.5, 0.6))),     # his reply, the meters move
-    (14.4, 16.0, "play", ("take2", 105.2, 1.12, 1.16, (0.56, 0.45))),   # High Priest Malrik
-    (16.0, 17.88, "play", ("take3", 39.4, 1.12, 1.16, (0.56, 0.45))),   # Treasurer Borvin
-    (17.88, 20.46, "play", ("take2", 166.8, 1.12, 1.16, (0.56, 0.45))), # Ambassador Ingvar
-    (20.46, 22.4, "play", ("take2", 210.0, 1.12, 1.16, (0.56, 0.45))),  # Healer Mira
-    (22.4, 24.48, "play", ("take3", 109.4, 1.12, 1.16, (0.56, 0.45))),  # Cook Gromm
-    (24.48, 27.47, "play", ("take3", 140.0, 1.1, 1.18, (0.55, 0.42))),  # the Merchant: your reign ends here
-    (27.47, 31.98, "death", None),
-    (31.98, DUR, "play", ("take3", 1.0, 1.58, 1.45, (0.5, 0.48))),      # back to the throne
+    # Gameplay shots show the whole frame with a slow push; the menu is cropped
+    # just enough (from the bottom-weighted centre) to keep the game's own title out.
+    (3.7, HIT, "play", ("take3", 0.6, 1.12, 1.16, (0.5, 0.56))),        # the throne-room menu
+    (HIT, 10.45, "play", ("take2", 12.6, 1.0, 1.04, (0.5, 0.5))),       # Edric, day 1, weighing the answers
+    (10.45, 12.36, "play", ("take2", 87.3, 1.0, 1.04, (0.5, 0.5))),     # General Rudolf
+    (12.36, 14.4, "play", ("take2", 89.9, 1.0, 1.04, (0.5, 0.55))),     # his reply, the meters move
+    (14.4, 16.0, "play", ("take2", 105.2, 1.0, 1.04, (0.5, 0.5))),      # High Priest Malrik
+    (16.0, 17.88, "play", ("take3", 39.4, 1.0, 1.04, (0.5, 0.5))),      # Treasurer Borvin
+    (17.88, 20.46, "play", ("take2", 166.8, 1.0, 1.04, (0.5, 0.5))),    # Ambassador Ingvar
+    (20.46, 22.4, "play", ("take2", 210.0, 1.0, 1.04, (0.5, 0.5))),     # Healer Mira
+    (22.4, 24.48, "play", ("take3", 109.4, 1.0, 1.04, (0.5, 0.5))),     # Cook Gromm
+    (24.48, 28.48, "play", ("take3", 140.0, 1.0, 1.06, (0.5, 0.5))),    # the Merchant: your reign ends here
+    (28.48, 31.98, "black", None),
+    (31.98, DUR, "play", ("take3", 1.0, 1.16, 1.12, (0.5, 0.56))),      # back to the throne
 ]
 
 CARDS = [  # (start, end, text, size, y, band)
     (0.45, 3.55, "You killed the king.", 120, 540, False),
     (3.85, 7.5, "Now keep his crown for 365 days.", 96, 860, True),
-    (7.8, 10.3, "Every day, a new petitioner.", 80, 975, True),
+    (7.8, 10.3, "Every day, a new petitioner.", 80, 905, True),
     (12.5, 14.3, "Every answer moves the realm.", 84, 640, True),
-    (16.1, 20.3, "Bread. Swords. Gold. Faith. Loyalty.", 76, 975, True),
-    (20.6, 24.35, "Keep nine pillars standing.", 84, 975, True),
-    (24.6, 27.35, "Let one fall\u2026", 96, 975, True),
+    (16.1, 20.3, "Bread. Swords. Gold. Faith. Loyalty.", 76, 905, True),
+    (20.6, 24.35, "Keep nine pillars standing.", 84, 905, True),
+    (24.6, 28.3, "Let one fall\u2026", 96, 905, True),
+    (28.75, 31.8, "\u2026and the crown falls with you.", 100, 540, False),
 ]
-FLASHES = [(HIT, 0.55), (27.47, 0.5), (31.98, 0.3)]
+FLASHES = [(HIT, 0.55), (31.98, 0.3)]
 TITLE_AT = 32.1
 END_AT = 34.4
 
@@ -191,8 +191,6 @@ def shot_frame(t):
             if kind == "play":
                 take, start, z0, z1, c = p
                 return kenburns(TAKES[take].at(start + (t - a)), u, z0, z1, c, c)
-            if kind == "death":
-                return kenburns(DEATH, ease(u) * 0.5 + u * 0.5, 1.0, 1.22, (0.5, 0.5), (0.5, 0.42))
     return Image.new("RGB", (W, H), (0, 0, 0))
 
 
@@ -252,6 +250,9 @@ def render(t):
         top = Image.linear_gradient("L").rotate(180).resize((W, 520))
         lay = Image.new("RGBA", (W, 520), (8, 5, 3, 0)); lay.putalpha(top.point(lambda v: int(v * 0.75 * ease(u / 0.8))))
         frame.alpha_composite(lay, (0, 0))
+        bot = Image.linear_gradient("L").resize((W, 560))  # hide the menu's buttons under the end card
+        lay = Image.new("RGBA", (W, 560), (8, 5, 3, 0)); lay.putalpha(bot.point(lambda v: int(min(255, v * 1.6) * 0.95 * ease(u / 0.8))))
+        frame.alpha_composite(lay, (0, H - 560))
         put(frame, text_layer("The Weight of the Crown", F_TITLE, 148, GOLD, glow=24, tracking=4),
             W / 2, 250 if t < END_AT else 250 - 40 * ease((t - END_AT) / 1.0), al, 1.06 - 0.06 * ease(u / 2.0))
         d = ImageDraw.Draw(frame)
@@ -268,7 +269,7 @@ def render(t):
             window(t, END_AT + 0.2, DUR, 0.6, 1.4))
         put(frame, text_layer("marysue.itch.io/the-weight-of-the-crown", F_BODY, 46, PARCH), W / 2, 700,
             window(t, END_AT + 0.6, DUR, 0.6, 1.4))
-        put(frame, text_layer("A Loosy Tale Studio game - EdenSpark Game Jam #2", F_BODY, 30, GOLD_DIM), W / 2, 960,
+        put(frame, text_layer("A Loosy Tale Studio game - EdenSpark Game Jam #2", F_BODY, 30, GOLD_DIM), W / 2, 800,
             window(t, END_AT + 1.1, DUR, 0.6, 1.4))
     return frame.convert("RGB")
 
