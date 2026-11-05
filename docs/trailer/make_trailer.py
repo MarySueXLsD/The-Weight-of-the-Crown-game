@@ -4,6 +4,9 @@
 
 <footage_root> holds what was captured from the editor's game view:
   take2/, take3/   gameplay frames at 24 fps, 1920x1080 JPEGs named <index>_<unix_ms>.jpg
+The petitioner parade puts the game's own static/Characters art, at the game's
+size and position, onto a captured frame of the empty court, and repaints the
+day counter in the top bar with the game's fonts.
 The footage is not kept in the repo. The "play" shots below name a take and the
 second in it where each cut starts, so a new take needs those times re-picked.
 
@@ -16,6 +19,7 @@ Writes docs/trailer/the_weight_of_the_crown_trailer.mp4 (1920x1080, 30 fps).
 import glob
 import math
 import os
+import random
 import subprocess
 import sys
 
@@ -140,39 +144,121 @@ def band(frame, y0, h, strength):
 
 # ------------------------------------------------------------------ the edit (times in trailer seconds)
 
-HIT = 7.65
+HIT = 7.64
+PARADE = (17.88, 24.48)
+# kind: "black", "menu" (take, start, z0, z1, centre) or "play" (take, start).
+# "play" and the parade share one slow camera (camera_zoom below) that keeps
+# moving across cuts, so a cut never snaps the framing back.
 SHOTS = [
     (0.0, 3.7, "black", None),
-    # Gameplay shots show the whole frame with a slow push; the menu is cropped
-    # just enough (from the bottom-weighted centre) to keep the game's own title out.
-    (3.7, HIT, "play", ("take3", 0.6, 1.12, 1.16, (0.5, 0.56))),        # the throne-room menu
-    (HIT, 10.45, "play", ("take2", 12.6, 1.0, 1.04, (0.5, 0.5))),       # Edric, day 1, weighing the answers
-    (10.45, 12.36, "play", ("take2", 87.3, 1.0, 1.04, (0.5, 0.5))),     # General Rudolf
-    (12.36, 14.4, "play", ("take2", 89.9, 1.0, 1.04, (0.5, 0.55))),     # his reply, the meters move
-    (14.4, 16.0, "play", ("take2", 105.2, 1.0, 1.04, (0.5, 0.5))),      # High Priest Malrik
-    (16.0, 17.88, "play", ("take3", 39.4, 1.0, 1.04, (0.5, 0.5))),      # Treasurer Borvin
-    (17.88, 20.46, "play", ("take2", 166.8, 1.0, 1.04, (0.5, 0.5))),    # Ambassador Ingvar
-    (20.46, 22.4, "play", ("take2", 210.0, 1.0, 1.04, (0.5, 0.5))),     # Healer Mira
-    (22.4, 24.48, "play", ("take3", 109.4, 1.0, 1.04, (0.5, 0.5))),     # Cook Gromm
-    (24.48, 28.48, "play", ("take3", 140.0, 1.0, 1.06, (0.5, 0.5))),    # the Merchant: your reign ends here
+    (3.7, HIT, "menu", ("take3", 0.6, 1.12, 1.14, (0.5, 0.56))),  # the throne room
+    (HIT, 12.36, "play", ("take2", 10.6)),          # Edric, day 1: the cursor weighs four answers
+    (12.36, PARADE[0], "play", ("take2", 86.4)),    # General Rudolf: question, choice, reply, +8 / -13
+    (PARADE[0], PARADE[1], "parade", None),         # dozens of petitioners, days racing by
+    (PARADE[1], 28.48, "play", ("take3", 137.0)),   # the Merchant arrives: your reign ends here
     (28.48, 31.98, "black", None),
-    (31.98, DUR, "play", ("take3", 1.0, 1.16, 1.12, (0.5, 0.56))),      # back to the throne
+    (31.98, DUR, "menu", ("take3", 1.0, 1.14, 1.12, (0.5, 0.56))),
 ]
+XFADE = 0.35   # soft dissolve into a shot, except on the music hit
 
 CARDS = [  # (start, end, text, size, y, band)
     (0.45, 3.55, "You killed the king.", 120, 540, False),
     (3.85, 7.5, "Now keep his crown for 365 days.", 96, 860, True),
-    (7.8, 10.3, "Every day, a new petitioner.", 80, 905, True),
-    (12.5, 14.3, "Every answer moves the realm.", 84, 640, True),
-    (16.1, 20.3, "Bread. Swords. Gold. Faith. Loyalty.", 76, 905, True),
-    (20.6, 24.35, "Keep nine pillars standing.", 84, 905, True),
-    (24.6, 28.3, "Let one fall\u2026", 96, 905, True),
+    (8.3, 12.2, "Every day, a new petitioner.", 80, 905, True),
+    (15.95, 17.75, "Every answer moves the realm.", 84, 640, True),
+    (18.2, 21.0, "Dozens of petitioners.", 88, 905, True),
+    (21.2, 24.35, "Keep nine pillars standing.", 88, 905, True),
+    (24.9, 28.3, "Let one fall\u2026", 96, 905, True),
     (28.75, 31.8, "\u2026and the crown falls with you.", 100, 540, False),
 ]
-FLASHES = [(HIT, 0.55), (31.98, 0.3)]
+FLASHES = [(HIT, 0.5), (31.98, 0.25)]
 TITLE_AT = 32.1
 END_AT = 34.4
 
+
+def camera_zoom(t):
+    """One slow breath in and back out per 10.4 s, never above 1.045, continuous across cuts."""
+    u = max(0.0, t - HIT)
+    return 1.0 + 0.045 * math.sin(math.pi * u / 10.42) ** 2
+
+
+# ------------------------------------------------------------------ the petitioner parade
+
+CHAR_DIR = S("Characters")
+PARADE_SKIP = {"king", "old_advisor_edric", "general_rudolf_steel", "merchant"}
+_names = sorted(f[:-4] for f in os.listdir(CHAR_DIR) if f.endswith(".png") and f[:-4] not in PARADE_SKIP)
+random.Random(7).shuffle(_names)
+_PLATE = None
+_chars = {}
+REIGN_SEASON_DAYS = 92
+SEASONS = ["Spring", "Summer", "Autumn", "Winter"]
+
+
+def parade_plan():
+    """Visitor start times: slow at first, then faster and faster."""
+    a, b = PARADE
+    times, t, d = [], a, 0.5
+    while t < b - 0.05:
+        times.append(t)
+        t += d
+        d = max(0.11, d * 0.86)
+    return times
+
+
+PARADE_TIMES = parade_plan()
+
+
+def plate():
+    """The empty court between two visitors, as the game shows it."""
+    global _PLATE
+    if _PLATE is None:
+        _PLATE = TAKES["take3"].at(12.7)
+    return _PLATE
+
+
+def char_sprite(name):
+    if name not in _chars:
+        im = Image.open(os.path.join(CHAR_DIR, name + ".png")).convert("RGBA")
+        im = im.crop(im.getchannel("A").getbbox())
+        h = 930  # the game's 80 %-of-screen height, in this 1080p capture
+        _chars[name] = im.resize((int(im.width * h / im.height), h), Image.LANCZOS)
+    return _chars[name]
+
+
+def day_bar(img, day):
+    """Repaint the two day labels in the top bar with the game's own fonts."""
+    col = plate().crop((450, 0, 451, 60))
+    img.paste(col.resize((400, 60)), (0, 0))
+    img.paste(col.resize((310, 60)).crop((0, 0, 310, 49)), (530, 0))
+    d = ImageDraw.Draw(img)
+    c = (187, 179, 161)
+    fl = ImageFont.truetype(F_TITLE, 52)
+    t1 = "Day %d The Usurper" % day
+    d.text((383 - fl.getlength(t1), 57), t1, font=fl, fill=c, anchor="ls")
+    fc = ImageFont.truetype(F_BODY, 27)
+    t2 = "%s \u00b7 Day %d of 365" % (SEASONS[min(3, (day - 1) // REIGN_SEASON_DAYS)], day)
+    d.text((682 - fc.getlength(t2) / 2, 45), t2, font=fc, fill=c, anchor="ls")
+
+
+def parade_frame(t):
+    times = PARADE_TIMES
+    k = max(i for i, s in enumerate(times) if s <= t)
+    n = len(times)
+    img = plate().copy().convert("RGBA")
+    ch = char_sprite(_names[k % len(_names)])
+    since = t - times[k]
+    stay = (times[k + 1] if k + 1 < n else PARADE[1]) - times[k]
+    slide = 1 - ease(since / min(0.16, 0.35 * stay))   # a short step in from the left, always solid
+    x = int(350 - ch.width / 2 - 60 * slide)
+    img.alpha_composite(ch, (x, 176))
+    img = img.convert("RGB")
+    img.paste(plate().crop((0, 975, W, H)), (0, 975))   # HUD bar in front of the visitor
+    day = int(round(7 + (205 - 7) * (k / max(1, n - 1)) ** 1.25))
+    day_bar(img, day)
+    return img
+
+
+# ------------------------------------------------------------------ frames
 
 VIG = None
 def vignette():
@@ -184,13 +270,29 @@ def vignette():
     return VIG
 
 
+def raw_shot(i, t):
+    a, b, kind, p = SHOTS[i]
+    u = (t - a) / (b - a)
+    if kind == "menu":
+        take, start, z0, z1, c = p
+        return kenburns(TAKES[take].at(start + (t - a)), u, z0, z1, c, c)
+    z = camera_zoom(t)
+    if kind == "play":
+        take, start = p
+        return kenburns(TAKES[take].at(start + (t - a)), 0, z, z, (0.5, 0.5), (0.5, 0.5))
+    if kind == "parade":
+        return kenburns(parade_frame(t), 0, z, z, (0.5, 0.5), (0.5, 0.5))
+    return Image.new("RGB", (W, H), (0, 0, 0))
+
+
 def shot_frame(t):
-    for (a, b, kind, p) in SHOTS:
+    for i, (a, b, kind, p) in enumerate(SHOTS):
         if a <= t < b:
-            u = (t - a) / (b - a)
-            if kind == "play":
-                take, start, z0, z1, c = p
-                return kenburns(TAKES[take].at(start + (t - a)), u, z0, z1, c, c)
+            img = raw_shot(i, t)
+            if i > 0 and abs(a - HIT) > 0.01 and t - a < XFADE and kind != "black" and SHOTS[i - 1][2] != "black":
+                prev = raw_shot(i - 1, t)
+                img = Image.blend(prev, img, ease((t - a) / XFADE))
+            return img
     return Image.new("RGB", (W, H), (0, 0, 0))
 
 
@@ -221,7 +323,7 @@ def render(t):
     a[..., 2] *= 0.95
     a *= vignette()
     # menu shot under the hook sits darker so the line reads
-    if 3.7 <= t < HIT:
+    if 3.7 <= t < HIT:  # menu under the hook sits darker
         a *= 0.62
     # dim behind the end card
     if t >= END_AT:
