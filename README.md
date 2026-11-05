@@ -6,7 +6,7 @@
 
 You usurped Estedor's throne. Now balance factions, control the masses, and survive the crown's weight through 365 days of rule.
 
-**[Play on itch.io →](https://marysue.itch.io/the-weight-of-the-crown)**
+**[Play on itch.io →](https://marysue.itch.io/the-weight-of-the-crown)** · **[Watch the trailer (40 s) →](docs/trailer/the_weight_of_the_crown_trailer.mp4)**
 
 <p align="center">
   <img src="docs/itch/gameplay.gif" width="560" alt="Gameplay: the main menu, the intro, the old advisor's first question, petitioners pleading at court, and the reign ending when the treasury runs dry">
