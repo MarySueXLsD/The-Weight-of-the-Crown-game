@@ -3,7 +3,7 @@
 Live page: https://marysue.itch.io/the-weight-of-the-crown
 
 Everything below is ready to paste into the itch.io **Edit game** form, top to bottom.
-All art is in this folder. Rebuild it with `python .project/itch/make_itch_art.py` from the project root.
+All art is in this folder. Rebuild it with `python docs/itch/make_itch_art.py` from the project root.
 
 ---
 
@@ -68,9 +68,22 @@ All art is in this folder. Rebuild it with `python .project/itch/make_itch_art.p
 | Slot | File | Notes |
 |---|---|---|
 | **Cover image** | `cover.png` (630 × 500) | Animated: `cover.gif`. Torchlight, dust in the window light, and a glint on the crown. |
-| **Screenshots** | `../screenshots/main_menu.jpeg`, `dialogue.jpeg`, `cut-scene.jpg`, `shot_2026.06.15_17.14.42.jpeg` | Upload in that order. These are from the jam build; replace them when fresh captures of the current UI exist. |
+| **Screenshots** | `screenshots/01_main_menu.jpg` … `05_reign_ends.jpg` | Upload in number order. Fresh captures of the current build (see below). Replace the jam-build screenshots on the page with these. |
+| **Gameplay GIF** (optional) | `gameplay.gif` (560 px, 37 s, 6.3 MB) | Add it as a screenshot, or put it at the top of the description. |
 
 The GIFs start on a finished frame, so if itch ever flattens one to a still it still looks right.
+
+### Screenshots
+
+| File | What it shows |
+|---|---|
+| `01_main_menu.jpg` | The main menu: the usurper on his throne |
+| `02_intro_cutscene.jpg` | The intro: Estedor burning, with the narrator |
+| `03_court_dialogue.jpg` | Day 1: Old Advisor Edric asks how the court should read you, with four answers |
+| `04_petitioner.jpg` | Day 2: General Rudolf wants the army paid, with a choice highlighted |
+| `05_reign_ends.jpg` | A death screen: the coffers ran dry and your creditors called their due |
+
+These were captured in the editor at 2560 × 1365, from the current build. The menu and death screen show a "Longest reign" of 12 days from the capture run.
 
 ---
 

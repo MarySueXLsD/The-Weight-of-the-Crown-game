@@ -1,8 +1,8 @@
 """Build the itch.io page art for The Weight of the Crown.
 
-Run from the project root:  python .project/itch/make_itch_art.py
+Run from the project root:  python docs/itch/make_itch_art.py
 
-Writes into .project/itch/:
+Writes into docs/itch/:
   cover.png / cover.gif        630 x 500
   banner.png / banner.gif     960 x 300
   page_bg.png / page_bg.gif  512 x 512, tiles seamlessly

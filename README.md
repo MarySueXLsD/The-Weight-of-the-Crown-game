@@ -1,12 +1,16 @@
 # The Weight of the Crown
 
 <p align="center">
-  <img src=".project/itch/banner.gif" width="960" alt="The usurper on the throne of Loria, lit by torches, beside the title The Weight of the Crown">
+  <img src="docs/itch/banner.gif" width="960" alt="The usurper on the throne of Loria, lit by torches, beside the title The Weight of the Crown">
 </p>
 
 You usurped Estedor's throne. Now balance factions, control the masses, and survive the crown's weight through 365 days of rule.
 
 **[Play on itch.io →](https://marysue.itch.io/the-weight-of-the-crown)**
+
+<p align="center">
+  <img src="docs/itch/gameplay.gif" width="560" alt="Gameplay: the main menu, the intro, the old advisor's first question, petitioners pleading at court, and the reign ending when the treasury runs dry">
+</p>
 
 ## About
 
@@ -31,22 +35,22 @@ King Edwin is dead. You — Gregor, the usurper — sit on the throne of Loria w
 <table>
 <tr>
 <td width="50%">
-<img src=".project/screenshots/main_menu.jpeg" alt="Main menu" />
+<img src="docs/itch/screenshots/01_main_menu.jpg" alt="Main menu" />
 <p align="center"><b>Main menu</b> — The throne awaits. Your reign begins with a coup already behind you and a kingdom already against you.</p>
 </td>
 <td width="50%">
-<img src=".project/screenshots/dialogue.jpeg" alt="Court dialogue" />
+<img src="docs/itch/screenshots/03_court_dialogue.jpg" alt="Court dialogue" />
 <p align="center"><b>Court dialogue</b> — Petitioners arrive with problems, flattery, and threats. Every answer shifts the realm.</p>
 </td>
 </tr>
 <tr>
 <td width="50%">
-<img src=".project/screenshots/cut-scene.jpg" alt="Cutscene" />
+<img src="docs/itch/screenshots/02_intro_cutscene.jpg" alt="Cutscene" />
 <p align="center"><b>Cutscenes</b> — Illustrated story beats and voiced sequences mark the turning points of your rule.</p>
 </td>
 <td width="50%">
-<img src=".project/screenshots/shot_2026.06.15_17.14.42.jpeg" alt="Kingdom management" />
-<p align="center"><b>Kingdom management</b> — Watch your meters, unlock new powers, and decide which pillar of the realm you can afford to neglect.</p>
+<img src="docs/itch/screenshots/05_reign_ends.jpg" alt="A death screen: the treasury ran dry" />
+<p align="center"><b>The reign ends</b> — Let one pillar fall and the crown ends up in the gutter. Every pillar has its own grim reckoning.</p>
 </td>
 </tr>
 </table>
@@ -77,6 +81,6 @@ Built with **[EdenSpark](https://edenspark.io)** using **Gen2 daScript** (Daslan
 
 Game logic lives in `main.das` (engine entry) and `scripts/das/` modules organized by domain (`core/`, `data/`, `arcs/`, `gameplay/`, `localization/`, `ui/`). See `docs/MODULES.md` for the full layout. Python scripts under `tools/` and `scripts/` support dialogue generation and content pipelines.
 
-**itch.io page:** the page texts, theme colours and upload settings are in `.project/itch/ITCH_PAGE.md`. The cover, banner and page background (PNG and animated GIF) are rebuilt from the game's own art with `python .project/itch/make_itch_art.py`.
+**itch.io page:** the page texts, theme colours and upload settings are in `docs/itch/ITCH_PAGE.md`. The cover, banner and page background (PNG and animated GIF) are rebuilt from the game's own art with `python docs/itch/make_itch_art.py`.
 
 **Project ID:** `019eab54-61cf-7c88-a293-0fa895edb23b`
