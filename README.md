@@ -1,5 +1,9 @@
 # The Weight of the Crown
 
+<p align="center">
+  <img src=".project/itch/banner.gif" width="960" alt="The usurper on the throne of Loria, lit by torches, beside the title The Weight of the Crown">
+</p>
+
 You usurped Estedor's throne. Now balance factions, control the masses, and survive the crown's weight through 365 days of rule.
 
 **[Play on itch.io →](https://marysue.itch.io/the-weight-of-the-crown)**
@@ -72,5 +76,7 @@ Built with **[EdenSpark](https://edenspark.io)** using **Gen2 daScript** (Daslan
 3. Open the project from the launcher and press Play
 
 Game logic lives in `main.das` (engine entry) and `scripts/das/` modules organized by domain (`core/`, `data/`, `arcs/`, `gameplay/`, `localization/`, `ui/`). See `docs/MODULES.md` for the full layout. Python scripts under `tools/` and `scripts/` support dialogue generation and content pipelines.
+
+**itch.io page:** the page texts, theme colours and upload settings are in `.project/itch/ITCH_PAGE.md`. The cover, banner and page background (PNG and animated GIF) are rebuilt from the game's own art with `python .project/itch/make_itch_art.py`.
 
 **Project ID:** `019eab54-61cf-7c88-a293-0fa895edb23b`
