@@ -94,12 +94,12 @@ The GIFs start on a finished frame, so if itch ever flattens one to a still it s
 | File | What it shows |
 |---|---|
 | `01_main_menu.jpg` | The main menu: the usurper on his throne |
-| `02_intro_cutscene.jpg` | The intro: Estedor burning, with the narrator |
+| `02_intro_cutscene.jpg` | The intro: a page of illustrated panels (King Edwin's court, the grain tax, the plague carts, the split church), with the narrator |
 | `03_court_dialogue.jpg` | Day 1: Old Advisor Edric asks how the court should read you, with four answers |
-| `04_petitioner.jpg` | Day 2: General Rudolf wants the army paid, with a choice highlighted |
-| `05_reign_ends.jpg` | A death screen: the coffers ran dry and your creditors called their due |
+| `04_petitioner.jpg` | Day 2: General Rudolf wants the army paid. "Pay the army in full" is hovered, so the Army and Treasury pillars glow gold |
+| `05_reign_ends.jpg` | A death screen: on day 3 the coffers ran dry and your creditors called their due |
 
-These were captured in the editor at 2560 × 1365, from the current build. The menu and death screen show a "Longest reign" of 12 days from the capture run.
+These were captured in fullscreen game mode in the editor, from the current build, at 1600 × 885. The menu and death screen show a "Longest reign" of 12 days from an earlier run.
 
 ---
 
