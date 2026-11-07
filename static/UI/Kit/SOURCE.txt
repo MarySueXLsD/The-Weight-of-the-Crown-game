@@ -1,0 +1,2 @@
+Pixel RPG Dialogue UI Resource Pack v1.2 (from H:/Assets/Art/UI). Fire_v1 and Smoke_v1 sequences in static/FX are from
+VFX Collector Pack by Fellor / BitBlast Studio: commercial use allowed, no standalone redistribution.

@@ -87,7 +87,7 @@ def public is_continue_fade_active() : bool {
 
 
 def public is_game_paused() : bool {
-    return is_startup_splash_active() || is_on_main_menu() || is_pause_menu_open() || is_character_profile_open() || is_advisor_popup_open() || is_story_cutscene_active() || is_continue_fade_active()
+    return is_startup_splash_active() || is_on_main_menu() || is_pause_menu_open() || is_character_profile_open() || is_advisor_popup_open() || is_story_cutscene_active() || is_continue_fade_active() || statIntroPopupOpen
 }
 
 

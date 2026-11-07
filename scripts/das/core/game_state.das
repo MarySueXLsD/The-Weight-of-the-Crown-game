@@ -99,6 +99,8 @@ var public queuedNextArcBeatIdx = -1
 var public statUnlocked : bool[STAT_COUNT]
 var public statUnlockRevealT : float[STAT_COUNT]
 var public statUnlockCutsceneActive = false
+// True while a stat introduction pop-up is on screen; the game pauses under it.
+var public statIntroPopupOpen = false
 var public statUnlockCutsceneStatIdx = -1
 var public statUnlockCutsceneTextureAspect = 1.6
 var public defeatPhase = DEFEAT_NONE

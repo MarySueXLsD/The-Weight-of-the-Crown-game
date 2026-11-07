@@ -1,6 +1,6 @@
 guid:t="019ec8a3-8a90-71d8-a92b-7220ef33c767"
 assetType:i=0
-filter:t="Point"
+filter:t="Bilinear"
 addressing:t="Clamp"
 anisotropicLevel:i=4
 sRGB:b=yes

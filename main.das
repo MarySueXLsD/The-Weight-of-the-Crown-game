@@ -24,16 +24,7 @@ require scripts/das/core/dialogue_ids
 require scripts/das/gameplay/game_save
 require scripts/das/ui/ui_state
 require scripts/das/ui/ui_flow
-require scripts/das/ui/ui_common
-require scripts/das/ui/audio
-require scripts/das/ui/menus
-require scripts/das/ui/character_profile
-require scripts/das/ui/cutscenes
-require scripts/das/ui/dialogue
-require scripts/das/ui/hud
-require scripts/das/ui/death
-require scripts/das/ui/bootstrap
-require scripts/das/ui/hover_components
+require scripts/das/ui/game_ui
 
 [cheat]
 def jump_day(day : int) {
@@ -68,6 +59,31 @@ def fire_arc_beat(arcId : int; beatIdx : int) {
     hide_dialogue_ui()
     dialogPhase = DIALOG_IDLE
     start_character_enter()
+}
+
+
+[cheat]
+def set_all_stats(value : int) {
+    for (i in range(STAT_COUNT)) {
+        kingdomStats[i] = clamp_stat(value)
+    }
+    update_stat_bar_anims(0.0)
+}
+
+
+[cheat]
+def reset_audio_settings() {
+    settingsMasterVolume = 1.0
+    settingsMusicVolume = 1.0
+    apply_settings_master_volume(settingsMasterVolume)
+    sync_options_ui_from_settings()
+    save_game_options()
+}
+
+
+[cheat]
+def print_audio_settings() {
+    print("audio: master={settingsMasterVolume} music={settingsMusicVolume} mutedForTests={DEBUG_MUTE_ALL_AUDIO}")
 }
 
 
@@ -187,6 +203,7 @@ def on_initialize() {
 [export]
 def on_update() {
     advisorActionClickHandledThisFrame = false
+    juice_update_game_feedback()
     let dt = get_delta_time()
     update_menu_slide(dt)
     update_character_profile_slide(dt)
