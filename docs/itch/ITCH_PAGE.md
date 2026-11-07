@@ -70,7 +70,7 @@ The trailer's end card says "Play in your browser", but this page is a Windows d
 > Click to answer. Hold the right mouse button to skip a cutscene. Esc pauses.
 >
 > ### Install
-> Unzip `TheWeightOfTheCrown-windows.zip` and run `run.bat`. Needs 64-bit Windows 10 or 11. If SmartScreen warns about an unknown publisher, choose **More info → Run anyway**.
+> Unzip the download and run `run.bat`. Needs 64-bit Windows 10 or 11. If SmartScreen warns about an unknown publisher, choose **More info → Run anyway**.
 >
 > Made for **[EdenSpark Game Jam #2](https://itch.io/jam/edenspark-game-jam-2)**. Theme: **Mass Control**.
 >

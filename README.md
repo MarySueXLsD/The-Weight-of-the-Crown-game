@@ -78,11 +78,11 @@ King Edwin is dead. You — Gregor, the usurper — sit on the throne of Loria w
 
 Get the Windows build from **[itch.io](https://marysue.itch.io/the-weight-of-the-crown)**:
 
-1. Download `TheWeightOfTheCrown-windows.zip` and unzip it anywhere.
+1. Download the Windows zip and unzip it anywhere.
 2. Open the folder and run `run.bat`.
 3. If Windows SmartScreen warns about an unknown publisher, choose **More info → Run anyway**.
 
-You need a 64-bit Windows 10 or 11 PC. Your progress and settings are saved between sessions.
+You need a 64-bit Windows 10 or 11 PC.
 
 ## EdenSpark Game Jam #2
 
