@@ -1,0 +1,4 @@
+# Codex CLI loads this project-scoped config only after the project is trusted
+# (answer "trust" on first run, or add it to ~/.codex/config.toml [projects]).
+[mcp_servers.EdenSpark]
+url = "http://localhost:54300/mcp"

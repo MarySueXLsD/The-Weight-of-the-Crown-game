@@ -1,13 +1,8 @@
 options gen2
-require DagorFiles
+require private_project
 require daslib/strings_boost
 
 var DAS_PAK_ROOT = "./"
-
-def file_exists(path : string) : bool {
-    var stat : DagorStat
-    return df_stat(path, stat) == 0
-}
 
 let remap <- {
         "%engine" => "engine",
@@ -29,7 +24,7 @@ def module_get(req,from:string) : tuple<string;string;string> {
     }
 
     let absPath = "{DAS_PAK_ROOT}{join(rs,"/")}.das"
-    if (file_exists(absPath)) {
+    if (dd_file_exists(absPath)) {
         return (modName, absPath, "")
     }
 
@@ -37,7 +32,7 @@ def module_get(req,from:string) : tuple<string;string;string> {
     while (length(fr) > 0) {
         pop(fr)
         let fromPath = "{join(fr, "/")}/{join(rs,"/")}.das"
-        if (file_exists(fromPath)) {
+        if (dd_file_exists(fromPath)) {
             return (modName, fromPath, "")
         }
     }

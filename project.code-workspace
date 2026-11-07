@@ -6,7 +6,7 @@
     }
   ],
   "settings": {
-    "dascript.compiler": "C:/Users/syanavi/AppData/Local/EdenSpark/win64/../win64/eden-aot-windows-x86_64.exe",
+    "dascript.compiler": "C:/Users/MarySue/AppData/Local/EdenSpark/win64/../win64/eden-aot-windows-x86_64.exe",
     "dascript.project.file": "./plugin.das_project",
     "dascript.server.args": [
       "${file}",
@@ -18,7 +18,7 @@
       "--base-path",
       "${workspaceFolder}/",
       "--base-path",
-      "C:/Users/syanavi/AppData/Local/EdenSpark/win64/../",
+      "C:/Users/MarySue/AppData/Local/EdenSpark/win64/../",
       "--vfs",
       "eden.vromfs.bin"
     ],
@@ -26,10 +26,6 @@
       "servers": {
         "EdenSpark": {
           "url": "http://localhost:54300/mcp",
-          "type": "http"
-        },
-        "context7": {
-          "url": "https://mcp.context7.com/mcp",
           "type": "http"
         }
       },
@@ -51,9 +47,9 @@
                 "${workspaceFolder}/main.das",
                 "-config:debug/openAsEditor:b=yes",
                 "--cache-blk-path",
-                "C:/Users/syanavi/Documents/My Games/eden/launcher/cache.blk",
+                "C:/Users/MarySue/Documents/My Games/eden/launcher/cache.blk",
             ],
-            "cwd": "C:/Users/syanavi/AppData/Local/EdenSpark/win64/.."
+            "cwd": "C:/Users/MarySue/AppData/Local/EdenSpark/win64/.."
         },
         {
             "type": "cppvsdbg",
@@ -64,9 +60,9 @@
                 "${workspaceFolder}/main.das",
                 "-config:debug/openAsEditor:b=no",
                 "--cache-blk-path",
-                "C:/Users/syanavi/Documents/My Games/eden/launcher/cache.blk",
+                "C:/Users/MarySue/Documents/My Games/eden/launcher/cache.blk",
             ],
-            "cwd": "C:/Users/syanavi/AppData/Local/EdenSpark/win64/.."
+            "cwd": "C:/Users/MarySue/AppData/Local/EdenSpark/win64/.."
         },
         {
             "type": "dascript",
