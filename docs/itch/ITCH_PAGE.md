@@ -21,7 +21,13 @@ All art is in this folder. Rebuild it with `python docs/itch/make_itch_art.py` f
 
 ## Uploads
 
-- The Windows build zip, platform **Windows**. Give it a clean name such as `TheWeightOfTheCrown-windows.zip` instead of `The Weight of the Crown (1).zip`.
+- `TheWeightOfTheCrown-windows.zip`, platform **Windows**. It's the launcher's **Export** build, zipped (see the README). Upload it, then delete the old build from the uploads list (or tick **Hide this file**), so nobody downloads the jam version by mistake.
+
+## Trailer
+
+Paste `https://www.youtube.com/watch?v=_gAcZbwmUVY` into **Gameplay video or trailer** on the Edit game page. itch then shows the video at the top of the page.
+
+The trailer's end card says "Play in your browser", but this page is a Windows download. If that matters to you, say "Download for Windows" in the YouTube description.
 
 ---
 
@@ -53,9 +59,18 @@ All art is in this folder. Rebuild it with `python docs/itch/make_itch_art.py` f
 >
 > ### Features
 > - Branching narrative with persistent story arcs and reactive dialogue
-> - Illustrated characters, voiced cutscenes, and a unique death screen for every fallen pillar
+> - Illustrated characters, cutscenes with slow camera push-ins, and a unique death screen for every fallen pillar
+> - Hover an answer to see which pillars it will move
+> - A torchlit hall that fills with embers and smoke as the realm nears ruin
 > - English and Russian
 > - Save and continue, and chase your longest reign
+> - A Reduce effects option for fewer particles and gentler shake and flashes
+>
+> ### How to play
+> Click to answer. Hold the right mouse button to skip a cutscene. Esc pauses.
+>
+> ### Install
+> Unzip `TheWeightOfTheCrown-windows.zip` and run `run.bat`. Needs 64-bit Windows 10 or 11. If SmartScreen warns about an unknown publisher, choose **More info → Run anyway**.
 >
 > Made for **[EdenSpark Game Jam #2](https://itch.io/jam/edenspark-game-jam-2)**. Theme: **Mass Control**.
 >
@@ -70,7 +85,7 @@ All art is in this folder. Rebuild it with `python docs/itch/make_itch_art.py` f
 | **Cover image** | `cover.png` (630 × 500) | Animated: `cover.gif`. Torchlight, dust in the window light, and a glint on the crown. |
 | **Screenshots** | `screenshots/01_main_menu.jpg` … `05_reign_ends.jpg` | Upload in number order. Fresh captures of the current build (see below). Replace the jam-build screenshots on the page with these. |
 | **Gameplay GIF** (optional) | `gameplay.gif` (560 px, 37 s, 6.3 MB) | Add it as a screenshot, or put it at the top of the description. |
-| **Trailer** | `../trailer/the_weight_of_the_crown_trailer.mp4` (1080p, 40 s, 15 MB) | itch only embeds trailers from YouTube or Vimeo. Upload it there, then paste the link into **Gameplay video or trailer** on the Edit game page. Music: "Kingdom of Shadows" by AlkaKrab (credit appreciated, so put it in the video description). |
+| **Trailer** | On YouTube: https://youtu.be/_gAcZbwmUVY (source file: `../trailer/the_weight_of_the_crown_trailer.mp4`, 1080p, 40 s) | See **Trailer** above. Music: "Kingdom of Shadows" by AlkaKrab (credit appreciated, so keep it in the video description). |
 
 The GIFs start on a finished frame, so if itch ever flattens one to a still it still looks right.
 
@@ -150,4 +165,4 @@ itch has been known to flatten some animated GIF banners to one frame, so check 
 ## Before you publish
 
 1. **AI disclosure: your call.** itch asks whether a project uses generative AI. The game's code was written with an AI assistant, and this page's art was assembled by script from the game's own artwork. Answer to fit the jam's rules and what you know about how the game's illustrations were made.
-2. **Credits.** The README lists only you. Add anyone else (voice, music, art) here and in the description before publishing.
+2. **Credits.** The README now credits the asset packs (UI frames, stat icons, ember and smoke sprites) and the trailer music. Add anyone else (voice, music, art) here and in the description before publishing.

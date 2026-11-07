@@ -1,2 +1,20 @@
 **/*.eden
 .project/cache
+
+# Standalone builds from the launcher's Export button, and their itch.io zips
+.project/standalone_*/
+.project/*.zip
+
+# Editor import files for the README and itch.io page images
+docs/**/*.meta
+**/__pycache__/
+
+# Paid asset packs: their licences don't allow sharing the raw files, so they
+# stay out of this public repo. They still ship inside the game build.
+# docs/MODULES.md lists each pack.
+static/UI/Kit/*
+!static/UI/Kit/SOURCE.txt
+static/FX/
+static/SFX/
+static/Top_Bar/stat_*_outline.png
+static/Top_Bar/stat_*_outline.png.meta
