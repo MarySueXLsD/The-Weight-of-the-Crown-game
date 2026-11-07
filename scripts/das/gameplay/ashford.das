@@ -42,11 +42,11 @@ let ashfordDebutEncounter : Encounter <- Encounter(
             )
         ),
         DialogueNode(
-            prompt = "Freely? How refreshing. Most kings who took the throne prefer flattery. So — the question every great house whispers in their halls: will you make lawful your reign through noble blood, or rule as a lone wolf until the realm tears you apart? My house can crown you in the eyes of the elite — or bury you beside the king you replaced.",
+            prompt = "Freely? How refreshing. Most usurpers prefer flattery. So — the question every great house whispers in their halls: will you make lawful your reign through noble blood, or rule as a lone wolf until the realm tears you apart? My house can crown you in the eyes of the elite — or bury you beside the king you replaced.",
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
-                    choiceText = "Grant Ashford a seat on the king's close advisors",
+                    choiceText = "Give Ashford a seat on my council",
                     response = "A seat, not merely a title. My house will speak for you in halls where your name still tastes of treason.",
                     statDeltas = fixed_array(0, 0, 0, -10, 0, 10, 18, 0, 8)
                 ),
@@ -74,7 +74,7 @@ let ashfordDebutEncounter : Encounter <- Encounter(
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
-                    choiceText = "Grant Ashford a seat on the king's close advisors",
+                    choiceText = "Give Ashford a seat on my council",
                     response = "A seat, not merely a title. My house will speak for you in halls where your name still tastes of treason.",
                     statDeltas = fixed_array(0, 0, 0, -10, 0, 10, 18, 0, 8)
                 ),
@@ -129,13 +129,13 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
             choiceCount = 3,
             choices = fixed_array(
                 DialogueChoice(
-                    choiceText = "Говорите открыто, леди",
+                    choiceText = "Говори открыто, леди",
                     response = "",
                     statDeltas = fixed_array(0, 0, 0, 0, 0, 5, 8, 0, 5),
                     nextNodeIdx = 1
                 ),
                 DialogueChoice(
-                    choiceText = "Следите за тоном. Меч Лории в моих руках",
+                    choiceText = "Следи за тоном. Меч Лории в моих руках",
                     response = "",
                     statDeltas = fixed_array(0, 0, 0, 0, 0, -5, -10, 0, 0),
                     nextNodeIdx = 2
@@ -150,7 +150,7 @@ let ashfordDebutEncounterRu : Encounter <- Encounter(
             )
         ),
         DialogueNode(
-            prompt = "Открыто? Как освежительно. Большинство тех, кто взял трон предпочитают лесть. Итак — вопрос, который каждый великий дом шепчет в своих залах: сделаете ли вы правление законным через дворянскую кровь, или будете править в одиночку, пока страна не разорвёт вас? Мой дом может короновать вас в глазах знати — или похоронить рядом с королём, которого вы сменили.",
+            prompt = "Открыто? Как освежительно. Большинство узурпаторов предпочитают лесть. Итак — вопрос, который каждый великий дом шепчет в своих залах: сделаете ли вы правление законным через дворянскую кровь, или будете править в одиночку, пока страна не разорвёт вас? Мой дом может короновать вас в глазах знати — или похоронить рядом с королём, которого вы сменили.",
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(

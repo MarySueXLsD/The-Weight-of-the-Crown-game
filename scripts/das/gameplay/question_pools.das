@@ -265,6 +265,33 @@ def pick_random_from_pool(start : int; count : int; markUsed : bool; gateDay : i
 }
 
 
+// Late-pool slots that reuse a mid-pool scene: skip them once the player has seen the original.
+var private lateTwinOfMid : array<int>
+
+
+def private late_twin_seen(idx : int) : bool {
+    if (length(lateTwinOfMid) == 0) {
+        resize(lateTwinOfMid, POOL_LATE_COUNT)
+        for (i in range(POOL_LATE_COUNT)) {
+            lateTwinOfMid[i] = -1
+            let latePrompt = get_encounter_en(POOL_LATE_START + i).nodes[0].prompt
+            for (m in range(POOL_MID_COUNT)) {
+                if (get_encounter_en(POOL_MID_START + m).nodes[0].prompt == latePrompt) {
+                    lateTwinOfMid[i] = POOL_MID_START + m
+                    break
+                }
+            }
+        }
+    }
+    let slot = idx - POOL_LATE_START
+    if (slot < 0 || slot >= POOL_LATE_COUNT) {
+        return false
+    }
+    let twin = lateTwinOfMid[slot]
+    return twin >= 0 && usedEncounterFlags[twin]
+}
+
+
 def pick_random_from_late_pool(markUsed : bool; gateDay : int) : int {
     var candidates : array<int>
     for (i in range(1, POOL_LATE_COUNT)) {
@@ -275,7 +302,7 @@ def pick_random_from_late_pool(markUsed : bool; gateDay : int) : int {
         if (!encounter_passes_character_debut_gate(idx, gateDay)) {
             continue
         }
-        if (!usedEncounterFlags[idx] && encounter_passes_character_cooldown(idx)) {
+        if (!usedEncounterFlags[idx] && !late_twin_seen(idx) && encounter_passes_character_cooldown(idx)) {
             push(candidates, idx)
         }
     }

@@ -57,7 +57,7 @@ def public try_patch_arc_prompt(base : DialogueNode; prompt : string) : Dialogue
 
 def build_northern_receipt_prompt_en() : string {
     if (northernEnvoyChoice == 0) {
-        return "Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? You treated me as an equal envoy on day five. Unusual for a king who took the throne. They want the same answer in writing before they recognize your seal."
+        return "Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? You treated me as an equal envoy on day five. Unusual for a usurper. They want the same answer in writing before they recognize your seal."
     }
     if (northernEnvoyChoice == 1) {
         return "Your Majesty, the princes ask for a receipt: what did the coup cost, and who still owes whom? You called the north vultures before your crown was warm. They do not send recognition — they send a list of exiles they already shelter. Pay attention to the names."
@@ -129,18 +129,18 @@ def build_northern_border_prompt() : string {
 
 def build_northern_faith_prompt_en() : string {
     if (northernBorderChoice == 0) {
-        return "Your Majesty, in three days your priests will ask whether heaven blesses killing a king. You reinforced the Grey Pass when the north burned villages. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal. God can wait. Politics cannot."
+        return "Your Majesty, in three days your priests will ask whether heaven blesses the killing of a king. You reinforced the Grey Pass when the north burned villages. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal. God can wait. Politics cannot."
     }
     if (northernBorderChoice == 1) {
-        return "Your Majesty, in three days your priests will ask whether heaven blesses killing a king. You raided northern scouts after the smoke on the pass. The princes offer a secular bargain before Malrik offers a holy one — or they raise banners. God can wait. Politics cannot."
+        return "Your Majesty, in three days your priests will ask whether heaven blesses the killing of a king. You raided northern scouts after the smoke on the pass. The princes offer a secular bargain before Malrik offers a holy one — or they raise banners. God can wait. Politics cannot."
     }
     if (northernBorderChoice == 2) {
-        return "Your Majesty, in three days your priests will ask whether heaven blesses killing a king. You sent Ingvar to the pass to buy words. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal."
+        return "Your Majesty, in three days your priests will ask whether heaven blesses the killing of a king. You sent Ingvar to the pass to buy words. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal."
     }
     if (northern_trust_tier() == NORTHERN_TIER_WARY || northern_trust_tier() == NORTHERN_TIER_HOSTILE) {
-        return "Your Majesty, in three days your priests will ask whether heaven blesses killing a king. You hold the border with stone, not gifts. The princes raise tribute instead of banners — for now. Pay, or let Malrik become your only friend."
+        return "Your Majesty, in three days your priests will ask whether heaven blesses the killing of a king. You hold the border with stone, not gifts. The princes raise tribute instead of banners — for now. Pay, or let Malrik become your only friend."
     }
-    return "Your Majesty, in three days your priests will ask whether heaven blesses killing a king. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal. God can wait. Politics cannot."
+    return "Your Majesty, in three days your priests will ask whether heaven blesses the killing of a king. The princes offer a secular bargain before Malrik offers a holy one: recognize their trade rights, and they recognize your seal. God can wait. Politics cannot."
 }
 
 
@@ -247,12 +247,12 @@ def build_northern_knox_prompt() : string {
 def build_northern_charter_prompt_en() : string {
     if (northern_trust_tier() <= NORTHERN_TIER_WARY) {
         if (northernKnoxChoice == 2) {
-            return "Your Majesty, you hung my scribes. The princes do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you killing a king in every hall from here to the sea."
+            return "Your Majesty, you hung my scribes. The princes do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you a king-killer in every hall from here to the sea."
         }
         if (northernKnoxChoice == 1) {
-            return "Your Majesty, you questioned my agents until they sang. The princes do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you killing a king in every hall from here to the sea."
+            return "Your Majesty, you questioned my agents until they sang. The princes do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you a king-killer in every hall from here to the sea."
         }
-        return "Your Majesty, you returned my agents politely. The princes still do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you killing a king in every hall from here to the sea."
+        return "Your Majesty, you returned my agents politely. The princes still do not offer alliance — they offer terms. Dismantle forts on the Grey Pass, pay twelve years of tribute, and they will not call you a king-killer in every hall from here to the sea."
     }
     if (northernKnoxChoice == 0) {
         return "Your Majesty, you returned my agents politely. The princes read your habit as clearly as I do. They offer a charter: mutual defence, shared tolls, your seal beside theirs on the Grey Pass. Sign, and the north calls you king in every market from here to winter."
@@ -269,7 +269,7 @@ def build_northern_charter_prompt_en() : string {
 
 def build_northern_charter_prompt_ru() : string {
     if (northern_trust_tier() <= NORTHERN_TIER_WARY) {
-        return "Ваше Величество, князья не предлагают союз — они предлагают условия. Разберите форты на Сером перевале, платите двенадцать лет дани — и они не будут называть вас тем, кто взял трон в каждом зале отсюда до моря."
+        return "Ваше Величество, князья не предлагают союз — они предлагают условия. Разберите форты на Сером перевале, платите двенадцать лет дани — и они не будут называть вас узурпатором в каждом зале отсюда до моря."
     }
     if (northernKnoxChoice == 0) {
         return "Ваше Величество, вы вежливо вернули моих агентов. Князья читают вашу привычку так же ясно, как я. Они предлагают хартию: взаимная оборона, общие пошлины, ваша печать рядом с их на Сером перевале."
@@ -299,9 +299,9 @@ def build_northern_skirmish_prompt_en() : string {
 
 def build_northern_skirmish_prompt_ru() : string {
     if (northernAllianceSigned) {
-        return "Ваше Величество, кровь на Сером перевале — наши или их, смотря кто лжёт. Вы подписали хартию Ингвара. Север проверяет, настоящая ли армия у того, кто взял трон. Держать, преследовать или просить перемирия, пока снег владеет высотами?"
+        return "Ваше Величество, кровь на Сером перевале — наши или их, смотря кто лжёт. Вы подписали хартию Ингвара. Север проверяет, настоящая ли армия у узурпатора. Держать, преследовать или просить перемирия, пока снег владеет высотами?"
     }
-    return "Ваше Величество, кровь на Сером перевале. Север проверяет, настоящая ли армия у того, кто взял трон. Держать, преследовать или просить перемирия?"
+    return "Ваше Величество, кровь на Сером перевале. Север проверяет, настоящая ли армия у узурпатора. Держать, преследовать или просить перемирия?"
 }
 
 
@@ -315,20 +315,20 @@ def build_northern_skirmish_prompt() : string {
 
 def build_northern_refugees_prompt_en() : string {
     if (northernAllianceSigned || northern_trust_tier() >= NORTHERN_TIER_CORDIAL) {
-        return "Your Majesty, two thousand northern refugees crowd the ford — famine in the princes' hills, or a leash to embarrass you. You allied with us. The commons watch whether the king who took the throne feeds my people while Edwin's widows beg. Malrik offers baptisms. I offer politics."
+        return "Your Majesty, two thousand northern refugees crowd the ford — famine in the princes' hills, or a leash to embarrass you. You allied with us. The commons watch whether the usurper feeds my people while Edwin's widows beg. Malrik offers baptisms. I offer politics."
     }
     if (northern_trust_tier() == NORTHERN_TIER_HOSTILE) {
-        return "Your Majesty, two thousand northern refugees crowd the ford. You declared us enemies at the pass. The commons watch whether the king who took the throne turns hungry mouths away. Malrik offers baptisms. I offer politics."
+        return "Your Majesty, two thousand northern refugees crowd the ford. You declared us enemies at the pass. The commons watch whether the usurper turns hungry mouths away. Malrik offers baptisms. I offer politics."
     }
-    return "Your Majesty, two thousand northern refugees crowd the ford — famine in the princes' hills, or a leash to embarrass you. The commons watch whether the king who took the throne feeds strangers while Edwin's widows beg. Malrik offers baptisms. I offer politics."
+    return "Your Majesty, two thousand northern refugees crowd the ford — famine in the princes' hills, or a leash to embarrass you. The commons watch whether the usurper feeds strangers while Edwin's widows beg. Malrik offers baptisms. I offer politics."
 }
 
 
 def build_northern_refugees_prompt_ru() : string {
     if (northernAllianceSigned || northern_trust_tier() >= NORTHERN_TIER_CORDIAL) {
-        return "Ваше Величество, две тысячи северных беженцев теснят брод. Вы — наш союзник. Простой люди смотрят, кормит ли тот, кто взял трон, мой народ, пока вдовы Эдвина просят. Малрик предлагает крещения. Я — политику."
+        return "Ваше Величество, две тысячи северных беженцев теснят брод. Вы — наш союзник. Простой люди смотрят, кормит ли узурпатор мой народ, пока вдовы Эдвина просят. Малрик предлагает крещения. Я — политику."
     }
-    return "Ваше Величество, две тысячи северных беженцев теснят брод. Простой люди смотрят, кормит ли тот, кто взял трон, чужаков, пока вдовы Эдвина просят. Малрик предлагает крещения. Я — политику."
+    return "Ваше Величество, две тысячи северных беженцев теснят брод. Простой люди смотрят, кормит ли узурпатор чужаков, пока вдовы Эдвина просят. Малрик предлагает крещения. Я — политику."
 }
 
 
@@ -509,18 +509,18 @@ def build_household_osric_prompt() : string {
         return "Ваше Величество, я одиннадцать лет копировал руку короля Эдвина — и его печать до сих пор заказывает зерно с моего стола. Указы мёртвого короля всё ещё уходят из этой комнаты. Какой подлог ваш: печати, почерка или молчания?"
     }
     if (householdKeptGromm && householdPurgedGuards) {
-        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. You kept Gromm in the kitchens. Varn replaced the old guard. Yet warrants signed in a dead king's name still leave this room. Which fake seal is yours: the seal, the clerk, or the silence?"
+        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. You kept Gromm in the kitchens. Varn replaced the old guard. Yet warrants signed in a dead king's name still leave this room. Which lie do you end first: the seal, the clerk, or the silence?"
     }
     if (householdKeptGromm) {
-        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. You kept Gromm in the kitchens. Yet warrants signed in a dead king's name still leave this room. Which fake seal is yours: the seal, the clerk, or the silence?"
+        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. You kept Gromm in the kitchens. Yet warrants signed in a dead king's name still leave this room. Which lie do you end first: the seal, the clerk, or the silence?"
     }
     if (householdCutClerks) {
-        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. You burned Edwin's seal from my desk last week. Yet copyists still whisper his name when they think I am not listening. Which fake seal is yours: the seal, the clerk, or the silence?"
+        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. You burned Edwin's seal from my desk last week. Yet copyists still whisper his name when they think I am not listening. Which lie do you end first: the seal, the clerk, or the silence?"
     }
     if (householdPurgedGuards) {
-        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. Varn reforged the guard while Edwin's warrants still leave this room. Which fake seal is yours: the seal, the clerk, or the silence?"
+        return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. Varn reforged the guard while Edwin's warrants still leave this room. Which lie do you end first: the seal, the clerk, or the silence?"
     }
-    return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. Yet warrants signed in a dead king's name still leave this room. Which fake seal is yours: the seal, the clerk, or the silence?"
+    return "Your Majesty, I copied King Edwin's hand for eleven years — and his seal still orders grain, pardons, and wages from my desk. Yet warrants signed in a dead king's name still leave this room. Which lie do you end first: the seal, the clerk, or the silence?"
 }
 
 
@@ -1215,6 +1215,13 @@ def build_nephew_prompt(beatIdx : int) : string {
 
 
 def build_plague_prompt(beatIdx : int) : string {
+    // The Odo outcome has no legacy beat of its own; it borrows beat 25 with its own words.
+    if (beatIdx == 25 && plagueOutcome == 5) {
+        if (is_russian()) {
+            return "Ваше Величество, год кончается, а люди всё ещё просыпаются по ночам с криком. Кашель отступил, но вместе с ним сломалось что-то другое. Летописи не вспомнят ивовую кору — они вспомнят дешёвый отвар Одо и короля, который выбрал спешку. «Лекарь безумного короля». Я всё ещё хожу по палатам. Я всё ещё помню."
+        }
+        return "Your Majesty, the year ends and men still wake screaming in the night. The cough broke, but something else broke with it. The chronicles will not speak of willow bark — they will speak of Odo's cheap brew and the king who chose haste. The Mad King's Physic. I still tend the wards. I still remember."
+    }
     return ""
 }
 

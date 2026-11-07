@@ -25,7 +25,7 @@ let DEFEAT_SCREEN_TEXTURE_PATHS : string[STAT_COUNT] <- fixed_array(
 
 let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
     DialogueNode(
-        prompt = "The commons are at the gates, Your Majesty. They say the king who took the throne stole a crown and left their children hungry. Your reign ends here.",
+        prompt = "The commons are at the gates, Your Majesty. They say the usurper stole a crown and left their children hungry. Your reign ends here.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -63,7 +63,7 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "The men who crowned you have turned their blades. An unpaid army does not guard a bankrupt king who took the throne.",
+        prompt = "The men who crowned you have turned their blades. An unpaid army does not guard a bankrupt usurper.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
@@ -82,11 +82,11 @@ let defeatDialogueNodes : DialogueNode[STAT_COUNT] <- fixed_array(
         )
     ),
     DialogueNode(
-        prompt = "The treasury is empty and the mob remembers why you sit on that throne. Your reign ends here, king who took the throne.",
+        prompt = "The treasury is empty and the mob remembers why you sit on that throne. Your reign ends here, usurper.",
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
-                choiceText = "I won this crown fairly!",
+                choiceText = "This crown is mine — I took it and I will keep it!",
                 response = "The old king's coins are gone and the people are done with your lies. Seize him.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -227,7 +227,7 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
                 statDeltas = NO_STAT_CHANGE
             ),
             DialogueChoice(
-                choiceText = "Назовите цену, епископ",
+                choiceText = "Назови цену, епископ",
                 response = "Небо не торгуют монетами. Ваша корона недействительна — и душа с ней.",
                 statDeltas = NO_STAT_CHANGE
             ),
@@ -260,7 +260,7 @@ let defeatDialogueNodesRu : DialogueNode[STAT_COUNT] <- fixed_array(
         choiceCount = 2,
         choices = fixed_array(
             DialogueChoice(
-                choiceText = "Я честно завоевал эту корону!",
+                choiceText = "Эта корона моя — я её взял и удержу!",
                 response = "Монеты старого короля исчезли, и люди устали от ваших лжей. Хватайте его.",
                 statDeltas = NO_STAT_CHANGE
             ),

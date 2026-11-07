@@ -149,7 +149,7 @@ let public openingWeekEncountersRu : Encounter[OPENING_WEEK_ENC_COUNT] <- fixed_
                         statDeltas = fixed_array(0, 0, 0, -5, 0, 0, 0, 10, 0)
                     ),
                     DialogueChoice(
-                        choiceText = "Найдите другой источник дохода.",
+                        choiceText = "Найди другой источник дохода.",
                         response = "",
                         statDeltas = NO_STAT_CHANGE,
                         nextNodeIdx = 1
@@ -269,7 +269,7 @@ let public openingWeekEncountersRu : Encounter[OPENING_WEEK_ENC_COUNT] <- fixed_
                         statDeltas = fixed_array(-2, 0, -5, 5, 0, 0, 0, 0, 0)
                     ),
                     DialogueChoice(
-                        choiceText = "Кого вы подозреваете?",
+                        choiceText = "Кого ты подозреваешь?",
                         response = "",
                         statDeltas = NO_STAT_CHANGE,
                         nextNodeIdx = 1

@@ -24,7 +24,7 @@ let public arcDaySchedule : ArcDaySlot[ARC_SCHEDULE_COUNT] <- fixed_array(
     ArcDaySlot(day = 25, arcId = 13, beatIdx = 0, priority = 72),
     ArcDaySlot(day = 27, arcId = 6, beatIdx = 3, priority = 50),
     ArcDaySlot(day = 29, arcId = 2, beatIdx = 3, priority = 70),
-    ArcDaySlot(day = 30, arcId = 4, beatIdx = 12, priority = 55),
+    ArcDaySlot(day = 30, arcId = 5, beatIdx = 0, priority = 60),
     ArcDaySlot(day = 33, arcId = 0, beatIdx = 3, priority = 80),
     ArcDaySlot(day = 35, arcId = 5, beatIdx = 1, priority = 60),
     ArcDaySlot(day = 36, arcId = 2, beatIdx = 4, priority = 70),

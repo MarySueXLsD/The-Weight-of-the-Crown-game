@@ -159,9 +159,24 @@ var public plagueFundingPath = 0
 var public plagueCureProgress = 0
 var public plagueOutcome = 0
 var public plagueArcPhase = 0
+var public plagueChurchTook = false
+var public plagueChurchShare = false
+var public plagueOdoAsked = false
+var public plagueOdoUsed = false
+var public plagueOdoWide = false
+var public plagueAftermathShown = 0
 
 // ---- People unlock tone ----
 var public peopleUnlockTone = 0
+
+// ---- Outcome flags added with the arc logic fix ----
+var public guildCompactSigned = false
+var public housesAshfordLeads = false
+var public housesRaymondRising = false
+var public housesDellCrowDeal = false
+var public housesGooseFavored = false
+var public heirAshfordCage = false
+var public heirRecognized = false
 
 
 def public reset_arc_state() {
@@ -283,10 +298,23 @@ def public reset_arc_state() {
     nephewArcPhase = 0
     heirCrownStance = -1
     heirNephewAlive = true
+    guildCompactSigned = false
+    housesAshfordLeads = false
+    housesRaymondRising = false
+    housesDellCrowDeal = false
+    housesGooseFavored = false
+    heirAshfordCage = false
+    heirRecognized = false
     heirIngvarBid = false
     plagueFundingPath = 0
     plagueCureProgress = 0
     plagueOutcome = 0
     plagueArcPhase = 0
+    plagueChurchTook = false
+    plagueChurchShare = false
+    plagueOdoAsked = false
+    plagueOdoUsed = false
+    plagueOdoWide = false
+    plagueAftermathShown = 0
     peopleUnlockTone = 0
 }

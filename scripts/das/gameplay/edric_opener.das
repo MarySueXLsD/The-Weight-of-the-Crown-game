@@ -16,7 +16,7 @@ let edricDayOneEncounter : Encounter <- Encounter(
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
-                    choiceText = "I am king by necessity, not appetite.",
+                    choiceText = "I took the crown because someone had to.",
                     response = "A careful beginning. Men forgive ambition more easily when it wears a funeral cloak.",
                     statDeltas = fixed_array(0, 0, 0, 0, 0, 5, 0, 0, 0),
                     nextNodeIdx = 1
@@ -80,29 +80,29 @@ let edricDayOneEncounterRu : Encounter <- Encounter(
     characterIdx = CHAR_EDRIC,
     nodes = fixed_array(
         DialogueNode(
-            prompt = "Ваше Величество. Так мне велено называть вас теперь. Город ещё не решил, делать ли то же. Народ за стенами ждёт доказательства, что прошлой ночью пролилась не только кровь — ещё и сменилась обстановка в покоях. Впереди — работа потруднее. Как мне велеть двору вас воспринимать?",
+            prompt = "Ваше Величество. Так мне велено называть вас теперь. Город ещё не решил, делать ли то же. Народ за стенами ждёт доказательства, что прошлой ночью случилось нечто большее, чем убийство в богатых покоях. Впереди — работа потруднее. Как мне велеть двору вас воспринимать?",
             choiceCount = 4,
             choices = fixed_array(
                 DialogueChoice(
-                    choiceText = "Я король по необходимости, не по аппетиту.",
+                    choiceText = "Я взял корону, потому что кто-то должен был.",
                     response = "Осторожное начало. Люди охотнее прощают честолюбие в похоронном плаще.",
                     statDeltas = fixed_array(0, 0, 0, 0, 0, 5, 0, 0, 0),
                     nextNodeIdx = 1
                 ),
                 DialogueChoice(
-                    choiceText = "Скажите, что я взял то, что слабость не удержала.",
+                    choiceText = "Скажи им: я взял то, что слабый не удержал.",
                     response = "Тогда услышат силу. Одни восхитятся. Другие начнут точить причины бояться.",
                     statDeltas = fixed_array(0, 0, 5, 0, 0, 0, 0, 0, 0),
                     nextNodeIdx = 1
                 ),
                 DialogueChoice(
-                    choiceText = "Ничего не говорите. Пусть гадают.",
+                    choiceText = "Ничего не говори. Пусть гадают.",
                     response = "Тайна полезна, государь. На день. Потом люди наполняют молчание изменой.",
                     statDeltas = fixed_array(0, 0, 0, 0, 0, -3, 0, 0, 2),
                     nextNodeIdx = 1
                 ),
                 DialogueChoice(
-                    choiceText = "Скажите — меня судят по тому, что будет дальше.",
+                    choiceText = "Скажи им: пусть судят меня по делам.",
                     response = "Опасные слова. Они пробуждают память. Но могут купить вам немного терпения.",
                     statDeltas = fixed_array(3, 2, 0, 0, 0, 2, 0, 0, 0),
                     nextNodeIdx = 1
