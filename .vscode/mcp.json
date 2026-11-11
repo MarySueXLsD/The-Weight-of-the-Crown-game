@@ -1,8 +1,0 @@
-{
-  "servers": {
-    "EdenSpark": {
-      "type": "http",
-      "url": "http://localhost:54300/mcp"
-    }
-  }
-}

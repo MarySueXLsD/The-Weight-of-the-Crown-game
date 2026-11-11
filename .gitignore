@@ -11,6 +11,15 @@
 .mcp.json.meta
 plugin.das_project
 project.code-workspace
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.agents/
+.claude/
+.codex/
+.gemini/
+.github/
+.vscode/
 
 # Editor import files for the README and itch.io page images
 docs/**/*.meta
