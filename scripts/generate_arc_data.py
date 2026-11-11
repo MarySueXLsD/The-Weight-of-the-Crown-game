@@ -7,8 +7,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DAS_DATA = ROOT / "scripts" / "das" / "data"
 DAS_ARCS = ROOT / "scripts" / "das" / "arcs"
-REF_EN = ROOT / "QUESTIONS_REFERENCE.md"
-REF_RU = ROOT / "QUESTIONS_REFERENCE_RU.md"
+REF_EN = ROOT / "docs" / "reference" / "QUESTIONS_REFERENCE.md"
+REF_RU = ROOT / "docs" / "reference" / "QUESTIONS_REFERENCE_RU.md"
 
 ARC_SECTIONS = [
     ("ARC_HOUSEHOLD", 0, "The Old King's Household"),

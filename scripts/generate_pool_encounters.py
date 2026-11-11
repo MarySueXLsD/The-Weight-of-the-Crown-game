@@ -231,8 +231,8 @@ def extract_pool_section(md_path: Path, section_title: str) -> str:
 
 
 def main() -> None:
-    en_src = ROOT / "pool_expansion_tail.md"
-    ru_src = ROOT / "QUESTIONS_REFERENCE_RU.md"
+    en_src = ROOT / "docs" / "reference" / "pool_expansion_tail.md"
+    ru_src = ROOT / "docs" / "reference" / "QUESTIONS_REFERENCE_RU.md"
 
     pools = [
         ("nobility", "allEncountersEnNobility", "POOL_NOBILITY_COUNT", 252, 306, "Nobility Pool", "Пул Знати"),

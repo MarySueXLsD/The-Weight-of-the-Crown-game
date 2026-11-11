@@ -5,9 +5,9 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REF_EN = ROOT / "QUESTIONS_REFERENCE.md"
-REF_RU = ROOT / "QUESTIONS_REFERENCE_RU.md"
-OUTPUT = ROOT / "QUESTIONS_REFERENCE_BILINGUAL.md"
+REF_EN = ROOT / "docs" / "reference" / "QUESTIONS_REFERENCE.md"
+REF_RU = ROOT / "docs" / "reference" / "QUESTIONS_REFERENCE_RU.md"
+OUTPUT = ROOT / "docs" / "reference" / "QUESTIONS_REFERENCE_BILINGUAL.md"
 
 STAT_ORDER = ["People", "Church", "Army", "Treasury", "Health", "Loyalty", "Nobility", "Food", "Succession"]
 

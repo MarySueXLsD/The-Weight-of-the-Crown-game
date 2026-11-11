@@ -40,8 +40,8 @@ PYTHON_SOURCES = [
 ]
 
 REFERENCE_DOCS = [
-    "QUESTIONS_REFERENCE.md",
-    "QUESTIONS_REFERENCE_RU.md",
+    "docs/reference/QUESTIONS_REFERENCE.md",
+    "docs/reference/QUESTIONS_REFERENCE_RU.md",
 ]
 
 FIELD_RE = re.compile(r'(prompt|choiceText|response)\s*=\s*"((?:[^"\\]|\\.)*)"')

@@ -1,6 +1,6 @@
 # Module reference
 
-All game modules live under `scripts/das/`. `require scripts/das/...` paths resolve via `plugin.das_project` (`DAS_PAK_ROOT = "./"`).
+All game modules live under `scripts/das/`. `require scripts/das/...` paths resolve via `plugin.das_project` (`DAS_PAK_ROOT = "./"`), which the launcher writes when it opens the project, so it is not in git.
 
 ## Entry
 

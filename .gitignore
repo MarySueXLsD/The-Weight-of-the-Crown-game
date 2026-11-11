@@ -5,6 +5,13 @@
 .project/standalone_*/
 .project/*.zip
 
+# Files the EdenSpark Launcher writes when it opens the project
+.cursorrules
+.mcp.json
+.mcp.json.meta
+plugin.das_project
+project.code-workspace
+
 # Editor import files for the README and itch.io page images
 docs/**/*.meta
 **/__pycache__/

@@ -19,7 +19,7 @@ PROOF_TRANSCRIPT = Path(
     r"\agent-transcripts\33cd35b6-6c0c-4650-b708-fc3c38938486"
     r"\33cd35b6-6c0c-4650-b708-fc3c38938486.jsonl"
 )
-OUTPUT = ROOT / "QUESTIONS_REFERENCE.md"
+OUTPUT = ROOT / "docs" / "reference" / "QUESTIONS_REFERENCE.md"
 
 MOJIBAKE = {
     "â€”": "—",
