@@ -6,19 +6,15 @@
 
 You usurped Estedor's throne. Now balance factions, control the masses, and survive the crown's weight through 365 days of rule.
 
-**[Download for Windows on itch.io →](https://marysue.itch.io/the-weight-of-the-crown)** · **[Watch the trailer on YouTube →](https://youtu.be/_gAcZbwmUVY)**
-
 <p align="center">
-  <a href="https://youtu.be/_gAcZbwmUVY"><img src="docs/trailer/thumbnail.jpg" width="720" alt="Watch the 40-second trailer of The Weight of the Crown on YouTube"></a>
+  <img src="docs/itch/gameplay.gif" width="560" alt="Gameplay: the main menu, the intro, the old advisor's first question, petitioners pleading at court, and the reign ending when the treasury runs dry">
 </p>
+
+**[Watch the 40-second trailer on YouTube →](https://youtu.be/_gAcZbwmUVY)** · **[Download for Windows on itch.io →](https://marysue.itch.io/the-weight-of-the-crown)**
 
 ## About
 
 King Edwin is dead. You — Gregor, the usurper — sit on the throne of Loria while the realm still bleeds from plague, empty granaries, unpaid soldiers, and a church that cannot decide whether your crown is holy or cursed. Every morning brings another petitioner, another crisis, another chance to buy peace at a price you cannot afford twice.
-
-<p align="center">
-  <img src="docs/itch/gameplay.gif" width="560" alt="Gameplay: the main menu, the intro, the old advisor's first question, petitioners pleading at court, and the reign ending when the treasury runs dry">
-</p>
 
 **What you'll do**
 
@@ -114,7 +110,7 @@ Built with **[EdenSpark](https://edenspark.io)** using **Gen2 daScript** (Daslan
 2. Clone this repository into your Eden projects directory
 3. Open the project from the launcher and press Play
 
-Game logic lives in `main.das` (engine entry) and `scripts/das/` modules organized by domain (`core/`, `data/`, `arcs/`, `gameplay/`, `localization/`, `ui/`). See `docs/MODULES.md` for the full layout and where every added asset came from. Python scripts under `tools/` and `scripts/` support dialogue generation and content pipelines.
+Game logic lives in `main.das` (engine entry) and `scripts/das/` modules organized by domain (`core/`, `data/`, `arcs/`, `gameplay/`, `localization/`, `ui/`). See `docs/MODULES.md` for the full layout and where every added asset came from. Python scripts under `tools/` and `scripts/` support dialogue generation and content pipelines. They read the full dialogue text, in English and Russian, from `docs/reference/`.
 
 **Paid asset packs:** the UI frames, stat icons, and particle sprites listed in Credits come from paid packs whose licences don't allow sharing the raw files, so this repository doesn't include them (the stat icons in `static/Top_Bar` are the older originals). Copy them from your own copies of the packs to the paths in `docs/MODULES.md`.
 
